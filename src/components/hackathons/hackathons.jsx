@@ -31,7 +31,7 @@ class Hackathons extends Component {
             <img src={require("../../images/1.jpg")} width="250" height="250" />
             <div className="hackathon-info">
               <h3>
-                <Link to="" className="link">
+                <Link to="/hackathon" className="link">
                   Hackathon Name
                 </Link>
               </h3>

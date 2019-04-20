@@ -6,6 +6,9 @@ import Login from "./user/login";
 import Signup from "./user/signup";
 import SignupConfirmation from "./user/signupConfirmation";
 import Hackathons from "./hackathons/hackathons";
+import Hackathon from "./hackathons/hackathon";
+import ViewProfile from "./user/viewProfile";
+import EditProfile from "./user/editProfile";
 
 class Main extends Component {
   render() {
@@ -16,6 +19,9 @@ class Main extends Component {
         <Route path="/signup" exact component={Signup} />
         <Route path="/confirm" exact component={SignupConfirmation} />
         <Route path="/hackathons" exact component={Hackathons} />
+        <Route path="/hackathon" exact component={Hackathon} />
+        <Route path="/profile" exact component={ViewProfile} />
+        <Route path="/profile-edit" exact component={EditProfile} />
         <Route path="/not-found" exact component={NotFound} />
         <Route path="/" exact component={Home} />
         <Redirect to="/not-found" />
