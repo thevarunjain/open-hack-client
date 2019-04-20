@@ -2,12 +2,10 @@
   background-color: #3b5998;
   margin-top: 3%;
 }
-
 .container .fa-facebook {
   color: white;
   margin-left: -20%;
 }
-
 .container .facebook {
   color: white;
   margin-left: 25%;
@@ -38,11 +36,6 @@
   margin-top: 1%;
 }
 
-.container label {
-  font-size: 100%;
-  margin-top: 3%;
-}
-
 .form-header {
   font-size: 150%;
   color: #666;
@@ -61,7 +54,7 @@
   font-size: 80%;
   color: white;
   margin-left: 33%;
-  margin-top: 15%;
+  margin-top: 10%;
 }
 .footer-2 {
   color: white;
@@ -78,6 +71,7 @@
 .container .btn-google {
   background-color: #d8d3d3;
 }
+
 .container .fa-google {
   color: #787878;
   margin-left: -20%;
