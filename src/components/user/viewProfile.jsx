@@ -15,7 +15,7 @@ class ViewProfile extends Component {
               alt="The Traveler hasn't uploaded anything yet"
             />
           </div>
-          <div className="name">
+          <div className="full-name">
             <span>Hi, I'm Firstname Lastname</span>
           </div>
           <div className="about">

@@ -1,0 +1,90 @@
+.profile-home {
+  background: url("../images/home.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+
+.profile {
+  margin: 0 0 0 50%;
+  color: white;
+}
+
+.profile-photo {
+  margin-left: -90%;
+}
+
+.upload_profile_photo {
+  margin-left: 30%;
+  width: 15%;
+}
+
+.name {
+  color: white;
+  margin-top: 1%;
+  text-align: center;
+  margin-left: -130%;
+}
+
+.profile-body {
+  width: 70%;
+  height: auto;
+  /* border: 1px solid yellow; */
+  margin-left: 15%;
+  margin-top: 2%;
+  padding: 2% 2% 2% 2%;
+}
+
+.profile-body button {
+  margin: 2% 0 0 0;
+  width: 12%;
+  height: 3vw;
+  border-radius: 10vw;
+}
+
+.profile-information {
+  border: 1px solid #d3d8de;
+  width: 50%;
+  height: auto;
+  padding: 3% 0 3% 3%;
+  color: white;
+}
+
+.profile-information input {
+  height: 3vw;
+  margin-top: 4%;
+  width: 80%;
+}
+
+.profile-information textarea {
+  margin-top: 4%;
+  width: 80%;
+  resize: none;
+}
+
+.profile-information select {
+  margin-top: 4%;
+  width: 80%;
+  height: 3vw;
+}
+
+.view_profile {
+  border: 1px solid #d3d8de;
+  float: right;
+  width: 40%;
+  height: 5vw;
+  margin-top: -30%;
+  padding-left: 2%;
+}
+
+.view_profile a {
+  width: 87%;
+  margin: 4% 0 0 4%;
+  background-color: white;
+  border-color: 0067db;
+  color: #0067db;
+  border-radius: 100vw;
+  height: 3vw;
+  padding-top: 3%;
+}

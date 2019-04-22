@@ -18,14 +18,14 @@
   text-align: center;
 }
 
-.name {
+.full-name {
   height: auto;
   width: auto;
   margin-top: -33%;
   margin-left: 30%;
 }
 
-.name span {
+.full-name span {
   color: #353e44;
   font-size: 200%;
   color: white;
