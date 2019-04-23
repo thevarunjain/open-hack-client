@@ -22,7 +22,7 @@ class EditProfile extends Component {
           </div>
           <br />
           <h1 className="name">
-            <span>Firstname Lastname</span>
+            <span>Screenname</span>
           </h1>
         </div>
         <div className="profile-body">
@@ -32,16 +32,10 @@ class EditProfile extends Component {
               <br />
               <input
                 type="text"
-                name="firstname"
+                name="screenname"
                 className="form-control"
                 autoFocus
-                placeholder="First Name"
-              />
-              <input
-                type="text"
-                name="lastname"
-                className="form-control"
-                placeholder="Last Name"
+                placeholder="First and Last Name"
               />
               <input
                 type="text"

@@ -19,18 +19,12 @@ class Signup extends Component {
             <form>
               <input
                 type="text"
-                name="firstname"
+                name="screenname"
                 autoFocus
                 className="form-control"
-                placeholder="First name"
+                placeholder="First and Last Name"
               />
-              <br />
-              <input
-                type="text"
-                name="lastname"
-                className="form-control"
-                placeholder="Last name"
-              />
+
               <br />
               <input
                 type="text"
