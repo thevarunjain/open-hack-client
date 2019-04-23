@@ -1,0 +1,63 @@
+.view-profile-container {
+  width: 60%;
+  margin-left: 20%;
+  margin-top: 5%;
+  height: 70%;
+  position: fixed;
+  padding: 3% 5% 3% 5%;
+}
+
+.view-photo {
+  height: auto;
+  width: 20%;
+}
+
+.view-photo img {
+  height: 150%;
+  width: 150%;
+  text-align: center;
+}
+
+.full-name {
+  height: auto;
+  width: auto;
+  margin-top: -33%;
+  margin-left: 30%;
+}
+
+.full-name span {
+  color: #353e44;
+  font-size: 200%;
+  color: white;
+}
+
+.about {
+  height: auto;
+  width: auto;
+  color: white;
+  margin-left: 40%;
+  margin-top: 5%;
+}
+
+.about h3s {
+  color: white;
+}
+
+.about div {
+  margin-top: 2%;
+}
+
+.edit_profile {
+  font-size: 150%;
+  margin-left: 78%;
+  margin-top: 2%;
+}
+
+.edit_profile a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.edit_profile a {
+  color: white;
+}

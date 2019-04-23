@@ -1,0 +1,58 @@
+h1 {
+  color: white;
+  margin-left: 40%;
+  margin-top: 5%;
+}
+
+.heading {
+  color: white;
+  margin-left: 35%;
+  font-size: 120%;
+}
+
+span {
+  margin-left: 15%;
+}
+
+.search {
+  width: 20%;
+  margin-left: 40%;
+  margin-top: 2%;
+}
+
+.search button {
+  margin-left: 110%;
+  margin-top: -18%;
+  width: 30%;
+}
+
+.hackathons-list {
+  width: 80%;
+  margin-left: 10%;
+  height: auto;
+}
+
+.hackathon {
+  width: 20%;
+}
+
+.hackathons-list img {
+  margin-left: 6%;
+  margin-top: 6%;
+}
+
+.hackathon-info {
+  color: white;
+  text-align: center;
+  margin-left: 6%;
+  width: 90%;
+}
+
+.link {
+  color: white;
+}
+
+.link:hover {
+  color: white;
+  text-decoration: none;
+}

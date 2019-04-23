@@ -1,0 +1,23 @@
+.home {
+  background: url("../images/home.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+.home-body {
+  margin-left: 25%;
+  width: 100%;
+  padding-top: 15%;
+}
+
+.header-content {
+  color: white;
+  font-size: 300%;
+}
+
+.footer-content {
+  color: white;
+  font-size: 150%;
+}

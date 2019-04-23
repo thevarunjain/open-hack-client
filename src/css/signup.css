@@ -1,0 +1,83 @@
+.container .btn-facebook {
+  background-color: #3b5998;
+  margin-top: 3%;
+}
+.container .fa-facebook {
+  color: white;
+  margin-left: -20%;
+}
+.container .facebook {
+  color: white;
+  margin-left: 25%;
+}
+
+.login-one {
+  margin-left: 40%;
+  margin-top: 3%;
+  font-size: 250%;
+  color: white;
+}
+
+.login-two {
+  margin-left: 43%;
+  margin-top: -1%;
+  font-size: 120%;
+  color: white;
+}
+
+.container {
+  height: auto;
+  background-color: white;
+  padding: 3% 3% 7% 3%;
+  margin-top: 1%;
+}
+
+.container input {
+  margin-top: 1%;
+}
+
+.form-header {
+  font-size: 150%;
+  color: #666;
+}
+
+.login-btn {
+  margin-top: 5%;
+  width: 100%;
+  background-color: #ff8a00;
+  border-color: #ff8a00;
+  color: white;
+  padding: 2%;
+}
+
+.footer-1 {
+  font-size: 80%;
+  color: white;
+  margin-left: 33%;
+  margin-top: 6%;
+}
+.footer-2 {
+  color: white;
+  margin-left: 18%;
+}
+
+.login-container {
+  width: 20%;
+  height: auto;
+  margin-left: 40%;
+  margin-top: 1%;
+}
+
+.container .btn-google {
+  background-color: #d8d3d3;
+}
+
+.container .fa-google {
+  color: #787878;
+  margin-left: -20%;
+}
+
+.google_text {
+  color: #787878;
+  margin-left: 25%;
+}
