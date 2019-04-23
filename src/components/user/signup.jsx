@@ -19,18 +19,31 @@ class Signup extends Component {
             <form>
               <input
                 type="text"
-                name="screenname"
+                name="firstname"
                 autoFocus
                 className="form-control"
-                placeholder="First and Last Name"
+                placeholder="First Name"
               />
-
+              <br />
+              <input
+                type="text"
+                name="lastname"
+                className="form-control"
+                placeholder="Last Name"
+              />
+              <br />
+              <input
+                type="text"
+                name="screenname"
+                className="form-control"
+                placeholder="Screen Name"
+              />
               <br />
               <input
                 type="text"
                 name="username"
                 className="form-control"
-                placeholder="Email address"
+                placeholder="Email Address"
               />
               <br />
               <input
@@ -45,15 +58,21 @@ class Signup extends Component {
               </button>
             </form>
 
-            <a className="btn btn-block btn-social btn-facebook">
+            <button
+              type="submit"
+              className="btn btn-block btn-social btn-facebook"
+            >
               <span className="fa fa-facebook" />
-              <span className="facebook">Log in with Facebook</span>
-            </a>
+              <span className="facebook">Sign up with Facebook</span>
+            </button>
 
-            <a className="btn btn-block btn-social btn-google">
+            <button
+              type="submit"
+              className="btn btn-block btn-social btn-google"
+            >
               <span className="fa fa-google" />
-              <span className="google_text">Log in with Google</span>
-            </a>
+              <span className="google_text">Sign up with Google</span>
+            </button>
           </div>
         </div>
         <div className="footer-1">

@@ -39,15 +39,21 @@ class Login extends Component {
               <label> &nbsp; Keep me signed in</label>
             </form>
 
-            <a className="btn btn-block btn-social btn-facebook">
+            <button
+              type="submit"
+              className="btn btn-block btn-social btn-facebook"
+            >
               <span className="fa fa-facebook" />
               <span className="facebook">Log in with Facebook</span>
-            </a>
+            </button>
 
-            <a className="btn btn-block btn-social btn-google">
+            <button
+              type="submit"
+              className="btn btn-block btn-social btn-google"
+            >
               <span className="fa fa-google" />
               <span className="google_text">Log in with Google</span>
-            </a>
+            </button>
           </div>
         </div>
         <div className="footer-1">

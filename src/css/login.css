@@ -57,13 +57,14 @@
   padding: 2%;
 }
 
-.footer-1 {
+.login-footer-1 {
   font-size: 80%;
   color: white;
   margin-left: 33%;
   margin-top: 15%;
+  border: 1px solid white;
 }
-.footer-2 {
+.login-footer-2 {
   color: white;
   margin-left: 18%;
 }
