@@ -56,11 +56,13 @@ class Login extends Component {
             </button>
           </div>
         </div>
-        <div className="footer-1">
+        <div className="login-footer-1">
           Use of this Web site constitutes acceptance of the OpenHack.com{" "}
           <a href="/login">Terms and Conditions </a>
           and <a href="/login">Privacy Policy</a>. <br />
-          <div className="footer-2">©2019 OpenHack. All rights reserved.</div>
+          <div className="login-footer-2">
+            ©2019 OpenHack. All rights reserved.
+          </div>
         </div>
       </div>
     );

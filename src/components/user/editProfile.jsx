@@ -35,7 +35,20 @@ class EditProfile extends Component {
                 name="screenname"
                 className="form-control"
                 autoFocus
-                placeholder="First and Last Name"
+                placeholder="Screen Name"
+                disabled
+              />
+              <input
+                type="text"
+                name="firstname"
+                className="form-control"
+                placeholder="First Name"
+              />
+              <input
+                type="text"
+                name="lastname"
+                className="form-control"
+                placeholder="Last Name"
               />
               <input
                 type="text"
@@ -48,19 +61,36 @@ class EditProfile extends Component {
                 placeholder="About me"
                 className="form-control"
               />
-              <textarea
-                name="address"
-                placeholder="Address"
+              <input
+                type="text"
+                name="street"
                 className="form-control"
+                placeholder="Street Address"
               />
-              <select className="form-control">
-                <option disabled selected>
-                  Organization
-                </option>
-                <option>Org 1</option>
-                <option>Org 2</option>
-                <option>Org 3</option>
-              </select>
+              <input
+                type="text"
+                name="city"
+                className="form-control"
+                placeholder="City"
+              />
+              <input
+                type="text"
+                name="state"
+                className="form-control"
+                placeholder="State"
+              />
+              <input
+                type="text"
+                name="zipcode"
+                className="form-control"
+                placeholder="Zipcode"
+              />
+              <input
+                type="text"
+                name="organization"
+                className="form-control"
+                placeholder="Organization"
+              />
             </div>
             <div className="view_profile">
               <Link
@@ -74,7 +104,7 @@ class EditProfile extends Component {
               </Link>
             </div>
             <button type="submit" className="btn btn-primary">
-              Save changes
+              Save
             </button>{" "}
           </form>
         </div>

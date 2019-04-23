@@ -16,7 +16,7 @@ class ViewProfile extends Component {
             />
           </div>
           <div className="full-name">
-            <span>Hi, I'm Screenname</span>
+            <span>Hi, I'm Firstname Lastname</span>
           </div>
           <div className="about">
             <h3>About me</h3>
@@ -24,7 +24,7 @@ class ViewProfile extends Component {
             <br />
             <br />
             <div>Title: Business Title </div>
-            <div>Organization: List of Organizations</div>
+            <div>Organization: Organization Name</div>
             <div>Address: address </div>
           </div>
         </div>
