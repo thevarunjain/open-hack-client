@@ -18,7 +18,8 @@ class EditProfile extends FormEventHandlers {
       city: "",
       state: "",
       zipcode: "",
-      organization: ""
+      organization: "",
+      id: ""
     };
   }
 
@@ -36,7 +37,8 @@ class EditProfile extends FormEventHandlers {
         city: response.data.city,
         state: response.data.state,
         zipcode: response.data.zipcode,
-        organization: response.data.organization
+        organization: response.data.organization,
+        id: response.data.id
       });
     });
   }
@@ -52,7 +54,8 @@ class EditProfile extends FormEventHandlers {
       city: this.state.city,
       state: this.state.state,
       zipcode: this.state.zipcode,
-      organization: this.state.organization
+      organization: this.state.organization,
+      id: this.state.id
     };
 
     console.log(profile);
@@ -64,7 +67,6 @@ class EditProfile extends FormEventHandlers {
     });
   };
   render() {
-    const ID = localStorage.getItem("id");
     return (
       <div className="profile-home">
         <Navbar />
@@ -176,7 +178,7 @@ class EditProfile extends FormEventHandlers {
                 className="btn btn-primary"
                 to={{
                   pathname: "/profile",
-                  state: { id: ID }
+                  state: { id: this.state.id }
                 }}
               >
                 View Profile
