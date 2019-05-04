@@ -1,8 +1,37 @@
-import React, { Component } from "react";
+import React from "react";
 import Navbar from "../common/navbar";
 import "../../css/signup.css";
+import Form from "../common/form";
+import axios from "axios";
+import { Redirect } from "react-router";
 
-class Signup extends Component {
+class Signup extends Form {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: {
+        firstname: "",
+        lastname: "",
+        screenname: "",
+        username: "",
+        password: ""
+      }
+    };
+  }
+
+  doSubmit = () => {
+    axios
+      .post("http://localhost:3001/users", this.state.data)
+      .then(response => {
+        if (response.status === 200) {
+          window.alert("Sign up successful.");
+          this.props.history.push("/confirm");
+        } else {
+          console.log("Error in sign up.");
+        }
+      });
+  };
+
   render() {
     return (
       <div className="home">
@@ -16,43 +45,53 @@ class Signup extends Component {
           <div className="container">
             <div className="form-header">Account Sign up</div>
             <hr />
-            <form>
-              <input
-                type="text"
-                name="firstname"
-                autoFocus
-                className="form-control"
-                placeholder="First Name"
-              />
-              <br />
-              <input
-                type="text"
-                name="lastname"
-                className="form-control"
-                placeholder="Last Name"
-              />
-              <br />
-              <input
-                type="text"
-                name="screenname"
-                className="form-control"
-                placeholder="Screen Name"
-              />
-              <br />
-              <input
-                type="text"
-                name="username"
-                className="form-control"
-                placeholder="Email Address"
-              />
-              <br />
-              <input
-                type="text"
-                name="password"
-                className="form-control"
-                placeholder="Password"
-              />
 
+            <input
+              type="input"
+              name="firstname"
+              autoFocus
+              className="form-control"
+              placeholder="First Name"
+              onChange={this.handleChange}
+              value={this.state.firstname}
+            />
+            <br />
+            <input
+              type="input"
+              name="lastname"
+              className="form-control"
+              placeholder="Last Name"
+              onChange={this.handleChange}
+              value={this.state.lastname}
+            />
+            <br />
+            <input
+              type="input"
+              name="screenname"
+              className="form-control"
+              placeholder="Screen Name"
+              onChange={this.handleChange}
+              value={this.state.screenname}
+            />
+            <br />
+            <input
+              type="email"
+              name="username"
+              className="form-control"
+              placeholder="Email Address"
+              onChange={this.handleChange}
+              value={this.state.username}
+            />
+            <br />
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              placeholder="Password"
+              onChange={this.handleChange}
+              value={this.state.password}
+            />
+            <form onSubmit={this.handleSubmit}>
               <button type="submit" className="login-btn">
                 Sign up
               </button>
