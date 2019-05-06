@@ -10,7 +10,7 @@ class Hackathons extends Form {
   constructor() {
     super();
     this.state = {
-      hackathons: {},
+      hackathons: [],
       data: {}
     };
   }
@@ -68,7 +68,13 @@ class Hackathons extends Form {
               />
               <div className="hackathon-info">
                 <h3>
-                  <Link to="/hackathon" className="link">
+                  <Link
+                    className="link"
+                    to={{
+                      pathname: "/hackathon",
+                      state: { id: hackathon.id }
+                    }}
+                  >
                     {hackathon.name}
                   </Link>
                 </h3>
