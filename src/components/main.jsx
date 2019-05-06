@@ -10,6 +10,7 @@ import Hackathon from "./hackathons/hackathon";
 import ViewProfile from "./user/viewProfile";
 import EditProfile from "./user/editProfile";
 import CreateOrganization from "./organization/createOrganization";
+import MyOrganizations from "./organization/myOrganizations";
 
 class Main extends Component {
   render() {
@@ -28,6 +29,7 @@ class Main extends Component {
           exact
           component={CreateOrganization}
         />
+        <Route path="/organizations" exact component={MyOrganizations} />
         <Route path="/not-found" exact component={NotFound} />
         <Route path="/" exact component={Home} />
         <Redirect to="/not-found" />
