@@ -4,6 +4,7 @@ import "../../css/editProfile.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import FormEventHandlers from "../common/formEventHandlers";
+import { Redirect } from "react-router";
 
 class EditProfile extends FormEventHandlers {
   constructor() {
@@ -67,11 +68,16 @@ class EditProfile extends FormEventHandlers {
     });
   };
   render() {
+    let redirectVar = null;
+    var id = localStorage.getItem("id");
+    if (!id) {
+      redirectVar = <Redirect to="/home" />;
+    }
     return (
       <div className="profile-home">
+        {redirectVar}
         <Navbar />
         <hr />
-
         <div className="profile">
           <div className="profile-photo">
             <input type="file" className="upload_profile_photo" name="files" />

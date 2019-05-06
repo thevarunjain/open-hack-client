@@ -10,6 +10,8 @@ import Hackathon from "./hackathons/hackathon";
 import ViewProfile from "./user/viewProfile";
 import EditProfile from "./user/editProfile";
 import Firebase from "./Firebase";
+import CreateOrganization from "./organization/createOrganization";
+import MyOrganizations from "./organization/myOrganizations";
 
 class Main extends Component {
   render() {
@@ -23,6 +25,12 @@ class Main extends Component {
         <Route path="/hackathon" exact component={Hackathon} />
         <Route path="/profile" exact component={ViewProfile} />
         <Route path="/profile-edit" exact component={EditProfile} />
+        <Route
+          path="/organization/create"
+          exact
+          component={CreateOrganization}
+        />
+        <Route path="/organizations" exact component={MyOrganizations} />
         <Route path="/not-found" exact component={NotFound} />
         <Route path="/" exact component={Home} />
         <Route path="/firebase" exact component={Firebase} />

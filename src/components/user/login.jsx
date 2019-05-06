@@ -10,6 +10,7 @@ import {isUserVerified} from "../Firebase";
 import {getFirebaseUser} from "../Firebase";
 var firebase = require('firebase/app');
 require("firebase/auth");
+import { Redirect } from "react-router";
 
 class Login extends Form {
   state = {
@@ -34,10 +35,15 @@ class Login extends Form {
   };
 
   render() {
-
+    let redirectVar = null;
+    var id = localStorage.getItem("id");
+    if (id) {
+      redirectVar = <Redirect to="/hackathons" />;
+    }
     return (
       
       <div className="home">
+        {redirectVar}
         <Navbar />
         <div className="login-one">Log in to OpenHack</div>
         <br />

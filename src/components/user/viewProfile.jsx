@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "../../css/viewProfile.css";
 import axios from "axios";
 import { If } from "react-if";
+import { Redirect } from "react-router";
 
 class ViewProfile extends Component {
   constructor() {
@@ -30,8 +31,14 @@ class ViewProfile extends Component {
     });
   }
   render() {
+    let redirectVar = null;
+    var id = localStorage.getItem("id");
+    if (!id) {
+      redirectVar = <Redirect to="/home" />;
+    }
     return (
       <div className="home">
+        {redirectVar}
         <Navbar />
         {this.state.profiles.map(profile => (
           <div className="view-profile-container">
