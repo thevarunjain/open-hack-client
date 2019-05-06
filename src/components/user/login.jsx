@@ -3,27 +3,40 @@ import Navbar from "../common/navbar";
 import "../../css/login.css";
 import Form from "../common/form";
 import axios from "axios";
+import {signUpWithFacebook} from "../Firebase";
+import {signUpWithGoogle} from "../Firebase";
+import {loginWithCredentials} from "../Firebase";
+import {isUserVerified} from "../Firebase";
+import {getFirebaseUser} from "../Firebase";
+var firebase = require('firebase/app');
+require("firebase/auth");
 
 class Login extends Form {
   state = {
-    data: { username: "", password: "" }
+    data: { username: "", password: "" },
+    user : ""
   };
 
   doSubmit = () => {
-    axios
-      .post("http://localhost:3001/login", this.state.data)
+
+    if(isUserVerified()){
+      var loggedInUser = loginWithCredentials(this.state.data.username, this.state.data.password);
+    }
+    axios.post("http://localhost:3001/login", this.state.data)
       .then(response => {
         console.log("Status Code : ", response.data);
         if (response.status === 200) {
           console.log("Login successful.");
-
           localStorage.setItem("username", this.state.data.username);
           localStorage.setItem("id", this.state.data.id);
         }
       });
   };
+
   render() {
+
     return (
+      
       <div className="home">
         <Navbar />
         <div className="login-one">Log in to OpenHack</div>
@@ -55,7 +68,7 @@ class Login extends Form {
               value={this.state.password}
             />
             <form onSubmit={this.handleSubmit}>
-              <button type="submit" className="login-btn">
+              <button type="submit" className="login-btn" >
                 Login
               </button>
               <input type="checkbox" />
@@ -65,6 +78,7 @@ class Login extends Form {
             <button
               type="submit"
               className="btn btn-block btn-social btn-facebook"
+              onClick={signUpWithFacebook}
             >
               <span className="fa fa-facebook" />
               <span className="facebook">Log in with Facebook</span>
@@ -73,6 +87,7 @@ class Login extends Form {
             <button
               type="submit"
               className="btn btn-block btn-social btn-google"
+              onClick={signUpWithGoogle}
             >
               <span className="fa fa-google" />
               <span className="google_text">Log in with Google</span>

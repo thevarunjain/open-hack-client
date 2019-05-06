@@ -12,15 +12,19 @@ require("firebase/auth");
     };
 
         firebase.initializeApp(firebaseConfig);
-            firebase.auth().onAuthStateChanged(function(user) {
+
+      firebase.auth().onAuthStateChanged(function(user) {
                 if (user) {
                     console.log("Current User", user);
                 } else {
-                    console.log("No user");
+                    console.log("No user", user);
                 }
+                return user ? user : null;
         });
 
-        var signUpWithGoogle=()=>{
+      export var signUpWithGoogle=()=>{
+        console.log("In google method")
+
             var provider = new firebase.auth.GoogleAuthProvider();
             firebase.auth().signInWithPopup(provider).then(function(result) {
 
@@ -37,8 +41,7 @@ require("firebase/auth");
         }
 
 
-
-        function signUpWithFacebook(){
+       export function signUpWithFacebook(){
             console.log("In Facebook method")
             var provider = new firebase.auth.FacebookAuthProvider();
                 firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -54,7 +57,7 @@ require("firebase/auth");
                 });
         }
 
-        var signout =()=>{
+       export var signout =()=>{
             firebase.auth().signOut().then(function() {
                 console.log("Sign-out successful")
             }).catch(function(error) {
@@ -62,21 +65,23 @@ require("firebase/auth");
             });
         }
 
-        var signUpWithCredentials= ()=>{
-            firebase.auth().createUserWithEmailAndPassword("v810460@nwytg.net","abcdef").then(user=>{
+        export var signUpWithCredentials= (email, password )=>{
+            firebase.auth().createUserWithEmailAndPassword(email,password).then(user=>{
                 console.log(user);
                 sendVerificationEmail();
+                return user;
             })
 
         }
 
-        var loginWithCredentials =()=>{
-            firebase.auth().signInWithEmailAndPassword("v810460@nwytg.net","abcdef").then(user=>{
+        export var loginWithCredentials =(email, password )=>{
+            firebase.auth().signInWithEmailAndPassword(email, password ).then(user=>{
                 console.log(user);
+                return user;
             })
         }
 
-        var sendVerificationEmail =()=>{
+        export var sendVerificationEmail =()=>{
             var curr = firebase.auth().currentUser;
             console.log("curr ...",curr);
             if(curr && !curr.emailVerified){
@@ -90,15 +95,16 @@ require("firebase/auth");
             }
         }
 
-        var isUserVerified =()=>{
-            var curr = firebase.auth().currentUser;
-            console.log(curr.emailVerified,"/.............");   
-            console.log(curr)
-            return curr.emailVerified;
+        export var isUserVerified =()=>{
+            var currentUser = firebase.auth().currentUser;
+            return currentUser ? currentUser.emailVerified : null;
         }
 
+        export var getFirebaseUser=()=>{
+            return firebase.auth().currentUser;
+        }
 
-        export default class Firebase extends Component {
+         class Firebase extends Component {
             constructor(props){
             super(props);
 
@@ -108,21 +114,11 @@ require("firebase/auth");
         render() {
             return(
             <div>
-                <div >
                 <button className="fa fa-facebook" onClick={signUpWithFacebook} > Log in with Facebook </button>
-                </div><br></br>
-                <div >
                 <button className="googlebutton" onClick={signUpWithGoogle} > Log in with Google </button>
-                </div> <br></br>
-                <div >
                 <button className="googlebutton" onClick={signout} > Sign Out </button>
-                </div> <br></br>
-                <button className="googlebutton" onClick={signUpWithCredentials} > Sign Up with credential </button>
-                <button className="googlebutton" onClick={loginWithCredentials} > Login with credential </button>
-                <button className="googlebutton" onClick={sendVerificationEmail} > Send Verification Mail </button>
-                <button className="googlebutton" onClick={isUserVerified} > Check for Validation </button>
-                <p>Email is verified : </p>
             </div>
             )
          }
 }
+export default Firebase;
