@@ -2,8 +2,35 @@ import React, { Component } from "react";
 import Navbar from "../common/navbar";
 import "../../css/hackathons.css";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import Hackathon from "./hackathon";
+import Form from "../common/form";
 
-class Hackathons extends Component {
+class Hackathons extends Form {
+  constructor() {
+    super();
+    this.state = {
+      hackathons: [],
+      data: {}
+    };
+  }
+
+  componentDidMount() {
+    axios.get("http://localhost:3001/hackathons").then(response => {
+      this.setState({
+        hackathons: response.data
+      });
+    });
+  }
+
+  doSubmit = e => {
+    axios
+      .get("http://localhost:3001/hackathons/" + this.state.data.hackathon_name)
+      .then(response => {
+        this.setState({ hackathons: response.data });
+      });
+  };
+
   render() {
     return (
       <div className="home">
@@ -20,27 +47,44 @@ class Hackathons extends Component {
             name="hackathon_name"
             className="form-control"
             placeholder="Hackathon name"
+            onChange={this.handleChange}
             autoFocus
           />
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={this.handleSubmit}
+          >
             Search
           </button>
         </div>
-        <div className="hackathons-list">
-          <div className="hackathon">
-            <img src={require("../../images/1.jpg")} width="250" height="250" />
-            <div className="hackathon-info">
-              <h3>
-                <Link to="/hackathon" className="link">
-                  Hackathon Name
-                </Link>
-              </h3>
-              from - to
-              <br />
-              Location
+        {this.state.hackathons.map(hackathon => (
+          <div className="hackathons-list">
+            <div className="hackathon">
+              <img
+                src={require("../../images/1.jpg")}
+                width="250"
+                height="250"
+              />
+              <div className="hackathon-info">
+                <h3>
+                  <Link
+                    className="link"
+                    to={{
+                      pathname: "/hackathon",
+                      state: { id: hackathon.id }
+                    }}
+                  >
+                    {hackathon.name}
+                  </Link>
+                </h3>
+                {hackathon.start_date} - {hackathon.end_date}
+                <br />
+                {hackathon.status}
+              </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
     );
   }

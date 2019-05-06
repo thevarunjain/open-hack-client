@@ -1,8 +1,27 @@
-import React, { Component } from "react";
+import React from "react";
 import Navbar from "../common/navbar";
 import "../../css/login.css";
+import Form from "../common/form";
+import axios from "axios";
 
-class Login extends Component {
+class Login extends Form {
+  state = {
+    data: { username: "", password: "" }
+  };
+
+  doSubmit = () => {
+    axios
+      .post("http://localhost:3001/login", this.state.data)
+      .then(response => {
+        console.log("Status Code : ", response.data);
+        if (response.status === 200) {
+          console.log("Login successful.");
+
+          localStorage.setItem("username", this.state.data.username);
+          localStorage.setItem("id", this.state.data.id);
+        }
+      });
+  };
   render() {
     return (
       <div className="home">
@@ -16,22 +35,26 @@ class Login extends Component {
           <div className="container">
             <div className="form-header">Account Login</div>
             <hr />
-            <form>
-              <input
-                type="text"
-                name="username"
-                autoFocus
-                className="form-control"
-                placeholder="Email address"
-              />
-              <br />
-              <input
-                type="text"
-                name="password"
-                className="form-control"
-                placeholder="Password"
-              />
 
+            <input
+              type="email"
+              name="username"
+              autoFocus
+              className="form-control"
+              placeholder="Email address"
+              onChange={this.handleChange}
+              value={this.state.username}
+            />
+            <br />
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              placeholder="Password"
+              onChange={this.handleChange}
+              value={this.state.password}
+            />
+            <form onSubmit={this.handleSubmit}>
               <button type="submit" className="login-btn">
                 Login
               </button>
@@ -56,11 +79,13 @@ class Login extends Component {
             </button>
           </div>
         </div>
-        <div className="footer-1">
+        <div className="login-footer-1">
           Use of this Web site constitutes acceptance of the OpenHack.com{" "}
           <a href="/login">Terms and Conditions </a>
           and <a href="/login">Privacy Policy</a>. <br />
-          <div className="footer-2">©2019 OpenHack. All rights reserved.</div>
+          <div className="login-footer-2">
+            ©2019 OpenHack. All rights reserved.
+          </div>
         </div>
       </div>
     );
