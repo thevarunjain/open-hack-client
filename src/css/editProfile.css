@@ -63,18 +63,12 @@
   resize: none;
 }
 
-.profile-information select {
-  margin-top: 4%;
-  width: 80%;
-  height: 3vw;
-}
-
 .view_profile {
   border: 1px solid #d3d8de;
   float: right;
   width: 40%;
   height: 5vw;
-  margin-top: -30%;
+  margin-top: -77%;
   padding-left: 2%;
 }
 

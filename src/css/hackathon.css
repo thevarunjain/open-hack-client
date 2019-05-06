@@ -4,4 +4,47 @@
   background-repeat: no-repeat;
   background-size: cover;
   height: 100vh;
+  color: white;
+}
+
+.hackathon-details {
+  margin-left: 10%;
+  margin-top: 3%;
+  width: 40%;
+}
+
+.hackathon-team a {
+  color: white;
+}
+
+.hackathon-team a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.hackathon-team {
+  width: 30%;
+  margin-left: 60%;
+  margin-top: -13%;
+}
+
+.hackathon-judge {
+  width: 30%;
+  margin-left: 60%;
+  margin-top: 3%;
+}
+
+.hackathon-judge a {
+  color: white;
+}
+
+.hackathon-judge a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.hackathon-sponsor {
+  width: 30%;
+  margin-left: 60%;
+  margin-top: 3%;
 }
