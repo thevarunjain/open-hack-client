@@ -1,0 +1,43 @@
+.orgs {
+  background: url("../images/home.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+.org-information {
+  border: 1px solid #d3d8de;
+  width: 50%;
+  height: auto;
+  padding: 3% 0 3% 3%;
+  color: white;
+  margin-left: 15vw;
+}
+
+.org-information input {
+  height: 3vw;
+  margin-top: 4%;
+  width: 80%;
+}
+
+.org-information textarea {
+  margin-top: 4%;
+  width: 80%;
+  resize: none;
+}
+
+.org-body button {
+  margin: 2% 0 0 23%;
+  width: 12%;
+  height: 3vw;
+  border-radius: 10vw;
+}
+
+.org-body {
+  width: 70%;
+  height: auto;
+  margin-left: 15%;
+  margin-top: 2%;
+  padding: 2% 2% 2% 2%;
+}

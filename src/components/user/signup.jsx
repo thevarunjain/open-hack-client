@@ -33,8 +33,14 @@ class Signup extends Form {
   };
 
   render() {
+    let redirectVar = null;
+    var id = localStorage.getItem("id");
+    if (id) {
+      redirectVar = <Redirect to="/hackathons" />;
+    }
     return (
       <div className="home">
+        {redirectVar}
         <Navbar />
         <div className="login-one">Sign up for OpenHack</div>
         <br />

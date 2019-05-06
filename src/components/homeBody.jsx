@@ -1,10 +1,17 @@
 import React, { Component } from "react";
 import "../css/home.css";
+import { Redirect } from "react-router";
 
 class HomeBody extends Component {
   render() {
+    let redirectVar = null;
+    var id = localStorage.getItem("id");
+    if (id) {
+      redirectVar = <Redirect to="/hackathons" />;
+    }
     return (
       <div className="home-body">
+        {redirectVar}
         <div className="header-content">
           Allow students to innovate and collaborate <br />
           &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; through
