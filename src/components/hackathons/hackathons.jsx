@@ -3,8 +3,8 @@ import Navbar from "../common/navbar";
 import "../../css/hackathons.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import Hackathon from "./hackathon";
 import Form from "../common/form";
+import { Redirect } from "react-router";
 
 class Hackathons extends Form {
   constructor() {
@@ -32,8 +32,14 @@ class Hackathons extends Form {
   };
 
   render() {
+    let redirectVar = null;
+    var id = localStorage.getItem("id");
+    if (!id) {
+      redirectVar = <Redirect to="/home" />;
+    }
     return (
       <div className="home">
+        {redirectVar}
         <Navbar />
         <h1>Upcoming Hackathons</h1>
         <div className="heading">

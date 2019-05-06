@@ -3,6 +3,7 @@ import Navbar from "../common/navbar";
 import "../../css/login.css";
 import Form from "../common/form";
 import axios from "axios";
+import { Redirect } from "react-router";
 
 class Login extends Form {
   state = {
@@ -23,8 +24,14 @@ class Login extends Form {
       });
   };
   render() {
+    let redirectVar = null;
+    var id = localStorage.getItem("id");
+    if (id) {
+      redirectVar = <Redirect to="/hackathons" />;
+    }
     return (
       <div className="home">
+        {redirectVar}
         <Navbar />
         <div className="login-one">Log in to OpenHack</div>
         <br />
