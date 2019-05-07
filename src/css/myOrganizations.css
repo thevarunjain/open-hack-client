@@ -4,10 +4,10 @@
   background-repeat: no-repeat;
   background-size: cover;
   height: 100vh;
+  color: white;
 }
 
 .owner {
-  color: white;
   border: 1px solid white;
   margin-left: 20%;
   width: 50%;
@@ -16,7 +16,6 @@
 }
 
 .member {
-  color: white;
   border: 1px solid white;
   margin-left: 20%;
   width: 50%;
@@ -26,4 +25,13 @@
 
 .create-org {
   margin-left: 70%;
+}
+
+.member input {
+  width: 40%;
+}
+
+.btn-submit {
+  margin-left: 45%;
+  margin-top: -8%;
 }

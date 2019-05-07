@@ -11,21 +11,13 @@ class ViewProfile extends Component {
     super();
     this.state = {
       profiles: [],
-      ID: "",
-      IDFlag: false // to check if current user and ID from props are same
+      ID: ""
     };
   }
   componentDidMount() {
-    const ID_props = this.props.id;
     const ID = localStorage.getItem("id");
 
-    this.setState({ ID: ID_props });
-    if (ID === ID_props) {
-      this.setState({ IDFlag: true });
-    }
-    // axios.defaults.headers.common["Authorization"] = localStorage.getItem("id");
     axios.get("http://localhost:8080/users/" + ID).then(response => {
-      console.log(response);
       this.setState({
         profiles: response.data
       });
@@ -37,39 +29,44 @@ class ViewProfile extends Component {
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
-    console.log(this.state.profiles);
+
+    const profile = this.state.profiles;
+    console.log("res=", profile);
     return (
       <div className="home">
         {redirectVar}
         <Navbar />
-        {this.state.profiles.map(profile => (
-          <div className="view-profile-container">
-            <div className="view-photo">
-              <img
-                src={require("../../images/1.jpg")}
-                alt="The Traveler hasn't uploaded anything yet"
-              />
-            </div>
-            <div className="full-name">
-              <span>
-                Hi, I'm {profile.firstname} {profile.lastname}
-              </span>
-            </div>
-            <div className="about">
-              <h3>About me</h3>
-              {profile.about}
-              <br />
-              <br />
-              <div>Title: {profile.title} </div>
-              <div>Organization: {profile.organization}</div>
-              <div>
-                Address: {profile.street}, {profile.city}, {profile.state} -{" "}
-                {profile.zipcode}{" "}
-              </div>
+
+        <div className="view-profile-container">
+          <div className="view-photo">
+            <img
+              src={require("../../images/1.jpg")}
+              alt="The Traveler hasn't uploaded anything yet"
+            />
+          </div>
+          <div className="full-name">
+            <span>
+              Hi, I'm {profile.name ? profile.name.first : ""}{" "}
+              {profile.name ? profile.name.last : ""}
+            </span>
+          </div>
+          <div className="about">
+            <h3>About me</h3>
+            {profile.aboutMe}
+            <br />
+            <br />
+            <div>Title: {profile.businessTitle} </div>
+            <div>Organization: {profile.organization}</div>
+            <div>
+              Address: {profile.address ? profile.address.street : ""},{" "}
+              {profile.address ? profile.address.city : ""},{" "}
+              {profile.address ? profile.address.state : ""} -{" "}
+              {profile.address ? profile.address.zip : ""}{" "}
             </div>
           </div>
-        ))}
-        <If condition={this.state.IDFlag}>
+        </div>
+
+        <If condition={profile.admin}>
           <div className="edit_profile">
             <Link to="/profile-edit">Edit Profile</Link>
           </div>{" "}

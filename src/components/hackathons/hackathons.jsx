@@ -5,17 +5,26 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Form from "../common/form";
 import { Redirect } from "react-router";
+import { If } from "react-if";
+import { paginate } from "../utils/paginate";
+import Pagination from "../common/pagination";
 
 class Hackathons extends Form {
   constructor() {
     super();
     this.state = {
       hackathons: [],
-      data: {}
+      data: {},
+      isAdmin: false,
+      currentPage: 1,
+      pageSize: 8
     };
   }
 
   componentDidMount() {
+    const username = localStorage.getItem("username");
+    if (username.includes("@sjsu.edu")) this.setState({ isAdmin: true });
+
     axios.get("http://localhost:8080/hackathons").then(response => {
       this.setState({
         hackathons: response.data
@@ -23,22 +32,36 @@ class Hackathons extends Form {
     });
   }
 
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
+
   doSubmit = e => {
     axios
-      .get("http://localhost:8080/hackathons/" + this.state.data.hackathon_name)
+      .get(
+        "http://localhost:8080/hackathons/name/" +
+          this.state.data.hackathon_name
+      )
       .then(response => {
         this.setState({ hackathons: response.data });
       });
   };
 
   render() {
+    console.log(this.state.hackathons);
     let redirectVar = null;
     var id = localStorage.getItem("id");
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
+
+    const paginatedData = paginate(
+      this.state.hackathons ? this.state.hackathons : "",
+      this.state.currentPage,
+      this.state.pageSize
+    );
     return (
-      <div className="home">
+      <div className="hack-home">
         {redirectVar}
         <Navbar />
         <h1>Upcoming Hackathons</h1>
@@ -47,6 +70,11 @@ class Hackathons extends Form {
           diverse
           <br /> <span>student hackathons in the world.</span>
         </div>
+        <If condition={this.state.isAdmin}>
+          <a className="btn btn-primary create-hack" href="/hackathon/create">
+            Create Hackathon
+          </a>
+        </If>
         <div className="search">
           <input
             type="text"
@@ -64,7 +92,8 @@ class Hackathons extends Form {
             Search
           </button>
         </div>
-        {this.state.hackathons.map(hackathon => (
+
+        {paginatedData.map(hackathon => (
           <div className="hackathons-list">
             <div className="hackathon">
               <img
@@ -84,13 +113,23 @@ class Hackathons extends Form {
                     {hackathon.name}
                   </Link>
                 </h3>
-                {hackathon.start_date} - {hackathon.end_date}
+                {hackathon.startDate} - {hackathon.endDate}
                 <br />
                 {hackathon.status}
               </div>
             </div>
           </div>
         ))}
+        <div className="general_pagination">
+          <Pagination
+            itemsCount={
+              this.state.hackathons ? this.state.hackathons.length : ""
+            }
+            pageSize={this.state.pageSize}
+            onPageChange={this.handlePageChange}
+            currentPage={this.state.currentPage}
+          />
+        </div>
       </div>
     );
   }

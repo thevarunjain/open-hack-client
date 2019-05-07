@@ -1,3 +1,11 @@
+.hack-home {
+  background: url("../images/home.jpg");
+  background-position: center;
+  background-repeat: repeat;
+  background-size: cover;
+  height: 100%;
+}
+
 h1 {
   color: white;
   margin-left: 40%;
@@ -27,13 +35,15 @@ span {
 }
 
 .hackathons-list {
-  width: 80%;
-  margin-left: 10%;
+  width: 16%;
+
   height: auto;
+  float: left;
+  margin-left: 7%;
 }
 
 .hackathon {
-  width: 20%;
+  width: 100%;
 }
 
 .hackathons-list img {
@@ -55,4 +65,9 @@ span {
 .link:hover {
   color: white;
   text-decoration: none;
+}
+
+.general_pagination {
+  margin-top: 45%;
+  margin-left: 50%;
 }

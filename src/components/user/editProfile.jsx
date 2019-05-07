@@ -19,7 +19,6 @@ class EditProfile extends FormEventHandlers {
       city: "",
       state: "",
       zipcode: "",
-      organization: "",
       id: ""
     };
   }
@@ -29,16 +28,15 @@ class EditProfile extends FormEventHandlers {
 
     axios.get("http://localhost:8080/users/" + ID).then(response => {
       this.setState({
-        screenname: response.data.screenname,
-        firstname: response.data.firstname,
-        lastname: response.data.lastname,
-        title: response.data.title,
-        about: response.data.about,
-        street: response.data.street,
-        city: response.data.city,
-        state: response.data.state,
-        zipcode: response.data.zipcode,
-        organization: response.data.organization,
+        screenname: response.data.screenName,
+        firstname: response.data.name.first,
+        lastname: response.data.name.last,
+        title: response.data.businessTitle,
+        about: response.data.aboutMe,
+        street: response.data.address.street,
+        city: response.data.address.city,
+        state: response.data.address.state,
+        zipcode: response.data.address.zip,
         id: response.data.id
       });
     });
@@ -55,7 +53,6 @@ class EditProfile extends FormEventHandlers {
       city: this.state.city,
       state: this.state.state,
       zipcode: this.state.zipcode,
-      organization: this.state.organization,
       id: this.state.id
     };
 
@@ -73,6 +70,7 @@ class EditProfile extends FormEventHandlers {
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
+
     return (
       <div className="profile-home">
         {redirectVar}
@@ -90,7 +88,7 @@ class EditProfile extends FormEventHandlers {
           </div>
           <br />
           <h1 className="name">
-            <span>Screenname</span>
+            <span>{this.state.screenname}</span>
           </h1>
         </div>
         <div className="profile-body">
@@ -131,7 +129,8 @@ class EditProfile extends FormEventHandlers {
                 defaultValue={this.state.title}
                 onChange={this.handleChangeTitle}
               />
-              <textarea
+              <input
+                type="text"
                 name="about"
                 placeholder="About me"
                 className="form-control"
@@ -169,14 +168,6 @@ class EditProfile extends FormEventHandlers {
                 placeholder="Zipcode"
                 defaultValue={this.state.zipcode}
                 onChange={this.handleChangeZipcode}
-              />
-              <input
-                type="text"
-                name="organization"
-                className="form-control"
-                placeholder="Organization"
-                defaultValue={this.state.organization}
-                onChange={this.handleChangeOrganization}
               />
             </div>
             <div className="view_profile">

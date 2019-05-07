@@ -15,8 +15,24 @@ class CreateOrganization extends Form {
 
   doSubmit = e => {
     var ownerId = localStorage.getItem("id");
+    console.log("data=", this.state.data);
+
+    var address = {
+      street: this.state.data.street,
+      city: this.state.data.city,
+      state: this.state.data.state,
+      zip: this.state.data.zipcode
+    };
+
+    var org = {
+      name: this.state.data.name,
+      description: this.state.data.description,
+      address: address
+    };
+
+    console.log(org);
     axios
-      .post("http://localhost:8080/organizations/" + ownerId, this.state.data)
+      .post("http://localhost:8080/organizations?ownerId=" + ownerId, org)
       .then(response => {
         window.alert("Organization created successfully.");
       });
@@ -35,6 +51,12 @@ class CreateOrganization extends Form {
         <hr />
 
         <div className="org-body">
+          <a className="btn btn-primary create-org" href="/organizations">
+            My Organizations
+          </a>
+          <br />
+          <br />
+          <br />
           <form>
             <div className="org-information">
               <h3>Organization Information</h3>

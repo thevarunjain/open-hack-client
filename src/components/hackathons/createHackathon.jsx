@@ -15,6 +15,7 @@ class CreateHackathon extends Form {
 
   doSubmit = e => {
     var id = localStorage.getItem("id");
+    console.log(this.state.data);
     axios
       .post("http://localhost:8080/hackathons", this.state.data + id)
       .then(response => {
