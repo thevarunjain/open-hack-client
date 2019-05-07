@@ -11,10 +11,10 @@ class EditProfile extends FormEventHandlers {
     super();
     this.state = {
       screenname: "",
-      firstname: "",
-      lastname: "",
-      title: "",
-      about: "",
+      first: "",
+      last: "",
+      businessTitle: "",
+      aboutMe: "",
       street: "",
       city: "",
       state: "",
@@ -29,10 +29,10 @@ class EditProfile extends FormEventHandlers {
     axios.get("http://localhost:8080/users/" + ID).then(response => {
       this.setState({
         screenname: response.data.screenName,
-        firstname: response.data.name.first,
-        lastname: response.data.name.last,
-        title: response.data.businessTitle,
-        about: response.data.aboutMe,
+        first: response.data.name.first,
+        last: response.data.name.last,
+        businessTitle: response.data.businessTitle,
+        aboutMe: response.data.aboutMe,
         street: response.data.address.street,
         city: response.data.address.city,
         state: response.data.address.state,
@@ -43,24 +43,29 @@ class EditProfile extends FormEventHandlers {
   }
 
   doSubmit = e => {
+
     var profile = {
-      screenname: this.state.screenname,
-      firstname: this.state.firstname,
-      lastname: this.state.lastname,
-      title: this.state.title,
-      about: this.state.about,
-      street: this.state.street,
-      city: this.state.city,
-      state: this.state.state,
-      zipcode: this.state.zipcode,
-      id: this.state.id
+      screenName: this.state.screenname,
+      name :{
+        first: this.state.first,
+        last: this.state.last,
+      },
+      businessTitle: this.state.businessTitle,
+      aboutMe: this.state.aboutMe,
+      address : {
+        street: this.state.street,
+        city: this.state.city,
+        state: this.state.state,
+        zip: this.state.zipcode,
+      }
+      // id: this.state.id
     };
 
     console.log(profile);
 
     const ID = localStorage.getItem("id");
 
-    axios.patch("http://localhost:3001/users/" + ID, profile).then(response => {
+    axios.put("http://localhost:8080/users/" + ID, profile).then(response => {
       window.alert("Profile updated successfully.");
     });
   };
@@ -80,7 +85,7 @@ class EditProfile extends FormEventHandlers {
           <div className="profile-photo">
             <input type="file" className="upload_profile_photo" name="files" />
             <img
-              src={require("../../images/1.jpg")}
+              src={require("../../images/man.svg")}
               width="300"
               height="200"
               alt="User has not uploaded anything yet"
@@ -107,26 +112,26 @@ class EditProfile extends FormEventHandlers {
               />
               <input
                 type="text"
-                name="firstname"
+                name="first"
                 className="form-control"
                 placeholder="First Name"
-                defaultValue={this.state.firstname}
+                defaultValue={this.state.first}
                 onChange={this.handleChangeFirstName}
               />
               <input
                 type="text"
-                name="lastname"
+                name="last"
                 className="form-control"
                 placeholder="Last Name"
-                defaultValue={this.state.lastname}
+                defaultValue={this.state.last}
                 onChange={this.handleChangeLastName}
               />
               <input
                 type="text"
-                name="title"
+                name="businessTitle"
                 className="form-control"
                 placeholder="Business Title"
-                defaultValue={this.state.title}
+                defaultValue={this.state.businessTitle}
                 onChange={this.handleChangeTitle}
               />
               <input
@@ -134,7 +139,7 @@ class EditProfile extends FormEventHandlers {
                 name="about"
                 placeholder="About me"
                 className="form-control"
-                defaultValue={this.state.about}
+                defaultValue={this.state.aboutMe}
                 onChange={this.handleChangeAbout}
               />
               <input

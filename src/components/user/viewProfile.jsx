@@ -11,15 +11,19 @@ class ViewProfile extends Component {
     super();
     this.state = {
       profiles: [],
-      ID: ""
+      ID: "",
+      Organization : ""
     };
   }
   componentDidMount() {
     const ID = localStorage.getItem("id");
 
     axios.get("http://localhost:8080/users/" + ID).then(response => {
-      this.setState({
-        profiles: response.data
+      console.log(response.data);
+
+    this.setState({
+        profiles: response.data,
+        Organization : response.data.memberOf.name
       });
     });
   }
@@ -40,7 +44,7 @@ class ViewProfile extends Component {
         <div className="view-profile-container">
           <div className="view-photo">
             <img
-              src={require("../../images/1.jpg")}
+              src={require("../../images/man.svg")}
               alt="The Traveler hasn't uploaded anything yet"
             />
           </div>
@@ -56,7 +60,7 @@ class ViewProfile extends Component {
             <br />
             <br />
             <div>Title: {profile.businessTitle} </div>
-            <div>Organization: {profile.organization}</div>
+            <div>Organization: {this.state.Organization}</div>
             <div>
               Address: {profile.address ? profile.address.street : ""},{" "}
               {profile.address ? profile.address.city : ""},{" "}
