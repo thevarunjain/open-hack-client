@@ -5,3 +5,7 @@ label {
 input[type="date"] {
   margin-top: -2%;
 }
+
+.create-hack {
+  margin-left: 80%;
+}
