@@ -12,6 +12,7 @@ class Navbar extends Component {
   };
   render() {
     var id = localStorage.getItem("id");
+    var username = localStorage.getItem("username");
 
     return (
       <div>
@@ -31,20 +32,29 @@ class Navbar extends Component {
             <a className="navbar-home" href="/home">
               OpenHack
             </a>
-
-            <div
-              className="dropdown-menu dropdown-content"
-              aria-labelledby="navbarDropdown"
-            >
-              <a className="dropdown-item" href="/profile">
-                Profile
+            <div className="nav-item dropdown dropdown-navbar">
+              <a
+                class="nav-link dropdown-toggle drop-user"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {username}
               </a>
-              <a className="dropdown-item" href="/organizations">
-                My Organizations
-              </a>
-              <a className="dropdown-item" onClick={this.handleLogout}>
-                Logout
-              </a>
+              <div class="dropdown-menu item" aria-labelledby="navbarDropdown">
+                <a className="dropdown-item" href="/profile">
+                  Profile
+                </a>
+                <a className="dropdown-item" href="/organizations">
+                  My Organizations
+                </a>
+                <a className="dropdown-item" onClick={this.handleLogout}>
+                  Logout
+                </a>
+              </div>
             </div>
           </nav>
         </If>
