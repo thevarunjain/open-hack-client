@@ -8,9 +8,10 @@ import {signUpWithGoogle} from "../Firebase";
 import {loginWithCredentials} from "../Firebase";
 import {isUserVerified} from "../Firebase";
 import {getFirebaseUser} from "../Firebase";
+import { Redirect } from "react-router";
+
 var firebase = require('firebase/app');
 require("firebase/auth");
-import { Redirect } from "react-router";
 
 class Login extends Form {
   state = {
@@ -35,6 +36,13 @@ class Login extends Form {
   };
 
   render() {
+    var rawDate = new Date;
+    var rawMonth = rawDate.getMonth()+1 > 9 ? rawDate.getMonth()+1 : "0"+rawDate.getMonth+1;
+    var rawDate = rawDate.getDate() > 9 ? rawDate.getDate() : "0"+rawDate.getDate();  
+    var localDate = rawDate.getFullYear()+"-"+rawMonth+"-"+rawDate;
+    
+    console.log(rawDate);
+    console.log(localDate);
     let redirectVar = null;
     var id = localStorage.getItem("id");
     if (id) {
