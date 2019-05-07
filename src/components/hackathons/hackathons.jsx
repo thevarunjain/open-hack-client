@@ -6,6 +6,8 @@ import axios from "axios";
 import Form from "../common/form";
 import { Redirect } from "react-router";
 import { If } from "react-if";
+import { paginate } from "../utils/paginate";
+import Pagination from "../common/pagination";
 
 class Hackathons extends Form {
   constructor() {
@@ -13,7 +15,9 @@ class Hackathons extends Form {
     this.state = {
       hackathons: [],
       data: {},
-      isAdmin: false
+      isAdmin: false,
+      currentPage: 1,
+      pageSize: 8
     };
   }
 
@@ -27,6 +31,10 @@ class Hackathons extends Form {
       });
     });
   }
+
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
 
   doSubmit = e => {
     axios
@@ -46,6 +54,12 @@ class Hackathons extends Form {
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
+
+    const paginatedData = paginate(
+      this.state.hackathons ? this.state.hackathons : "",
+      this.state.currentPage,
+      this.state.pageSize
+    );
     return (
       <div className="hack-home">
         {redirectVar}
@@ -79,7 +93,7 @@ class Hackathons extends Form {
           </button>
         </div>
 
-        {this.state.hackathons.map(hackathon => (
+        {paginatedData.map(hackathon => (
           <div className="hackathons-list">
             <div className="hackathon">
               <img
@@ -106,6 +120,16 @@ class Hackathons extends Form {
             </div>
           </div>
         ))}
+        <div className="general_pagination">
+          <Pagination
+            itemsCount={
+              this.state.hackathons ? this.state.hackathons.length : ""
+            }
+            pageSize={this.state.pageSize}
+            onPageChange={this.handlePageChange}
+            currentPage={this.state.currentPage}
+          />
+        </div>
       </div>
     );
   }
