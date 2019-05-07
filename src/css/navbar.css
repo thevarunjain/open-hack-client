@@ -13,3 +13,16 @@
   margin-left: 80%;
   font-size: 150%;
 }
+
+.dropdown-navbar {
+  margin-left: 70%;
+}
+
+.drop-user {
+  color: white;
+}
+
+.item a:hover {
+  color: black;
+  background-color: rgb(65, 191, 250);
+}

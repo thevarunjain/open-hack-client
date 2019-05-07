@@ -9,22 +9,24 @@ import {loginWithCredentials} from "../Firebase";
 import {isUserVerified} from "../Firebase";
 import {getFirebaseUser} from "../Firebase";
 import { Redirect } from "react-router";
-
 var firebase = require('firebase/app');
 require("firebase/auth");
 
 class Login extends Form {
   state = {
     data: { username: "", password: "" },
-    user : ""
+    user: ""
   };
 
   doSubmit = () => {
-
-    if(isUserVerified()){
-      var loggedInUser = loginWithCredentials(this.state.data.username, this.state.data.password);
+    if (isUserVerified()) {
+      var loggedInUser = loginWithCredentials(
+        this.state.data.username,
+        this.state.data.password
+      );
     }
-    axios.post("http://localhost:3001/login", this.state.data)
+    axios
+      .post("http://localhost:8080/login", this.state.data)
       .then(response => {
         console.log("Status Code : ", response.data);
         if (response.status === 200) {
@@ -49,7 +51,6 @@ class Login extends Form {
       redirectVar = <Redirect to="/hackathons" />;
     }
     return (
-      
       <div className="home">
         {redirectVar}
         <Navbar />
@@ -82,7 +83,7 @@ class Login extends Form {
               value={this.state.password}
             />
             <form onSubmit={this.handleSubmit}>
-              <button type="submit" className="login-btn" >
+              <button type="submit" className="login-btn">
                 Login
               </button>
               <input type="checkbox" />

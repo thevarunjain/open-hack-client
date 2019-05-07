@@ -16,7 +16,7 @@ class Hackathons extends Form {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:3001/hackathons").then(response => {
+    axios.get("http://localhost:8080/hackathons").then(response => {
       this.setState({
         hackathons: response.data
       });
@@ -25,7 +25,7 @@ class Hackathons extends Form {
 
   doSubmit = e => {
     axios
-      .get("http://localhost:3001/hackathons/" + this.state.data.hackathon_name)
+      .get("http://localhost:8080/hackathons/" + this.state.data.hackathon_name)
       .then(response => {
         this.setState({ hackathons: response.data });
       });

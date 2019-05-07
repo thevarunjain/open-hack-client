@@ -17,14 +17,14 @@ class Hackathon extends Component {
   componentDidMount() {
     const ID = this.props.id;
 
-    axios.get("http://localhost:3001/hackathons/" + ID).then(response => {
+    axios.get("http://localhost:8080/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
       });
     });
 
     axios
-      .get("http://localhost:3001/hackathons/" + ID + "/teams")
+      .get("http://localhost:8080/hackathons/" + ID + "/teams")
       .then(response => {
         this.setState({
           teams: response.data

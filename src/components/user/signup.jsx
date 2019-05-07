@@ -4,9 +4,9 @@ import "../../css/signup.css";
 import Form from "../common/form";
 import axios from "axios";
 import { Redirect } from "react-router";
-import {signUpWithFacebook} from "../Firebase";
-import {signUpWithGoogle} from "../Firebase";
-import {signUpWithCredentials} from "../Firebase";
+import { signUpWithFacebook } from "../Firebase";
+import { signUpWithGoogle } from "../Firebase";
+import { signUpWithCredentials } from "../Firebase";
 
 class Signup extends Form {
   constructor(props) {
@@ -23,20 +23,27 @@ class Signup extends Form {
   }
 
   doSubmit = () => {
+    // localStorage.setItem("username", "shishir.kulkarni@sjsu.edu");
+    // localStorage.setItem("id", "1");
+    var signedUpUser = signUpWithCredentials(
+      this.state.data.username,
+      this.state.data.password
+    );
 
-   var signedUpUser = signUpWithCredentials(this.state.data.username, this.state.data.password);
-   this.props.history.push("/confirm");
+    console.log("from signup page ", signedUpUser);
+    axios
+      .post("http://localhost:8080/users", this.state.data)
+      .then(response => {
+        console.log("res=" + response);
+        if (response.status === 200) {
+          window.alert("Sign up successful.");
+          this.props.history.push("/confirm");
+        } else {
+          console.log("Error in sign up.");
+        }
+      });
 
-    console.log("from isgnup page ", signedUpUser);
-    // axios.post("http://localhost:3001/users", this.state.data)
-    //   .then(response => {
-    //     if (response.status === 200) {
-    //       window.alert("Sign up successful.");
-    //       this.props.history.push("/confirm");
-    //     } else {
-    //       console.log("Error in sign up.");
-    //     }
-    //   });
+    this.props.history.push("/confirm");
   };
 
   render() {
@@ -106,7 +113,7 @@ class Signup extends Form {
             />
 
             <form onSubmit={this.handleSubmit}>
-              <button type="submit" className="login-btn" >
+              <button type="submit" className="login-btn">
                 Sign up
               </button>
             </form>
@@ -123,12 +130,11 @@ class Signup extends Form {
             <button
               type="submit"
               className="btn btn-block btn-social btn-google"
-              onClick= {signUpWithGoogle}
+              onClick={signUpWithGoogle}
             >
               <span className="fa fa-google" />
               <span className="google_text">Sign up with Google</span>
             </button>
-
           </div>
         </div>
         <div className="footer-1">

@@ -15,7 +15,7 @@ class MyOrganizations extends Component {
 
   componentDidMount() {
     var id = localStorage.getItem("id");
-    axios.get("http://localhost:3001/users/" + id).then(response => {
+    axios.get("http://localhost:8080/users/" + id).then(response => {
       this.setState({
         memberOf: response.data.memberOf,
         ownerOf: response.data.ownerOf

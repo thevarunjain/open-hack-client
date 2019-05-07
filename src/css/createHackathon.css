@@ -1,0 +1,7 @@
+label {
+  margin-top: 2%;
+}
+
+input[type="date"] {
+  margin-top: -2%;
+}
