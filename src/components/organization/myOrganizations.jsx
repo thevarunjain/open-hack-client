@@ -30,23 +30,29 @@ class MyOrganizations extends Component {
     }
     return (
       <div className="my-orgs">
-        {/* {redirectVar} */}
+        {redirectVar}
         <Navbar />
         <br />
-        {this.state.ownerOf.map(data => (
-          <div className="owner">
-            <h3>{data.name}</h3>
-            address
-          </div>
-        ))}
+        <a className="btn btn-primary create-org" href="/organization/create">
+          Create Organization
+        </a>
         <br />
         <br />
-        {this.state.memberOf.map(data => (
-          <div className="member">
-            <h3>{data.name}</h3>
-            address
-          </div>
-        ))}
+        <br />
+        {/* {this.state.ownerOf.map(data => ( */}
+        <div className="owner">
+          {/* <h3>{data.name}</h3> */}
+          address
+        </div>
+        {/* ))} */}
+        <br />
+        <br />
+        {/* {this.state.memberOf.map(data => ( */}
+        <div className="member">
+          {/* <h3>{data.name}</h3> */}
+          address
+        </div>
+        {/* ))} */}
       </div>
     );
   }
