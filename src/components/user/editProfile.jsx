@@ -27,7 +27,7 @@ class EditProfile extends FormEventHandlers {
   componentDidMount() {
     const ID = localStorage.getItem("id");
 
-    axios.get("http://localhost:3001/users/" + ID).then(response => {
+    axios.get("http://localhost:8080/users/" + ID).then(response => {
       this.setState({
         screenname: response.data.screenname,
         firstname: response.data.firstname,

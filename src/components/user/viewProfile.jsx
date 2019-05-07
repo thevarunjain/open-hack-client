@@ -23,8 +23,9 @@ class ViewProfile extends Component {
     if (ID === ID_props) {
       this.setState({ IDFlag: true });
     }
-
-    axios.get("http://localhost:3001/users/" + ID_props).then(response => {
+    // axios.defaults.headers.common["Authorization"] = localStorage.getItem("id");
+    axios.get("http://localhost:8080/users/" + ID).then(response => {
+      console.log(response);
       this.setState({
         profiles: response.data
       });
@@ -36,6 +37,7 @@ class ViewProfile extends Component {
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
+    console.log(this.state.profiles);
     return (
       <div className="home">
         {redirectVar}

@@ -12,6 +12,7 @@ import EditProfile from "./user/editProfile";
 import Firebase from "./Firebase";
 import CreateOrganization from "./organization/createOrganization";
 import MyOrganizations from "./organization/myOrganizations";
+import CreateHackathon from "./hackathons/createHackathon";
 
 class Main extends Component {
   render() {
@@ -25,6 +26,7 @@ class Main extends Component {
         <Route path="/hackathon" exact component={Hackathon} />
         <Route path="/profile" exact component={ViewProfile} />
         <Route path="/profile-edit" exact component={EditProfile} />
+        <Route path="/hackathon/create" exact component={CreateHackathon} />
         <Route
           path="/organization/create"
           exact

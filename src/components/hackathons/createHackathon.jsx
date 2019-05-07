@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import "../../css/createOrganization.css";
+import "../../css/createHackathon.css";
 import Navbar from "../common/navbar";
 import Form from "../common/form";
 import { Redirect } from "react-router";
 import axios from "axios";
 
-class CreateOrganization extends Form {
+class CreateHackathon extends Form {
   constructor() {
     super();
     this.state = {
@@ -16,9 +16,9 @@ class CreateOrganization extends Form {
   doSubmit = e => {
     var id = localStorage.getItem("id");
     axios
-      .post("http://localhost:8080/orgs", this.state.data + id)
+      .post("http://localhost:8080/hackathons", this.state.data + id)
       .then(response => {
-        window.alert("Organization created successfully.");
+        window.alert("Hackathon created successfully.");
       });
   };
 
@@ -29,7 +29,7 @@ class CreateOrganization extends Form {
       redirectVar = <Redirect to="/home" />;
     }
     return (
-      <div className="profile-home orgs">
+      <div className="home">
         {redirectVar}
         <Navbar />
         <hr />
@@ -37,7 +37,7 @@ class CreateOrganization extends Form {
         <div className="org-body">
           <form>
             <div className="org-information">
-              <h3>Organization Information</h3>
+              <h3>Hackathon Information</h3>
               <br />
               <input
                 type="text"
@@ -47,7 +47,21 @@ class CreateOrganization extends Form {
                 placeholder="Name"
                 onChange={this.handleChange}
               />
+              <label>Start Date:</label>
+              <input
+                type="date"
+                name="start_date"
+                className="form-control"
+                onChange={this.handleChange}
+              />
 
+              <label>End Date:</label>
+              <input
+                type="date"
+                name="end_date"
+                className="form-control"
+                onChange={this.handleChange}
+              />
               <textarea
                 name="description"
                 placeholder="Description"
@@ -56,30 +70,23 @@ class CreateOrganization extends Form {
               />
               <input
                 type="text"
-                name="street"
+                name="fee"
                 className="form-control"
-                placeholder="Street"
+                placeholder="Fee"
                 onChange={this.handleChange}
               />
               <input
                 type="text"
-                name="city"
+                name="min_size"
                 className="form-control"
-                placeholder="City"
+                placeholder="Minimum Number of People"
                 onChange={this.handleChange}
               />
               <input
                 type="text"
-                name="state"
+                name="max_size"
                 className="form-control"
-                placeholder="State"
-                onChange={this.handleChange}
-              />
-              <input
-                type="text"
-                name="zipcode"
-                className="form-control"
-                placeholder="Zipcode"
+                placeholder="Maximum Number of People"
                 onChange={this.handleChange}
               />
             </div>
@@ -97,4 +104,4 @@ class CreateOrganization extends Form {
   }
 }
 
-export default CreateOrganization;
+export default CreateHackathon;
