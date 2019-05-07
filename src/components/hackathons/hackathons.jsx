@@ -97,7 +97,7 @@ class Hackathons extends Form {
           <div className="hackathons-list">
             <div className="hackathon">
               <img
-                src={require("../../images/1.jpg")}
+                src={require("../../images/9.jpg")}
                 width="250"
                 height="250"
               />

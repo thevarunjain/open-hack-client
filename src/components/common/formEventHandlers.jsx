@@ -18,27 +18,27 @@ class FormEventHandlers extends Component {
     //   errors[e.currentTarget.name] = errorMessage;
     // } else delete errors[e.currentTarget.name];
 
-    let data = this.state.firstname;
+    let data = this.state.first;
     data = e.target.value;
-    this.setState({ firstname: data });
+    this.setState({ first: data });
   };
 
   handleChangeLastName = e => {
-    let data = this.state.lastname;
+    let data = this.state.last;
     data = e.target.value;
-    this.setState({ lastname: data });
+    this.setState({ last: data });
   };
 
   handleChangeTitle = e => {
-    let data = this.state.title;
+    let data = this.state.businessTitle;
     data = e.target.value;
-    this.setState({ title: data });
+    this.setState({ businessTitle: data });
   };
 
   handleChangeAbout = e => {
-    let data = this.state.about;
+    let data = this.state.aboutMe;
     data = e.target.value;
-    this.setState({ about: data });
+    this.setState({ aboutMe: data });
   };
 
   handleChangeStreet = e => {

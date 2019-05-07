@@ -11,6 +11,8 @@ class Navbar extends Component {
     return <Redirect to="/home" />;
   };
   render() {
+    localStorage.setItem("id","1");
+    localStorage.setItem("username","varun18");
     var id = localStorage.getItem("id");
     var username = localStorage.getItem("username");
 
