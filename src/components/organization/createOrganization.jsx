@@ -14,9 +14,9 @@ class CreateOrganization extends Form {
   }
 
   doSubmit = e => {
-    var id = localStorage.getItem("id");
+    var ownerId = localStorage.getItem("id");
     axios
-      .post("http://localhost:8080/orgs", this.state.data + id)
+      .post("http://localhost:8080/organizations/" + ownerId, this.state.data)
       .then(response => {
         window.alert("Organization created successfully.");
       });
