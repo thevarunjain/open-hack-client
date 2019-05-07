@@ -35,6 +35,12 @@ class CreateOrganization extends Form {
         <hr />
 
         <div className="org-body">
+          <a className="btn btn-primary create-org" href="/organizations">
+            My Organizations
+          </a>
+          <br />
+          <br />
+          <br />
           <form>
             <div className="org-information">
               <h3>Organization Information</h3>
