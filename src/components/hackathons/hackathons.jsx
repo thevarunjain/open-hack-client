@@ -91,7 +91,7 @@ class Hackathons extends Form {
           diverse
           <br /> <span>student hackathons in the world.</span>
         </div>
-        <If condition={this.state.isAdmin == true}>
+        <If condition={getJWTAdminStatus()}>
           <a className="btn btn-primary create-hack" href="/hackathon/create">
             Create Hackathon
           </a>
