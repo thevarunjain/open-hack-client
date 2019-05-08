@@ -3,13 +3,13 @@ import Navbar from "../common/navbar";
 import "../../css/login.css";
 import Form from "../common/form";
 import axios from "axios";
-import {signUpWithFacebook} from "../Firebase";
-import {signUpWithGoogle} from "../Firebase";
-import {loginWithCredentials} from "../Firebase";
-import {isUserVerified} from "../Firebase";
-import {getFirebaseUser} from "../Firebase";
+import { signUpWithFacebook } from "../Firebase";
+import { signUpWithGoogle } from "../Firebase";
+import { loginWithCredentials } from "../Firebase";
+import { isUserVerified } from "../Firebase";
+import { getFirebaseUser } from "../Firebase";
 import { Redirect } from "react-router";
-var firebase = require('firebase/app');
+var firebase = require("firebase/app");
 require("firebase/auth");
 
 class Login extends Form {
@@ -25,26 +25,21 @@ class Login extends Form {
         this.state.data.password
       );
     }
-    axios
-      .post("http://localhost:8080/login", this.state.data)
-      .then(response => {
-        console.log("Status Code : ", response.data);
-        if (response.status === 200) {
-          console.log("Login successful.");
-          localStorage.setItem("username", this.state.data.username);
-          localStorage.setItem("id", this.state.data.id);
-        }
-      });
+    var data = {
+      email: this.state.data.username,
+      password: this.state.data.password
+    };
+    axios.post("http://localhost:8080/auth/signin", data).then(response => {
+      console.log("Status Code : ", response.data);
+      if (response.status === 200) {
+        console.log("Login successful.");
+        localStorage.setItem("token", response.data.accessToken);
+        this.props.history.push("/home");
+      }
+    });
   };
 
   render() {
-    var rawDate = new Date;
-    var rawMonth = rawDate.getMonth()+1 > 9 ? rawDate.getMonth()+1 : "0"+rawDate.getMonth+1;
-    var rawDate = rawDate.getDate() > 9 ? rawDate.getDate() : "0"+rawDate.getDate();  
-    var localDate = rawDate.getFullYear()+"-"+rawMonth+"-"+rawDate;
-    
-    console.log(rawDate);
-    console.log(localDate);
     let redirectVar = null;
     var id = localStorage.getItem("id");
     if (id) {

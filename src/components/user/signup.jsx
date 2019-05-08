@@ -28,20 +28,28 @@ class Signup extends Form {
       this.state.data.password
     );
 
-    console.log("from signup page ", signedUpUser);
-    axios
-      .post("http://localhost:8080/users", this.state.data)
-      .then(response => {
-        console.log("res=" + response);
-        if (response.status === 200) {
-          window.alert("Sign up successful.");
-          this.props.history.push("/confirm");
-        } else {
-          console.log("Error in sign up.");
-        }
-      });
+    var name = {
+      first: this.state.data.firstname,
+      last: this.state.data.lastname
+    };
 
-    this.props.history.push("/confirm");
+    var data = {
+      name: name,
+      email: this.state.data.username,
+      screenName: this.state.data.screenname,
+      password: this.state.data.password
+    };
+
+    console.log("from signup page ", signedUpUser);
+    axios.post("http://localhost:8080/users", data).then(response => {
+      console.log("res=" + response);
+      if (response.status === 201) {
+        window.alert("Sign up successful.");
+        this.props.history.push("/confirm");
+      } else {
+        console.log("Error in sign up.");
+      }
+    });
   };
 
   render() {

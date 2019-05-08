@@ -4,95 +4,111 @@ import Navbar from "../common/navbar";
 import Form from "../common/form";
 import { Redirect } from "react-router";
 import axios from "axios";
-var moment = require('moment');
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus
+} from "../common/auth";
+var moment = require("moment");
 
 class CreateHackathon extends Form {
   constructor() {
     super();
     this.state = {
       data: {},
-      currentDate : "",
-      localStartDate : "",
-      localEndDate : "",
-      dataSend : ""
+      currentDate: "",
+      localStartDate: "",
+      localEndDate: "",
+      dataSend: ""
     };
   }
 
+  doSubmit = async e => {
+    var startDateLocale = this.state.data.start_date;
+    var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
 
-  doSubmit = async e  => {
-        var startDateLocale = this.state.data.start_date;
-        var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
+    var endDateLocale = this.state.data.end_date;
+    var endDate = moment(endDateLocale, "YYYY-MM-DD").toDate();
 
-        var endDateLocale = this.state.data.end_date;
-        var endDate = moment(endDateLocale, "YYYY-MM-DD").toDate();
+    var data = {
+      name: this.state.data.name,
+      description: this.state.data.description,
+      startDate: startDate,
+      endDate: endDate,
+      fee: this.state.data.fee,
+      minSize: this.state.data.min_size,
+      maxSize: this.state.data.max_size,
+      judges: [],
+      sponsors: [],
+      discount: []
+    };
 
-        
-      var data = {
-        "name" : this.state.data.name,
-        "description" : this.state.data.description,
-        "startDate" : startDate,
-        "endDate" : endDate,
-        "fee" : this.state.data.fee,
-        "minSize" : this.state.data.min_size,
-        "maxSize" : this.state.data.max_size,
-        judges :  [],
-        sponsors : [] ,
-        discount : []
+    var judgesName = this.state.data.judges
+                          ? this.state.data.judges.split(";").map(e => e.trim())
+                          : [];
+
+    judgesName.map(async (name, i) => {
+      if (name.replace(/\s/gi, "").length != 0) {
+        console.log(name);
+        var res = await axios.get("http://localhost:8080/users?name=" + name);
+        var jid = Number.parseInt(res.data[0].id, 10) - 1;
+        data["judges"].push(jid + 1);
       }
-      var judgesName =  this.state.data.judges ? this.state.data.judges.split(";").map(e=> e.trim()) : [];
-      judgesName.map( async (name,i)=>{
-          if(name.replace(/\s/ig, "").length!=0){
-              console.log(name);
-            var res = await axios.get("http://localhost:8080/users?name="+name)
-                var jid = Number.parseInt(res.data[0].id,10)-1;
-              data["judges"].push(jid+1);
-          }
-          })
-    
-      var discountsArray =  this.state.data.discount ? this.state.data.discount.split(";") : [];
+    });
 
-      data["discount"] = discountsArray.map(e=> Number.parseInt(e.trim(),10));
-      
-          
-      var sponsorsName =  this.state.data.sponsors ? this.state.data.sponsors.split(";").map(e=> e.trim()) : [];
+    var discountsArray = this.state.data.discount
+                              ? this.state.data.discount.split(";")
+                              : [];
 
-      sponsorsName.map( async (name,i)=>{
-        if(name.replace(/\s/ig, "").length!=0){
-            console.log(name);
-            var res = await axios.get("http://localhost:8080/organizations?name="+name);
-            var sid  = Number.parseInt(res.data[0].id,10)-1;
-            data["sponsors"][i] = sid+1;
-        }
-      });
+    data["discount"] = discountsArray.map(e => Number.parseInt(e.trim(), 10));
 
-      console.log(this.state);
-      console.log(data);      
-      
+    var sponsorsName = this.state.data.sponsors
+      ? this.state.data.sponsors.split(";").map(e => e.trim())
+      : [];
 
-      this.setState({
-        dataSend : data
-      }, function(){
-        console.log(this.state.dataSend)
-      }  )
-    
-      window.alert("Are you sure ?");
+    sponsorsName.map(async (name, i) => {
+      if (name.replace(/\s/gi, "").length != 0) {
+        console.log(name);
+        var res = await axios.get(
+          "http://localhost:8080/organizations?name=" + name
+        );
+        var sid = Number.parseInt(res.data[0].id, 10) - 1;
+        data["sponsors"][i] = sid + 1;
+      }
+    });
+
+    console.log(data);
+
+    this.setState(
+      {
+        dataSend: data
+      },
+      function() {
+        console.log(this.state.dataSend);
+      }
+    );
   };
 
+  async submit(e) {
+    e.preventDefault();
+    var id = getJWTID();
 
-     async submit(e){
-      e.preventDefault();
-      var id = localStorage.getItem("id");
-      
-       await axios.post("http://localhost:8080/hackathons?ownerId="+id , this.state.dataSend)
-              .then(response => {
-                console.log(response.data);
-                window.alert("Hackathon created successfully.");
-        });
-      }
+    await axios
+      .post(
+        "http://localhost:8080/hackathons?ownerId=" + id,
+        this.state.dataSend
+      )
+      .then(response => {
+        console.log(response.data);
+        window.alert("Hackathon created successfully.");
+      });
+  }
 
   render() {
     let redirectVar = null;
-    var id = localStorage.getItem("id");
+    var id = getJWTID();
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
