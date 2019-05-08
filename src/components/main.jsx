@@ -18,6 +18,7 @@ import MyHackerHackathon from "./hackathons/myHackerHackathon";
 import MyAdminHackathon from "./hackathons/myAdminHackathon";
 import Hackathon from "./hackathons/hackathon";
 import CreateTeam from "./teams/createTeam";
+import Payment from "./teams/Payment";
 
 class Main extends Component {
   render() {
@@ -62,7 +63,9 @@ class Main extends Component {
         <Route path="/not-found" exact component={NotFound} />
         <Route path="/" exact component={Home} />
         <Route path="/firebase" exact component={Firebase} />
+        <Route path="/payments/:hid/:tid" exact component={Payment} />
         <Redirect to="/not-found" />
+
       </Switch>
     );
   }

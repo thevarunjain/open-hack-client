@@ -45,9 +45,11 @@ class CreateHackathon extends Form {
       sponsors: [],
       discount: []
     };
+
     var judgesName = this.state.data.judges
-      ? this.state.data.judges.split(";").map(e => e.trim())
-      : [];
+                          ? this.state.data.judges.split(";").map(e => e.trim())
+                          : [];
+
     judgesName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
         // console.log(name);
@@ -59,8 +61,8 @@ class CreateHackathon extends Form {
     });
 
     var discountsArray = this.state.data.discount
-      ? this.state.data.discount.split(";")
-      : [];
+                              ? this.state.data.discount.split(";")
+                              : [];
 
     data["discount"] = discountsArray.map(e => Number.parseInt(e.trim(), 10));
 
@@ -81,8 +83,7 @@ class CreateHackathon extends Form {
       }
     });
 
-    // console.log(this.state);
-    // console.log(data);
+    console.log(data);
 
     this.setState(
       {
@@ -116,7 +117,7 @@ class CreateHackathon extends Form {
       redirectVar = <Redirect to="/home" />;
     }
     return (
-      <div className="create-hack-body">
+      <div className="create-hack-container">
         {redirectVar}
         <Navbar />
         <hr />
@@ -205,13 +206,6 @@ class CreateHackathon extends Form {
             >
               Create
             </button>{" "}
-            {/* <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={this.submit.bind(this)}
-            >
-              Send
-            </button>{" "} */}
           </form>
         </div>
       </div>
