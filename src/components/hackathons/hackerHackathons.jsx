@@ -24,8 +24,8 @@ class HackerHackathons extends Form {
     componentDidMount() {
         const username = localStorage.getItem("username");
         if (username.includes("@sjsu.edu")) this.setState({ isAdmin: true });
-
-        axios.get("http://localhost:8080/hackathons/my").then(response => {
+        const ID = localStorage.getItem('id');
+        axios.get("http://localhost:8080/users/" + ID + "/hackathons").then(response => {
             console.log(response.data);
             this.setState({
                 hackathons: response.data
