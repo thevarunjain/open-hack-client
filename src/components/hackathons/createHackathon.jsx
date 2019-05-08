@@ -96,7 +96,6 @@ class CreateHackathon extends Form {
   };
 
   async submit(e) {
-    // e.preventDefault();
     var id = getJWTID();
     setHeader();
     await axios
