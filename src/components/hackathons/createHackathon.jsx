@@ -20,7 +20,6 @@ class CreateHackathon extends Form {
 
 
   doSubmit = async e  => {
-       
         var startDateLocale = this.state.data.start_date;
         var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
 
