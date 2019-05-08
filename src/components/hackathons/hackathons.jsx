@@ -8,13 +8,21 @@ import { Redirect } from "react-router";
 import { If } from "react-if";
 import { paginate } from "../utils/paginate";
 import Pagination from "../common/pagination";
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus,
+  setHeader
+} from "../common/auth";
 
 class Hackathons extends Form {
   constructor() {
     super();
     this.state = {
       hackathons: [],
-        profile: [],
+      profile: [],
       data: {},
       isAdmin: false,
       currentPage: 1,
@@ -23,19 +31,21 @@ class Hackathons extends Form {
   }
 
   componentDidMount() {
-    const username = localStorage.getItem("username");
-    if (username.includes("@sjsu.edu")) this.setState({ isAdmin: true });
+    if (getJWTAdminStatus) this.setState({ isAdmin: true });
+
+    setHeader();
+
     axios.get("http://localhost:8080/hackathons").then(response => {
       this.setState({
         hackathons: response.data
       });
     });
-    const ID = localStorage.getItem('id');
+    const ID = localStorage.getItem("id");
     axios.get("http://localhost:8080/users/" + ID).then(response => {
-          this.setState({
-              profile: response.data
-          });
+      this.setState({
+        profile: response.data
       });
+    });
   }
 
   handlePageChange = page => {
@@ -54,10 +64,11 @@ class Hackathons extends Form {
   };
 
   render() {
-    sessionStorage.setItem('isAdmin', this.state.profile.admin);
-    console.log(sessionStorage.getItem('isAdmin'))
+    console.log("id=", getJWTID());
+    console.log(this.state.hackathons);
+
     let redirectVar = null;
-    var id = localStorage.getItem("id");
+    var id = getJWTID();
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
