@@ -72,7 +72,7 @@ class CreateHackathon extends Form {
       : [];
     judgesName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
-        console.log(name);
+        // console.log(name);
         setHeader();
         var res = await axios.get("http://localhost:8080/users?name=" + name);
         var jid = Number.parseInt(res.data[0].id, 10) - 1;
@@ -92,18 +92,19 @@ class CreateHackathon extends Form {
 
     sponsorsName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
-        console.log(name);
+        // console.log(name);
         setHeader();
         var res = await axios.get(
           "http://localhost:8080/organizations?name=" + name
         );
+        console.log(res.data);
         var sid = Number.parseInt(res.data[0].id, 10) - 1;
         data["sponsors"][i] = sid + 1;
       }
     });
 
-    console.log(this.state);
-    console.log(data);
+    // console.log(this.state);
+    // console.log(data);
 
     this.setState(
       {
@@ -125,7 +126,7 @@ class CreateHackathon extends Form {
         this.state.dataSend
       )
       .then(response => {
-        console.log(response.data);
+        // console.log(response.data);
         window.alert("Hackathon created successfully.");
       });
   }
@@ -201,21 +202,21 @@ class CreateHackathon extends Form {
                 type="text"
                 name="judges"
                 className="form-control"
-                placeholder="Judges colon seprated"
+                placeholder="Judges semi-colon separated"
                 onChange={this.handleChange}
               />
               <input
                 type="text"
                 name="sponsors"
                 className="form-control"
-                placeholder="Sponsors comma seprated"
+                placeholder="Sponsors semi-colon separated"
                 onChange={this.handleChange}
               />
               <input
                 type="text"
                 name="discount"
                 className="form-control"
-                placeholder="Discount comma seprated"
+                placeholder="Discount semi-colon separated"
                 onChange={this.handleChange}
               />
             </div>

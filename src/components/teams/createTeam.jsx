@@ -43,14 +43,14 @@ class CreateTeam extends Form {
                 type="text"
                 name="members"
                 className="form-control"
-                placeholder="Members colon separated"
+                placeholder="Members semi-colon separated"
                 onChange={this.handleChange}
               />
               <input
                 type="text"
                 name="roles"
                 className="form-control"
-                placeholder="Roles comma separated"
+                placeholder="Roles semi-colon separated"
                 onChange={this.handleChange}
               />
             </div>
