@@ -2,11 +2,19 @@ import React, { Component } from "react";
 import "../../css/notFound.css";
 import Navbar from "../common/navbar";
 import { Redirect } from "react-router";
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus,
+  setHeader
+} from "../common/auth";
 
 class SignupConfirmation extends Component {
   render() {
     let redirectVar = null;
-    var id = localStorage.getItem("id");
+    var id = getJWTID();
     if (id) {
       redirectVar = <Redirect to="/hackathons" />;
     }
