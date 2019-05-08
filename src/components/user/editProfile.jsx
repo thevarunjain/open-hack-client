@@ -5,6 +5,14 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import FormEventHandlers from "../common/formEventHandlers";
 import { Redirect } from "react-router";
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus,
+  setHeader
+} from "../common/auth";
 
 class EditProfile extends FormEventHandlers {
   constructor() {
@@ -24,8 +32,8 @@ class EditProfile extends FormEventHandlers {
   }
 
   componentDidMount() {
-    const ID = localStorage.getItem("id");
-
+    const ID = getJWTID();
+    setHeader();
     axios.get("http://localhost:8080/users/" + ID).then(response => {
       this.setState({
         screenname: response.data.screenName,
@@ -43,35 +51,33 @@ class EditProfile extends FormEventHandlers {
   }
 
   doSubmit = e => {
-
     var profile = {
       screenName: this.state.screenname,
-      name :{
+      name: {
         first: this.state.first,
-        last: this.state.last,
+        last: this.state.last
       },
       businessTitle: this.state.businessTitle,
       aboutMe: this.state.aboutMe,
-      address : {
+      address: {
         street: this.state.street,
         city: this.state.city,
         state: this.state.state,
-        zip: this.state.zipcode,
+        zip: this.state.zipcode
       }
-      // id: this.state.id
     };
 
     console.log(profile);
 
-    const ID = localStorage.getItem("id");
-
+    const ID = getJWTID();
+    setHeader();
     axios.put("http://localhost:8080/users/" + ID, profile).then(response => {
       window.alert("Profile updated successfully.");
     });
   };
   render() {
     let redirectVar = null;
-    var id = localStorage.getItem("id");
+    var id = getJWTID();
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }

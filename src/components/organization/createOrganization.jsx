@@ -4,6 +4,14 @@ import Navbar from "../common/navbar";
 import Form from "../common/form";
 import { Redirect } from "react-router";
 import axios from "axios";
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus,
+  setHeader
+} from "../common/auth";
 
 class CreateOrganization extends Form {
   constructor() {
@@ -14,7 +22,7 @@ class CreateOrganization extends Form {
   }
 
   doSubmit = e => {
-    var ownerId = localStorage.getItem("id");
+    var ownerId = getJWTID();
     console.log("data=", this.state.data);
 
     var address = {
@@ -31,7 +39,9 @@ class CreateOrganization extends Form {
     };
 
     console.log(org);
-    axios.post("http://localhost:8080/organizations?ownerId=" + ownerId, org)
+    setHeader();
+    axios
+      .post("http://localhost:8080/organizations?ownerId=" + ownerId, org)
       .then(response => {
         window.alert("Organization created successfully.");
       });
@@ -39,7 +49,7 @@ class CreateOrganization extends Form {
 
   render() {
     let redirectVar = null;
-    var id = localStorage.getItem("id");
+    var id = getJWTID();
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }

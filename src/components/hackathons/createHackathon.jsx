@@ -9,7 +9,8 @@ import {
   getJWTUsername,
   getJWTID,
   getJWTScreenName,
-  getJWTAdminStatus
+  getJWTAdminStatus,
+  setHeader
 } from "../common/auth";
 var moment = require("moment");
 
@@ -72,6 +73,7 @@ class CreateHackathon extends Form {
     judgesName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
         console.log(name);
+        setHeader();
         var res = await axios.get("http://localhost:8080/users?name=" + name);
         var jid = Number.parseInt(res.data[0].id, 10) - 1;
         data["judges"].push(jid + 1);
@@ -91,6 +93,7 @@ class CreateHackathon extends Form {
     sponsorsName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
         console.log(name);
+        setHeader();
         var res = await axios.get(
           "http://localhost:8080/organizations?name=" + name
         );
@@ -115,7 +118,7 @@ class CreateHackathon extends Form {
   async submit(e) {
     e.preventDefault();
     var id = getJWTID();
-
+    setHeader();
     await axios
       .post(
         "http://localhost:8080/hackathons?ownerId=" + id,
