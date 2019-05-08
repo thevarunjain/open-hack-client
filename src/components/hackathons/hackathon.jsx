@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { Redirect } from "react-router";
 import Form from "../common/form";
+import { If } from "react-if";
 import {
   getToken,
   getJWTUsername,
@@ -54,6 +55,11 @@ class Hackathon extends Component {
         <Navbar />
 
         <div className="hackathon-details">
+          <If condition={!this.state.isAdmin}>
+            <a className="btn btn-primary create-team" href="/team/create">
+              Create Team
+            </a>
+          </If>
           <h2>{this.state.hackathon ? this.state.hackathon.name : ""}</h2>
           <br />
           {this.state.hackathon ? this.state.hackathon.description : ""}
