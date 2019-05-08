@@ -55,7 +55,7 @@ class Hackathon extends Component {
         <Navbar />
 
         <div className="hackathon-details">
-          <If condition={!this.state.isAdmin}>
+          <If condition={!getJWTAdminStatus}>
             <Link
               className="btn btn-primary create-team"
               to={{
