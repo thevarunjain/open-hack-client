@@ -19,8 +19,11 @@ class MyHackerHackathon extends Component {
     super();
     this.state = {
       hackathon: [],
+      grades: "",
       teams: []
     };
+    // this.submitGrades = this.submitGrades.bind(this);
+    this.handleGrade = this.handleGrade.bind(this);
   }
 
   componentDidMount() {
@@ -43,8 +46,28 @@ class MyHackerHackathon extends Component {
       });
   }
 
+  handleGrade(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  submitGrades = (teamId) =>{
+
+    const ID = this.state.hackathon.id;
+    const team_ID = teamId;
+    console.log(team_ID);
+    const data = {
+      grades: this.state.grades
+    }
+    setHeader();
+    axios
+        .patch("http://localhost:8080/hackathons/" + ID + "/teams", + team_ID, data)
+        .then(response => {
+          window.alert("Grade Submitted successfully.");
+        });
+  }
+
   render() {
-    console.log(this.state.hackathon);
+    console.log(this.state.hackathon.id);
     let redirectVar = null;
     var id = getJWTID();
     console.log(id);
@@ -86,9 +109,11 @@ class MyHackerHackathon extends Component {
               this.state.hackathon.judges.map(judge_hackathon => (
                     <If condition={getJWTID() === judge_hackathon.id}>
                       <div className="input-group-append">
-                        <input type="text" className="form-control" placeholder="" aria-label=""
+                        <input type="text" name = "grades" onChange={this.handleGrade} className="form-control" placeholder="" aria-label=""
                                aria-describedby="basic-addon1"/>
-                        <button className="btn btn-outline-secondary" type="button">Submit Grades</button>
+                        <button className="btn btn-outline-secondary" onClick={() =>
+                            this.submitGrades(team.id)
+                        } type="button">Submit Grades</button>
                       </div>
                     </If>
               ))}
