@@ -54,14 +54,17 @@ class Hackathons extends Form {
   };
 
   doSubmit = e => {
+    console.log("In search button");
+    console.log(this.state);
     axios
       .get(
-        "http://localhost:8080/hackathons/name/" +
+        "http://localhost:8080/hackathons?name=" +
           this.state.data.hackathon_name
       )
       .then(response => {
         this.setState({ hackathons: response.data });
       });
+ 
   };
 
   render() {
