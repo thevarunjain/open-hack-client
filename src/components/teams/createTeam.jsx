@@ -11,6 +11,7 @@ import Navbar from "../common/navbar";
 import Form from "../common/form";
 import axios from "axios";
 import { Redirect } from "react-router";
+import "../../css/createHackathon.css";
 
 class CreateTeam extends Form {
   constructor() {
@@ -27,6 +28,7 @@ class CreateTeam extends Form {
       members: [],
       roles: []
     };
+
     var membersName = this.state.data.members
       ? this.state.data.members.split(";").map(e => e.trim())
       : [];
@@ -51,7 +53,6 @@ class CreateTeam extends Form {
       },
       function() {
         console.log(this.state.dataSend);
-        this.submit();
       }
     );
   };
@@ -70,7 +71,6 @@ class CreateTeam extends Form {
         this.state.dataSend
       )
       .then(response => {
-        // console.log(response.data);
         window.alert("Team created successfully.");
         window.location.reload();
       });
@@ -92,6 +92,7 @@ class CreateTeam extends Form {
             <div className="org-information">
               <h3>Team Information</h3>
               <br />
+              <label>Name of the Team</label>
               <input
                 type="text"
                 name="name"
@@ -100,29 +101,44 @@ class CreateTeam extends Form {
                 placeholder="Name"
                 onChange={this.handleChange}
               />
-
+              <label>Add Members to team</label>
               <input
                 type="text"
                 name="members"
                 className="form-control"
-                placeholder="Members semi-colon separated"
+                placeholder="Semi-colon(;) separated"
                 onChange={this.handleChange}
               />
+              <label>Assign roles to members</label>
               <input
                 type="text"
                 name="roles"
                 className="form-control"
-                placeholder="Roles semi-colon separated"
+                placeholder="Semi-colon(;) separated"
                 onChange={this.handleChange}
               />
             </div>
+            <div>
             <button
               type="submit"
+              style={{marginLeft : "41%", width: "fit-content"}}
+
               className="btn btn-primary"
               onClick={this.handleSubmit}
             >
-              Create
+              Finalize Team
             </button>{" "}
+            <br/>
+            <button
+              type="submit"
+              style={{marginLeft : "41%", width: "fit-content"}}
+
+              className="btn btn-primary"
+              onClick={this.submit.bind(this)}
+            >
+              Post Team
+            </button>{" "}
+            </div>
           </form>
         </div>
       </div>

@@ -52,7 +52,6 @@ class CreateHackathon extends Form {
 
     judgesName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
-        // console.log(name);
         setHeader();
         var res = await axios.get("http://localhost:8080/users?name=" + name);
         var jid = Number.parseInt(res.data[0].id, 10) - 1;
@@ -72,18 +71,14 @@ class CreateHackathon extends Form {
 
     sponsorsName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
-        // console.log(name);
         setHeader();
         var res = await axios.get(
           "http://localhost:8080/organizations?name=" + name
         );
-        console.log(res.data);
         var sid = Number.parseInt(res.data[0].id, 10) - 1;
         data["sponsors"][i] = sid + 1;
       }
     });
-
-    console.log(data);
 
     this.setState(
       {
@@ -91,12 +86,12 @@ class CreateHackathon extends Form {
       },
       function() {
         console.log(this.state.dataSend);
-        this.submit();
       }
     );
   };
 
   async submit(e) {
+    e.preventDefault();
     var id = getJWTID();
     setHeader();
     await axios
@@ -105,8 +100,8 @@ class CreateHackathon extends Form {
         this.state.dataSend
       )
       .then(response => {
-        // console.log(response.data);
         window.alert("Hackathon created successfully.");
+        window.location.reload();
       });
   }
 
@@ -127,85 +122,113 @@ class CreateHackathon extends Form {
             <div className="org-information">
               <h3>Hackathon Information</h3>
               <br />
+              <label>Name </label>
               <input
                 type="text"
                 name="name"
+                required
                 className="form-control"
                 autoFocus
                 placeholder="Name"
                 onChange={this.handleChange}
               />
-              <label>Start Date:</label>
+              <label>Description</label>
+                 <textarea
+                required
+                name="description"
+                placeholder="Atleast 10 characters"
+                className="form-control"
+                onChange={this.handleChange}
+              />
+              <label>Start Date</label>
               <input
                 type="date"
+                required
                 name="start_date"
                 className="form-control"
                 onChange={this.handleChange}
               />
 
-              <label>End Date:</label>
+              <label>End Date</label>
               <input
+                required
                 type="date"
                 name="end_date"
                 className="form-control"
                 onChange={this.handleChange}
               />
-              <textarea
-                name="description"
-                placeholder="Description"
-                className="form-control"
-                onChange={this.handleChange}
-              />
+              <label>Entry Fee</label>
               <input
-                type="text"
+                type="number" 
                 name="fee"
+                required
                 className="form-control"
                 placeholder="Fee"
                 onChange={this.handleChange}
               />
+              <label>Minimum coders</label>
               <input
                 type="text"
                 name="min_size"
+                required
                 className="form-control"
-                placeholder="Minimum Number of People"
+                placeholder="Atleat 1"
                 onChange={this.handleChange}
               />
+              <label>Maximum coders</label>
               <input
                 type="text"
                 name="max_size"
+                required
                 className="form-control"
-                placeholder="Maximum Number of People"
+                placeholder="Maximum 10"
                 onChange={this.handleChange}
               />
+              <label>Judges</label>              
               <input
                 type="text"
                 name="judges"
+                required
                 className="form-control"
-                placeholder="Judges semi-colon separated"
+                placeholder=" Atleast 1 with Semi-colon(;) separated"
                 onChange={this.handleChange}
               />
+              <label>Sponsors (Optional)</label>              
               <input
                 type="text"
                 name="sponsors"
                 className="form-control"
-                placeholder="Sponsors semi-colon separated"
+                placeholder="Semi-colon(;) separated"
                 onChange={this.handleChange}
               />
+              <label>Discount in % </label>              
               <input
                 type="text"
                 name="discount"
                 className="form-control"
-                placeholder="Discount semi-colon separated"
+                placeholder="Semi-colon(;) separated"
                 onChange={this.handleChange}
               />
             </div>
+            <div>
             <button
               type="submit"
+              style={{marginLeft : "41%", width: "fit-content"}}            
               className="btn btn-primary"
               onClick={this.handleSubmit}
             >
-              Create
+              Finalize Hackathon
             </button>{" "}
+            <br/>
+            <button
+              type="submit"
+            style={{marginLeft : "41%", width: "fit-content"}}
+              className="btn btn-primary"
+              onClick={this.submit.bind(this)}
+            >
+              Ready ? Create  
+            </button>{" "}
+            </div>
           </form>
         </div>
       </div>
