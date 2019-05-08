@@ -31,13 +31,17 @@ class AdminHackathons extends Form {
 
   componentDidMount() {
     if (getJWTAdminStatus()) this.setState({ isAdmin: true });
-    const ID= getJWTID();
-    axios.get("http://localhost:8080/users/" + ID + "/hackathons").then(response => {
-      console.log(response.data);
-      this.setState({
-        hackathons: response.data
+    const ID = getJWTID();
+    setHeader();
+
+    axios
+      .get("http://localhost:8080/users/" + ID + "/hackathons")
+      .then(response => {
+        // console.log("res=", response.data);
+        this.setState({
+          hackathons: response.data
+        });
       });
-    });
   }
 
   handlePageChange = page => {
@@ -45,6 +49,7 @@ class AdminHackathons extends Form {
   };
 
   render() {
+    console.log(this.state.hackathons);
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -52,7 +57,7 @@ class AdminHackathons extends Form {
     }
 
     const paginatedData = paginate(
-      this.state.hackathons ? this.state.hackathons : "",
+      this.state.hackathons ? this.state.hackathons.owner : "",
       this.state.currentPage,
       this.state.pageSize
     );
