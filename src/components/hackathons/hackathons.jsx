@@ -63,13 +63,13 @@ class Hackathons extends Form {
       .then(response => {
         this.setState({ hackathons: response.data });
       });
- 
   };
 
   render() {
-    console.log("id=", getJWTID());
-    console.log(this.state.profile);
+    // console.log("id=", getJWTID());
+    // console.log(this.state.profile);
 
+    console.log(this.state.isAdmin);
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -91,7 +91,7 @@ class Hackathons extends Form {
           diverse
           <br /> <span>student hackathons in the world.</span>
         </div>
-        <If condition={this.state.isAdmin}>
+        <If condition={this.state.isAdmin == true}>
           <a className="btn btn-primary create-hack" href="/hackathon/create">
             Create Hackathon
           </a>

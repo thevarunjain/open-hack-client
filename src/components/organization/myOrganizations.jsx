@@ -159,6 +159,8 @@ class MyOrganizations extends Form {
   };
 
   render() {
+    console.log(Object.keys(this.state.memberOf).length == 0);
+
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -275,7 +277,7 @@ class MyOrganizations extends Form {
         </div>
         <br />
         <br />
-        <If condition={this.state.memberOf != null}>
+        <If condition={Object.keys(this.state.memberOf).length != 0}>
           <Then>
             <div className="owner-orgs">
               <h2>Member of</h2>
