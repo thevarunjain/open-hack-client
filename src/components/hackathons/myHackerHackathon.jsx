@@ -82,8 +82,7 @@ class MyHackerHackathon extends Component {
     setHeader();
     axios
       .patch(
-        "http://localhost:8080/hackathons/" + ID + "/teams",
-        +team_ID,
+        "http://localhost:8080/hackathons/"+ID+"/teams/"+team_ID,
         data
       )
       .then(response => {
@@ -94,15 +93,14 @@ class MyHackerHackathon extends Component {
   submitSubmission = teamId => {
     const ID = this.state.hackathon.id;
     const team_ID = teamId;
-    console.log(team_ID);
+    console.log(team_ID, ID);
     const data = {
-      submissionLink: this.state.submissionLink
+      submissionURL : this.state.submissionLink
     };
     setHeader();
     axios
       .patch(
-        "http://localhost:8080/hackathons/" + ID + "/teams",
-        +team_ID,
+        "http://localhost:8080/hackathons/"+ID+"/teams/"+team_ID,
         data
       )
       .then(response => {
