@@ -72,7 +72,8 @@ class CreateTeam extends Form {
       )
       .then(response => {
         window.alert("Team created successfully.");
-        window.location.reload();
+        // window.location.reload();
+        this.props.history.push("/hackathons");
       });
   }
   render() {
@@ -119,25 +120,23 @@ class CreateTeam extends Form {
               />
             </div>
             <div>
-            <button
-              type="submit"
-              style={{marginLeft : "41%", width: "fit-content"}}
-
-              className="btn btn-primary"
-              onClick={this.handleSubmit}
-            >
-              Finalize Team
-            </button>{" "}
-            <br/>
-            <button
-              type="submit"
-              style={{marginLeft : "41%", width: "fit-content"}}
-
-              className="btn btn-primary"
-              onClick={this.submit.bind(this)}
-            >
-              Post Team
-            </button>{" "}
+              <button
+                type="submit"
+                style={{ marginLeft: "41%", width: "fit-content" }}
+                className="btn btn-primary"
+                onClick={this.handleSubmit}
+              >
+                Finalize Team
+              </button>{" "}
+              <br />
+              <button
+                type="submit"
+                style={{ marginLeft: "41%", width: "fit-content" }}
+                className="btn btn-primary"
+                onClick={this.submit.bind(this)}
+              >
+                Post Team
+              </button>{" "}
             </div>
           </form>
         </div>
