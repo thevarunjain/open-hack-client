@@ -116,7 +116,7 @@ export var sendVerificationEmail = () => {
 
 export var isUserVerified = () => {
   var currentUser = firebase.auth().currentUser;
-  return currentUser ? currentUser.emailVerified : null;
+  return currentUser ? currentUser.emailVerified : false;
 };
 
 export var getFirebaseUser = () => {

@@ -57,12 +57,13 @@ class Hackathons extends Form {
     setHeader();
     axios
       .get(
-        "http://localhost:8080/hackathons/name/" +
+        "http://localhost:8080/hackathons?name=" +
           this.state.data.hackathon_name
       )
       .then(response => {
         this.setState({ hackathons: response.data });
       });
+ 
   };
 
   render() {

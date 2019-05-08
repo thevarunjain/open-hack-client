@@ -20,23 +20,28 @@ class Login extends Form {
 
   doSubmit = () => {
     if (isUserVerified()) {
+    console.log(isUserVerified());
       var loggedInUser = loginWithCredentials(
-        this.state.data.username,
-        this.state.data.password
-      );
+                          this.state.data.username,
+                          this.state.data.password
+                          );
+
+        var data = {
+          email: this.state.data.username,
+          password: this.state.data.password
+                  };
+      axios.post("http://localhost:8080/auth/signin", data).then(response => {
+          console.log("Status Code : ", response.data);
+          if (response.status === 200) {
+            console.log("Login successful.");
+            localStorage.setItem("token", response.data.accessToken);
+            this.props.history.push("/hackathons");
+          }
+      });
+    }else{
+        window.alert("Email is not verified. Check your mail");
+        window.location.reload();
     }
-    var data = {
-      email: this.state.data.username,
-      password: this.state.data.password
-    };
-    axios.post("http://localhost:8080/auth/signin", data).then(response => {
-      console.log("Status Code : ", response.data);
-      if (response.status === 200) {
-        console.log("Login successful.");
-        localStorage.setItem("token", response.data.accessToken);
-        this.props.history.push("/hackathons");
-      }
-    });
   };
 
   render() {
