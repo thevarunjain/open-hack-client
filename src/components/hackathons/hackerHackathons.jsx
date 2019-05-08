@@ -31,8 +31,9 @@ class HackerHackathons extends Form {
   componentDidMount() {
     if (getJWTAdminStatus) this.setState({ isAdmin: true });
     setHeader();
-    axios.get("http://localhost:8080/hackathons/my").then(response => {
-      console.log(response.data);
+    const ID= getJWTID();
+    axios.get("http://localhost:8080/users/" + ID + "/hackathons").then(response => {
+        console.log(response.data);
       this.setState({
         hackathons: response.data
       });
@@ -51,10 +52,16 @@ class HackerHackathons extends Form {
     }
 
     const paginatedData = paginate(
-      this.state.hackathons ? this.state.hackathons : "",
+      this.state.hackathons ? this.state.hackathons.participant : "",
       this.state.currentPage,
       this.state.pageSize
     );
+
+      const paginatedJudgeData = paginate(
+          this.state.hackathons ? this.state.hackathons.judge : "",
+          this.state.currentPage,
+          this.state.pageSize
+      );
     return (
       <div className="hack-home">
         {redirectVar}
@@ -65,8 +72,9 @@ class HackerHackathons extends Form {
           diverse
           <br /> <span>student hackathons in the world.</span>
         </div>
+          <h2 style={{color:"white"}}> PARTICIPATED HACKATHONS: </h2>
         {paginatedData.map(hackathon => (
-          <div className="hackathons-list">
+          <div className="col-md-6">
             <div className="hackathon">
               <img
                 src={require("../../images/9.jpg")}
@@ -94,16 +102,47 @@ class HackerHackathons extends Form {
             </div>
           </div>
         ))}
-        <div className="general_pagination">
-          <Pagination
-            itemsCount={
-              this.state.hackathons ? this.state.hackathons.length : ""
-            }
-            pageSize={this.state.pageSize}
-            onPageChange={this.handlePageChange}
-            currentPage={this.state.currentPage}
-          />
-        </div>
+
+          <h2 style={{color:"white"}}> HACKATHONS TO BE JUDGED: </h2>
+          {paginatedJudgeData.map(hackathon => (
+              <div className="col-md-6">
+                  <div className="hackathon">
+                      <img
+                          src={require("../../images/9.jpg")}
+                          width="250"
+                          height="250"
+                      />
+                      <div className="hackathon-info">
+                          <h3>
+                              <Link
+                                  className="link"
+                                  hack_id={this.state.hackathons}
+                                  to={{
+                                      pathname: "/hackathons/hackerHackathons/hackathon-view",
+                                      state: { id: hackathon.id }
+                                  }}
+                                  params={{ testvalue: "hello" }}
+                              >
+                                  {hackathon.name}
+                              </Link>
+                          </h3>
+                          {hackathon.startDate} - {hackathon.endDate}
+                          <br />
+                          {hackathon.status}
+                      </div>
+                  </div>
+              </div>
+          ))}
+          <div className="general_pagination">
+              <Pagination
+                  itemsCount={
+                      this.state.hackathons ? this.state.hackathons.length : ""
+                  }
+                  pageSize={this.state.pageSize}
+                  onPageChange={this.handlePageChange}
+                  currentPage={this.state.currentPage}
+              />
+          </div>
       </div>
     );
   }

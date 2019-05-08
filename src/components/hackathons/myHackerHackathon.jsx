@@ -12,6 +12,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import {If} from "react-if";
 
 class MyHackerHackathon extends Component {
   constructor() {
@@ -35,6 +36,7 @@ class MyHackerHackathon extends Component {
     axios
       .get("http://localhost:8080/hackathons/" + ID + "/teams")
       .then(response => {
+        console.log(response.data);
         this.setState({
           teams: response.data
         });
@@ -45,6 +47,7 @@ class MyHackerHackathon extends Component {
     console.log(this.state.hackathon);
     let redirectVar = null;
     var id = getJWTID();
+    console.log(id);
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
@@ -79,7 +82,16 @@ class MyHackerHackathon extends Component {
           {this.state.teams.map(team => (
             <div>
               <Link to="/hackathon">{team.name}</Link>
-              <br />
+              {this.state.hackathon.judges &&
+              this.state.hackathon.judges.map(judge_hackathon => (
+                    <If condition={getJWTID() === judge_hackathon.id}>
+                      <div className="input-group-append">
+                        <input type="text" className="form-control" placeholder="" aria-label=""
+                               aria-describedby="basic-addon1"/>
+                        <button className="btn btn-outline-secondary" type="button">Submit Grades</button>
+                      </div>
+                    </If>
+              ))}
             </div>
           ))}
         </div>
