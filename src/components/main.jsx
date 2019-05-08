@@ -16,6 +16,7 @@ import HackerHackathons from "./hackathons/hackerHackathons";
 import AdminHackathons from "./hackathons/adminHackathons";
 import MyHackerHackathon from "./hackathons/myHackerHackathon";
 import MyAdminHackathon from "./hackathons/myAdminHackathon";
+import Hackathon from "./hackathons/hackathon";
 
 class Main extends Component {
   render() {
@@ -26,7 +27,7 @@ class Main extends Component {
         <Route path="/signup" exact component={Signup} />
         <Route path="/confirm" exact component={SignupConfirmation} />
         <Route path="/hackathons" exact component={Hackathons} />
-        <Route path="/hackathon" exact component={MyAdminHackathon} />
+        <Route path="/hackathon" exact component={Hackathon} />
         <Route path="/profile" exact component={ViewProfile} />
         <Route path="/profile-edit" exact component={EditProfile} />
         <Route path="/hackathon/create" exact component={CreateHackathon} />
