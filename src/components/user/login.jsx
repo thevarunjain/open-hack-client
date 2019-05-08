@@ -18,14 +18,14 @@ class Login extends Form {
     user: ""
   };
 
-  doSubmit = () => {
-    if (isUserVerified()) {
-    console.log(isUserVerified());
-      var loggedInUser = loginWithCredentials(
-                          this.state.data.username,
-                          this.state.data.password
-                          );
+  doSubmit = async () => {
+    
+    var loggedInUser = await loginWithCredentials(
+      this.state.data.username,
+      this.state.data.password
+      );
 
+    if (isUserVerified()) {
         var data = {
           email: this.state.data.username,
           password: this.state.data.password
@@ -39,8 +39,9 @@ class Login extends Form {
           }
       });
     }else{
-        window.alert("Email is not verified. Check your mail");
-        window.location.reload();
+        // window.alert("Email is not verified. Check your mail");
+        console.log("Email not verified");
+        // window.location.reload();
     }
   };
 

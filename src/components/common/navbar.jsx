@@ -10,12 +10,14 @@ import {
   getJWTScreenName,
   getJWTAdminStatus
 } from "../common/auth";
+import {signoutFirebase} from "../Firebase";
 
 class Navbar extends Component {
   handleLogout = () => {
     localStorage.removeItem("token");
     console.log("Logged out successfully.");
     window.location.reload();
+    signoutFirebase();
   };
   render() {
     var id = getJWTID();
