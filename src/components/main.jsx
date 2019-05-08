@@ -17,6 +17,7 @@ import AdminHackathons from "./hackathons/adminHackathons";
 import MyHackerHackathon from "./hackathons/myHackerHackathon";
 import MyAdminHackathon from "./hackathons/myAdminHackathon";
 import Hackathon from "./hackathons/hackathon";
+import CreateTeam from "./teams/createTeam";
 
 class Main extends Component {
   render() {
@@ -31,16 +32,33 @@ class Main extends Component {
         <Route path="/profile" exact component={ViewProfile} />
         <Route path="/profile-edit" exact component={EditProfile} />
         <Route path="/hackathon/create" exact component={CreateHackathon} />
-        <Route path="/hackathons/hackerHackathons" exact component={HackerHackathons} />
-        <Route path="/hackathons/adminHackathons" exact component={AdminHackathons} />
-        <Route path="/hackathons/hackerHackathons/hackathon-view" exact component={MyHackerHackathon} />
-          <Route path="/hackathons/adminHackathons/hackathon-view" exact component={MyAdminHackathon} />
+        <Route
+          path="/hackathons/hackerHackathons"
+          exact
+          component={HackerHackathons}
+        />
+        <Route
+          path="/hackathons/adminHackathons"
+          exact
+          component={AdminHackathons}
+        />
+        <Route
+          path="/hackathons/hackerHackathons/hackathon-view"
+          exact
+          component={MyHackerHackathon}
+        />
+        <Route
+          path="/hackathons/adminHackathons/hackathon-view"
+          exact
+          component={MyAdminHackathon}
+        />
         <Route
           path="/organization/create"
           exact
           component={CreateOrganization}
         />
         <Route path="/organizations" exact component={MyOrganizations} />
+        <Route path="/team/create" exact component={CreateTeam} />
         <Route path="/not-found" exact component={NotFound} />
         <Route path="/" exact component={Home} />
         <Route path="/firebase" exact component={Firebase} />
