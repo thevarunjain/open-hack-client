@@ -23,8 +23,6 @@ class Signup extends Form {
   }
 
   doSubmit = () => {
-    // localStorage.setItem("username", "shishir.kulkarni@sjsu.edu");
-    // localStorage.setItem("id", "1");
     var signedUpUser = signUpWithCredentials(
       this.state.data.username,
       this.state.data.password

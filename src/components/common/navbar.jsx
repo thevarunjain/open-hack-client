@@ -13,8 +13,8 @@ class Navbar extends Component {
     return <Redirect to="/home" />;
   };
   render() {
-    localStorage.setItem("id","4");
-    localStorage.setItem("username","varun18");
+    localStorage.setItem("username", "shishir.kulkarni@sjsu.edu");
+    localStorage.setItem("id", "1");
     var id = localStorage.getItem("id");
     var username = localStorage.getItem("username");
   console.log((sessionStorage.getItem("isAdmin")));
