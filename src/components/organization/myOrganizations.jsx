@@ -19,6 +19,7 @@ class MyOrganizations extends Form {
 
   componentDidMount() {
     var id = localStorage.getItem("id");
+
     axios.get("http://localhost:8080/users/" + id).then(response => {
       this.setState({
         memberOf: response.data.memberOf,
@@ -60,12 +61,12 @@ class MyOrganizations extends Form {
         <br />
         <br />
         <br />
-        {/* {this.state.ownerOf.map(data => ( */}
-        <div className="owner">
-          {/* <h3>{data.name}</h3> */}
-          address
-        </div>
-        {/* ))} */}
+        {/* {this.state.ownerOf.map(data => (
+          <div className="owner">
+            <h3>{data.name}</h3>
+            address
+          </div>
+        ))} */}
         <br />
         <br />
         <If condition={this.state.memberOf && this.state.memberOf.length == 0}>
