@@ -5,19 +5,21 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { Redirect } from "react-router";
 
-class Hackathon extends Component {
+class MyAdminHackathon extends Component {
   constructor() {
     super();
     this.state = {
       hackathon: [],
       teams: []
     };
+    this.handleOpenStatus = this.handleOpenStatus.bind(this);
+    this.handleClosedStatus = this.handleClosedStatus.bind(this);
+    this.handleFinalizedStatus = this.handleFinalizedStatus.bind(this);
   }
 
   componentDidMount() {
     const ID = this.props.location.state.id;
     console.log("id=", ID);
-
     axios.get("http://localhost:8080/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
@@ -32,6 +34,42 @@ class Hackathon extends Component {
         });
       });
   }
+
+  handleOpenStatus = e =>{
+    e.preventDefault();
+    const ID = this.props.location.state.id;
+    var data = {
+      toState : "Open"
+    };
+    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Status updated successfully.");
+    });
+  }
+
+  handleClosedStatus = e =>{
+    e.preventDefault();
+    const ID = this.props.location.state.id;
+    var data = {
+      toState : "Closed"
+    };
+    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Status updated successfully.");
+    });
+
+  }
+
+  handleFinalizedStatus = e =>{
+    e.preventDefault();
+    const ID = this.props.location.state.id;
+    var data = {
+      toState : "Finalized"
+    };
+    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Status updated successfully.");
+    });
+
+  }
+
 
   render() {
     console.log(this.state.hackathon);
@@ -96,9 +134,14 @@ class Hackathon extends Component {
               </div>
             ))}
         </div>
+        <div div className="button-hacks">
+        <button type="button" onClick={this.handleOpenStatus} style={{margin:20}} className="btn btn-primary btn-lg">Open</button>
+        <button type="button" onClick={this.handleClosedStatus} style={{margin:20}} className="btn btn-warning btn-lg">Closed</button>
+        <button type="button" onClick={this.handleFinalizedStatus} style={{margin:20}} className="btn btn-success btn-lg">Finalized</button>
+      </div>
       </div>
     );
   }
 }
 
-export default Hackathon;
+export default MyAdminHackathon;
