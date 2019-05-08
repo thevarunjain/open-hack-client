@@ -56,9 +56,15 @@ class Hackathon extends Component {
 
         <div className="hackathon-details">
           <If condition={!this.state.isAdmin}>
-            <a className="btn btn-primary create-team" href="/team/create">
+            <Link
+              className="btn btn-primary create-team"
+              to={{
+                pathname: "/team/create",
+                state: { id: this.props.location.state.id }
+              }}
+            >
               Create Team
-            </a>
+            </Link>
           </If>
           <h2>{this.state.hackathon ? this.state.hackathon.name : ""}</h2>
           <br />

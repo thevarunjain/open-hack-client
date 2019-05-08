@@ -91,12 +91,12 @@ class CreateHackathon extends Form {
       },
       function() {
         console.log(this.state.dataSend);
+        this.submit();
       }
     );
   };
 
   async submit(e) {
-    e.preventDefault();
     var id = getJWTID();
     setHeader();
     await axios
@@ -204,14 +204,7 @@ class CreateHackathon extends Form {
               className="btn btn-primary"
               onClick={this.handleSubmit}
             >
-              Finalize
-            </button>{" "}
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={this.submit.bind(this)}
-            >
-              Create Hackathon
+              Create
             </button>{" "}
           </form>
         </div>
