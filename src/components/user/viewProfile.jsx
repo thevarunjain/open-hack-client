@@ -17,13 +17,10 @@ class ViewProfile extends Component {
   }
   componentDidMount() {
     const ID = localStorage.getItem("id");
-
     axios.get("http://localhost:8080/users/" + ID).then(response => {
-      console.log(response.data);
-
     this.setState({
         profiles: response.data,
-        Organization : response.data.memberOf.name
+        // Organization : response.data.memberOf.name
       });
     });
   }
@@ -33,7 +30,6 @@ class ViewProfile extends Component {
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
-
     const profile = this.state.profiles;
     console.log("res=", profile);
     return (

@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import "../../css/navbar.css";
 import { Redirect } from "react-router";
-import { If } from "react-if";
+import { If,Then,Else } from "react-if";
+import {Link} from "react-router-dom";
 
 class Navbar extends Component {
   handleLogout = () => {
     localStorage.removeItem("id");
     localStorage.removeItem("username");
+    sessionStorage.removeItem("isAdmin");
     console.log("Logged out successfully.");
     return <Redirect to="/home" />;
   };
@@ -15,7 +17,7 @@ class Navbar extends Component {
     localStorage.setItem("username","varun18");
     var id = localStorage.getItem("id");
     var username = localStorage.getItem("username");
-
+  console.log((sessionStorage.getItem("isAdmin")));
     return (
       <div>
         <If condition={!id}>
@@ -53,6 +55,22 @@ class Navbar extends Component {
                 <a className="dropdown-item" href="/organizations">
                   My Organizations
                 </a>
+
+                <If condition={(sessionStorage.getItem("isAdmin"))}>
+                  <Then>
+                    <a className="dropdown-item" href="/hackathons/adminHackathons">
+                      My Hackathons
+                    </a>
+
+                  </Then>
+                  <Else>
+                    <a className="dropdown-item" href="/hackathons/hackerHackathons">
+                      My Hackathons
+                    </a>
+
+
+                  </Else>
+                </If>
                 <a className="dropdown-item" onClick={this.handleLogout}>
                   Logout
                 </a>

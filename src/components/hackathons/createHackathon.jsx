@@ -19,7 +19,7 @@ class CreateHackathon extends Form {
     axios
       .post("http://localhost:8080/hackathons", this.state.data + id)
       .then(response => {
-        window.alert("Hackathon created successfully.");
+        window.alert("MyAdminHackathon created successfully.");
       });
   };
 
