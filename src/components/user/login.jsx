@@ -34,7 +34,7 @@ class Login extends Form {
       if (response.status === 200) {
         console.log("Login successful.");
         localStorage.setItem("token", response.data.accessToken);
-        this.props.history.push("/home");
+        this.props.history.push("/hackathons");
       }
     });
   };

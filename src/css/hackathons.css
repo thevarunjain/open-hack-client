@@ -3,7 +3,7 @@
   background-position: center;
   background-repeat: repeat;
   background-size: cover;
-  height: 300%;
+  height: 100vw;
 }
 
 h1 {
@@ -70,4 +70,10 @@ span {
 .general_pagination {
   margin-top: 45%;
   margin-left: 50%;
+}
+
+.empty-admin {
+  color: white;
+  margin-left: 40%;
+  margin-top: 10%;
 }

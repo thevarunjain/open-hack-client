@@ -5,7 +5,16 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { Redirect } from "react-router";
 import Form from "../common/form";
-var moment = require('moment');
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus,
+  setHeader
+} from "../common/auth";
+
+var moment = require("moment");
 
 class MyAdminHackathon extends Component {
   constructor() {
@@ -14,7 +23,7 @@ class MyAdminHackathon extends Component {
       hackathon: [],
       startDate: "",
       endDate: "",
-      currentDate:"",
+      currentDate: "",
       teams: []
     };
     this.handleOpenStatus = this.handleOpenStatus.bind(this);
@@ -26,12 +35,13 @@ class MyAdminHackathon extends Component {
   componentDidMount() {
     const ID = this.props.location.state.id;
     console.log("id=", ID);
+    setHeader();
     axios.get("http://localhost:8080/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
       });
     });
-
+    setHeader();
     axios
       .get("http://localhost:8080/hackathons/" + ID + "/teams")
       .then(response => {
@@ -41,46 +51,53 @@ class MyAdminHackathon extends Component {
       });
   }
 
-  handleOpenStatus = e =>{
+  handleOpenStatus = e => {
     e.preventDefault();
     const ID = this.props.location.state.id;
     var data = {
-      toState : "Open"
+      toState: "Open"
     };
-    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Status updated successfully.");
-    });
-  }
+    setHeader();
+    axios
+      .patch("http://localhost:8080/hackathons/" + ID, data)
+      .then(response => {
+        window.alert("Hackathon Status updated successfully.");
+      });
+  };
 
-  handleClosedStatus = e =>{
+  handleClosedStatus = e => {
     e.preventDefault();
     const ID = this.props.location.state.id;
     var data = {
-      toState : "Closed"
+      toState: "Closed"
     };
-    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Status updated successfully.");
-    });
+    setHeader();
+    axios
+      .patch("http://localhost:8080/hackathons/" + ID, data)
+      .then(response => {
+        window.alert("Hackathon Status updated successfully.");
+      });
+  };
 
-  }
-
-  handleFinalizedStatus = e =>{
+  handleFinalizedStatus = e => {
     e.preventDefault();
     const ID = this.props.location.state.id;
     var data = {
-      toState : "Finalized"
+      toState: "Finalized"
     };
-    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Status updated successfully.");
-    });
-
-  }
+    setHeader();
+    axios
+      .patch("http://localhost:8080/hackathons/" + ID, data)
+      .then(response => {
+        window.alert("Hackathon Status updated successfully.");
+      });
+  };
 
   changeHandle(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  submitChanges = e =>{
+  submitChanges = e => {
     e.preventDefault();
     const ID = this.props.location.state.id;
 
@@ -92,18 +109,21 @@ class MyAdminHackathon extends Component {
 
     var currentDate = new Date();
     var data = {
-      "startDate" : startDate,
-      "currentDate" : currentDate,
-      "endDate" : endDate
+      startDate: startDate,
+      currentDate: currentDate,
+      endDate: endDate
     };
-    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Date updated successfully.");
-    });
-  }
+    setHeader();
+    axios
+      .patch("http://localhost:8080/hackathons/" + ID, data)
+      .then(response => {
+        window.alert("Hackathon Date updated successfully.");
+      });
+  };
 
   render() {
     let redirectVar = null;
-    var id = localStorage.getItem("id");
+    var id = getJWTID();
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
@@ -120,65 +140,61 @@ class MyAdminHackathon extends Component {
           <br />
           <label> Hackathon Start Date:</label> &nbsp;
           {this.state.hackathon ? this.state.hackathon.startDate : ""}
-          <br/>
+          <br />
           <label> Hackathon End Date:</label> &nbsp;
           {this.state.hackathon ? this.state.hackathon.endDate : ""}
-          <br/>
+          <br />
           <label> New Start Date:</label>
           <input
-              type="date"
-              name="startDate"
-              // value={this.state.hackathon ? this.state.hackathon.startDate : ""}
-              className="form-control"
-              onChange={this.changeHandle}
+            type="date"
+            name="startDate"
+            // value={this.state.hackathon ? this.state.hackathon.startDate : ""}
+            className="form-control"
+            onChange={this.changeHandle}
           />
           <label> New End Date:</label>
-          <br/>
+          <br />
           <input
-              type="date"
-              name="endDate"
-              // value={this.state.hackathon ? this.state.hackathon.endDate : ""}
-              className="form-control"
-              onChange={this.changeHandle}
+            type="date"
+            name="endDate"
+            // value={this.state.hackathon ? this.state.hackathon.endDate : ""}
+            className="form-control"
+            onChange={this.changeHandle}
           />
           <label>Fee:</label>
           <input
-              type="text"
-              name="Fee"
-              value={this.state.hackathon ? this.state.hackathon.fee : ""}
-              className="form-control"
-              disabled
+            type="text"
+            name="Fee"
+            value={this.state.hackathon ? this.state.hackathon.fee : ""}
+            className="form-control"
+            disabled
           />
-          <label>Team Size:</label><br/>
+          <label>Team Size:</label>
+          <br />
           Minimum: &nbsp;
           <input
-              type="text"
-              name="Min"
-              value={this.state.hackathon
-                  ? this.state.hackathon.minSize
-                  : ""}
-              className="form-control"
-              disabled
+            type="text"
+            name="Min"
+            value={this.state.hackathon ? this.state.hackathon.minSize : ""}
+            className="form-control"
+            disabled
           />
           Maximum: &nbsp;
           <input
-              type="text"
-              name="Max"
-              value={this.state.hackathon
-                  ? this.state.hackathon.maxSize
-                  : ""}
-              className="form-control"
-              disabled
+            type="text"
+            name="Max"
+            value={this.state.hackathon ? this.state.hackathon.maxSize : ""}
+            className="form-control"
+            disabled
           />
-          <label>Status:</label><br/>
+          <label>Status:</label>
+          <br />
           <input
-              type="text"
-              name="Status"
-              value={this.state.hackathon
-                  ? this.state.hackathon.status
-                  : ""}
-              className="form-control"
-              disabled
+            type="text"
+            name="Status"
+            value={this.state.hackathon ? this.state.hackathon.status : ""}
+            className="form-control"
+            disabled
           />
         </div>
         <div className="hackathon-team">
@@ -212,11 +228,39 @@ class MyAdminHackathon extends Component {
             ))}
         </div>
         <div div className="button-hacks">
-        <button type="button" onClick={this.handleOpenStatus} style={{margin:20}} className="btn btn-primary btn-lg">Open</button>
-        <button type="button" onClick={this.handleClosedStatus} style={{margin:20}} className="btn btn-warning btn-lg">Closed</button>
-        <button type="button" onClick={this.handleFinalizedStatus} style={{margin:20}} className="btn btn-success btn-lg">Finalized</button>
-          <button type="button" onClick={this.submitChanges} style={{margin:20}} className="btn btn-success btn-lg">Save Changes</button>
-      </div>
+          <button
+            type="button"
+            onClick={this.handleOpenStatus}
+            style={{ margin: 20 }}
+            className="btn btn-primary btn-lg"
+          >
+            Open
+          </button>
+          <button
+            type="button"
+            onClick={this.handleClosedStatus}
+            style={{ margin: 20 }}
+            className="btn btn-warning btn-lg"
+          >
+            Closed
+          </button>
+          <button
+            type="button"
+            onClick={this.handleFinalizedStatus}
+            style={{ margin: 20 }}
+            className="btn btn-success btn-lg"
+          >
+            Finalized
+          </button>
+          <button
+            type="button"
+            onClick={this.submitChanges}
+            style={{ margin: 20 }}
+            className="btn btn-success btn-lg"
+          >
+            Save Changes
+          </button>
+        </div>
       </div>
     );
   }

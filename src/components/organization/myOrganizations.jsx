@@ -5,6 +5,14 @@ import axios from "axios";
 import "../../css/myOrganizations.css";
 import { If, Then, Else } from "react-if";
 import Form from "../common/form";
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus,
+  setHeader
+} from "../common/auth";
 
 class MyOrganizations extends Form {
   constructor() {
@@ -19,8 +27,8 @@ class MyOrganizations extends Form {
     };
   }
   handleAccept(member, org) {
-    var requesterId = localStorage.getItem("id");
-
+    var requesterId = getJWTID();
+    setHeader();
     axios
       .put(
         "http://localhost:8080/organizations/" +
@@ -37,8 +45,8 @@ class MyOrganizations extends Form {
   }
 
   handleReject(member, org) {
-    var requesterId = localStorage.getItem("id");
-
+    var requesterId = getJWTID();
+    setHeader();
     axios
       .put(
         "http://localhost:8080/organizations/" +
@@ -55,8 +63,8 @@ class MyOrganizations extends Form {
   }
 
   handleLeave(org) {
-    var requesterId = localStorage.getItem("id");
-
+    var requesterId = getJWTID();
+    setHeader();
     axios
       .put(
         "http://localhost:8080/organizations/" +
@@ -73,8 +81,8 @@ class MyOrganizations extends Form {
   }
 
   handleSearch = () => {
-    var requesterId = localStorage.getItem("id");
-
+    var requesterId = getJWTID();
+    setHeader();
     axios
       .get(
         "http://localhost:8080/organizations?name=" + this.state.data.org_name
@@ -85,14 +93,8 @@ class MyOrganizations extends Form {
   };
 
   handleJoin = e => {
-    var requesterId = localStorage.getItem("id");
-
-    console.log(
-      "http://localhost:8080/organizations/" +
-        this.state.search_results[0].id +
-        "/memberships?requesterId=" +
-        requesterId
-    );
+    var requesterId = getJWTID();
+    setHeader();
     axios
       .post(
         "http://localhost:8080/organizations/" +
@@ -106,8 +108,8 @@ class MyOrganizations extends Form {
   };
 
   async componentDidMount() {
-    var id = localStorage.getItem("id");
-
+    var id = getJWTID();
+    setHeader();
     axios.get("http://localhost:8080/users/" + id).then(response => {
       this.setState(
         {
@@ -116,13 +118,15 @@ class MyOrganizations extends Form {
         },
         async function() {
           var ids = [];
-          for (let i = 0; i < this.state.ownerOf.length; i++) {
-            ids[i] = this.state.ownerOf[i].id;
-          }
+          if (this.state.ownerOf)
+            for (let i = 0; i < this.state.ownerOf.length; i++) {
+              ids[i] = this.state.ownerOf[i].id;
+            }
 
           var member = [];
           var memberStatus = [];
           for (let i = 0; i < ids.length; i++) {
+            setHeader();
             await axios
               .get(
                 "http://localhost:8080/organizations/" + ids[i] + "/memberships"
@@ -148,15 +152,15 @@ class MyOrganizations extends Form {
 
   doSubmit = () => {
     const name = this.state.data;
+    setHeader();
     axios.get("http://localhost:8080/organizations/" + name).then(response => {
       this.setState({ search_results: response.data });
     });
   };
 
   render() {
-    console.log(this.state.search_results);
     let redirectVar = null;
-    var id = localStorage.getItem("id");
+    var id = getJWTID();
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
@@ -173,84 +177,121 @@ class MyOrganizations extends Form {
         <br />
         <div className="owner-orgs">
           <h2>Owner of</h2>
-          {this.state.ownerOf.map((data, index) => (
-            <div>
+          <If condition={!this.state.ownerOf}>
+            <Then>
               <div className="owner">
-                <h3>{data.name}</h3>
-                {data.description}
-                <br />
-                <br />
-                <table class="table table-striped table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">Member</th>
-                      <th scope="col">Status</th>
-                      <th scope="col"> Accept</th>
-                      <th scope="col">Reject</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.state.member.map((data1, index1) => (
-                      <React.Fragment>
-                        {data1.map((data3, index3) => (
-                          <React.Fragment>
-                            {this.state.memberStatus.map((data2, index2) => (
-                              <React.Fragment>
-                                {data2.map((data4, index4) => (
-                                  <If
-                                    condition={
-                                      index1 == index2 &&
-                                      index1 == index &&
-                                      index3 == index4
-                                    }
-                                  >
-                                    <tr>
-                                      <td>{data3.screenName}</td>
-                                      <td>{data4}</td>
-                                      <td>
-                                        <If condition={data4 == "Pending"}>
-                                          <button
-                                            className="btn btn-success"
-                                            onClick={() =>
-                                              this.handleAccept(data3, data)
-                                            }
-                                          >
-                                            Accept
-                                          </button>
-                                        </If>
-                                      </td>
-                                      <td>
-                                        <If condition={data4 == "Pending"}>
-                                          <button
-                                            className="btn btn-danger"
-                                            onClick={() =>
-                                              this.handleReject(data3, data)
-                                            }
-                                          >
-                                            Reject
-                                          </button>
-                                        </If>
-                                      </td>
-                                    </tr>
-                                  </If>
-                                ))}
-                              </React.Fragment>
-                            ))}
-                          </React.Fragment>
-                        ))}
-                      </React.Fragment>
-                    ))}
-                  </tbody>
-                </table>
+                <h3>You haven't created any organization yet.</h3>
               </div>
-              <br />
-            </div>
-          ))}
+            </Then>
+            <Else>
+              {this.state.ownerOf &&
+                this.state.ownerOf.map((data, index) => (
+                  <div>
+                    <div className="owner">
+                      <h3>{data.name}</h3>
+                      {data.description}
+                      <br />
+                      <br />
+                      <table class="table table-striped table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col">Member</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"> Accept</th>
+                            <th scope="col">Reject</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {this.state.member.map((data1, index1) => (
+                            <React.Fragment>
+                              {data1.map((data3, index3) => (
+                                <React.Fragment>
+                                  {this.state.memberStatus.map(
+                                    (data2, index2) => (
+                                      <React.Fragment>
+                                        {data2.map((data4, index4) => (
+                                          <If
+                                            condition={
+                                              index1 == index2 &&
+                                              index1 == index &&
+                                              index3 == index4
+                                            }
+                                          >
+                                            <tr>
+                                              <td>{data3.screenName}</td>
+                                              <td>{data4}</td>
+                                              <td>
+                                                <If
+                                                  condition={data4 == "Pending"}
+                                                >
+                                                  <button
+                                                    className="btn btn-success"
+                                                    onClick={() =>
+                                                      this.handleAccept(
+                                                        data3,
+                                                        data
+                                                      )
+                                                    }
+                                                  >
+                                                    Accept
+                                                  </button>
+                                                </If>
+                                              </td>
+                                              <td>
+                                                <If
+                                                  condition={data4 == "Pending"}
+                                                >
+                                                  <button
+                                                    className="btn btn-danger"
+                                                    onClick={() =>
+                                                      this.handleReject(
+                                                        data3,
+                                                        data
+                                                      )
+                                                    }
+                                                  >
+                                                    Reject
+                                                  </button>
+                                                </If>
+                                              </td>
+                                            </tr>
+                                          </If>
+                                        ))}
+                                      </React.Fragment>
+                                    )
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </React.Fragment>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <br />
+                  </div>
+                ))}
+            </Else>
+          </If>
         </div>
         <br />
         <br />
-        <If condition={!this.state.memberOf}>
+        <If condition={this.state.memberOf != null}>
           <Then>
+            <div className="owner-orgs">
+              <h2>Member of</h2>
+              <div className="member">
+                <h3>{this.state.memberOf ? this.state.memberOf.name : ""}</h3>
+                {this.state.memberOf ? this.state.memberOf.description : ""}
+                <button
+                  className="btn btn-warning btn-leave"
+                  onClick={() => this.handleLeave(this.state.memberOf)}
+                >
+                  Leave
+                </button>
+              </div>
+            </div>
+          </Then>
+          <Else>
             {" "}
             <div className="member">
               {" "}
@@ -289,21 +330,6 @@ class MyOrganizations extends Form {
                     </button>
                   </Else>
                 </If>
-              </div>
-            </div>
-          </Then>
-          <Else>
-            <div className="owner-orgs">
-              <h2>Member of</h2>
-              <div className="member">
-                <h3>{this.state.memberOf ? this.state.memberOf.name : ""}</h3>
-                {this.state.memberOf ? this.state.memberOf.description : ""}
-                <button
-                  className="btn btn-warning btn-leave"
-                  onClick={() => this.handleLeave(this.state.memberOf)}
-                >
-                  Leave
-                </button>
               </div>
             </div>
           </Else>

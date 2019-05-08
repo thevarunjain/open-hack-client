@@ -5,6 +5,14 @@ import "../../css/viewProfile.css";
 import axios from "axios";
 import { If } from "react-if";
 import { Redirect } from "react-router";
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus,
+  setHeader
+} from "../common/auth";
 
 class ViewProfile extends Component {
   constructor() {
@@ -12,21 +20,21 @@ class ViewProfile extends Component {
     this.state = {
       profiles: [],
       ID: "",
-      Organization : ""
+      Organization: ""
     };
   }
   componentDidMount() {
-    const ID = localStorage.getItem("id");
+    const ID = getJWTID();
+    setHeader();
     axios.get("http://localhost:8080/users/" + ID).then(response => {
-    this.setState({
-        profiles: response.data,
-        // Organization : response.data.memberOf.name
+      this.setState({
+        profiles: response.data
       });
     });
   }
   render() {
     let redirectVar = null;
-    var id = localStorage.getItem("id");
+    var id = getJWTID();
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
