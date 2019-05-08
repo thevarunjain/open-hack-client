@@ -51,8 +51,13 @@ class HackerHackathons extends Form {
       redirectVar = <Redirect to="/home" />;
     }
 
+    console.log(this.state.hackathons.participant);
+        var data = [];
+      {this.state.hackathons.participant && this.state.hackathons.participant.map(hackathonData => (
+          data.push(hackathonData.hackathon)
+      ))}
     const paginatedData = paginate(
-      this.state.hackathons ? this.state.hackathons.participant : "",
+      data,
       this.state.currentPage,
       this.state.pageSize
     );
@@ -73,8 +78,7 @@ class HackerHackathons extends Form {
           <br /> <span>student hackathons in the world.</span>
         </div>
           <h2 style={{color:"white"}}> PARTICIPATED HACKATHONS: </h2>
-        {paginatedData.map(hackathon => (
-          <div className="col-md-6">
+        {paginatedData.map(hackathonDisplay => (
             <div className="hackathon">
               <img
                 src={require("../../images/9.jpg")}
@@ -88,19 +92,17 @@ class HackerHackathons extends Form {
                     hack_id={this.state.hackathons}
                     to={{
                       pathname: "/hackathons/hackerHackathons/hackathon-view",
-                      state: { id: hackathon.id }
+                      state: { id: hackathonDisplay.id }
                     }}
-                    params={{ testvalue: "hello" }}
                   >
-                    {hackathon.name}
+                    {hackathonDisplay.name}
                   </Link>
                 </h3>
-                {hackathon.startDate} - {hackathon.endDate}
-                <br />
-                {hackathon.status}
+                {hackathonDisplay.startDate} - {hackathonDisplay.endDate}
+                <br/>
+                {hackathonDisplay.status}
               </div>
             </div>
-          </div>
         ))}
 
           <h2 style={{color:"white"}}> HACKATHONS TO BE JUDGED: </h2>

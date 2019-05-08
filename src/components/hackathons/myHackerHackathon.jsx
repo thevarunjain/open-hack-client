@@ -19,17 +19,40 @@ class MyHackerHackathon extends Component {
     super();
     this.state = {
       hackathon: [],
+      hackathons: [],
+      grades: "",
+      data: [],
+      submissionLink: "",
+      role: "participant",
       teams: []
     };
+    this.submitGrades = this.submitGrades.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.submitSubmission = this.submitSubmission.bind(this);
   }
 
   componentDidMount() {
     const ID = this.props.location.state.id;
     console.log("id=", ID);
+    const userId = getJWTID();
     setHeader();
     axios.get("http://localhost:8080/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
+      });
+      for(var i=0; i<response.data.judges.length; i++){
+        if(response.data.judges[i].id === userId) {
+          this.setState({role:"judge"})
+          break;
+        }
+      }
+    });
+
+    setHeader();
+    axios.get("http://localhost:8080/users/" + userId + "/hackathons").then(response => {
+      console.log(response.data);
+      this.setState({
+        hackathons: response.data
       });
     });
     setHeader();
@@ -43,15 +66,53 @@ class MyHackerHackathon extends Component {
       });
   }
 
+  handleChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  submitGrades = (teamId) =>{
+
+    const ID = this.state.hackathon.id;
+    const team_ID = teamId;
+    console.log(team_ID);
+    const data = {
+      grades: this.state.grades
+    }
+    setHeader();
+    axios
+        .patch("http://localhost:8080/hackathons/" + ID + "/teams", + team_ID, data)
+        .then(response => {
+          window.alert("Grade Submitted successfully.");
+        });
+  }
+
+  submitSubmission = (teamId) =>{
+
+    const ID = this.state.hackathon.id;
+    const team_ID = teamId;
+    console.log(team_ID);
+    const data = {
+      submissionLink: this.state.submissionLink
+    }
+    setHeader();
+    axios
+        .patch("http://localhost:8080/hackathons/" + ID + "/teams", + team_ID, data)
+        .then(response => {
+          window.alert("Submission Link Submitted successfully.");
+        });
+  }
+
   render() {
-    console.log(this.state.hackathon);
     let redirectVar = null;
     var id = getJWTID();
-    console.log(id);
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
 
+    var data =[];
+    {this.state.hackathons.participant && this.state.hackathons.participant.map(hackathonData => (
+        data.push(hackathonData.team)
+    ))}
     return (
       <div className="hackathon-home">
         {redirectVar}
@@ -76,6 +137,21 @@ class MyHackerHackathon extends Component {
           - {this.state.hackathon ? this.state.hackathon.maxSize : ""}
           <br />
           Status: {this.state.hackathon ? this.state.hackathon.status : ""}
+          <br/>
+          <If condition = {this.state.role !== "judge"}>
+          <h3> My Team( {data[0] && data[0].name}) Code Submission: </h3>
+          </If>
+
+              <If condition={this.state.role !== "judge"}>
+              <div className="input-group-append">
+                <input type="text" name = "submissionLink" onChange={this.handleChange} className="form-control" placeholder="" aria-label=""
+                       aria-describedby="basic-addon1"/>
+                <button className="btn btn-dark" onClick={() =>
+                    this.submitSubmission(data[0] && data[0].id)
+                } type="button">Submit Submission Link</button>
+              </div>
+              </If>
+
         </div>
         <div className="hackathon-team">
           <h3>Teams</h3>
@@ -86,9 +162,11 @@ class MyHackerHackathon extends Component {
               this.state.hackathon.judges.map(judge_hackathon => (
                     <If condition={getJWTID() === judge_hackathon.id}>
                       <div className="input-group-append">
-                        <input type="text" className="form-control" placeholder="" aria-label=""
+                        <input type="text" name = "grades" onChange={this.handleChange} className="form-control" placeholder="" aria-label=""
                                aria-describedby="basic-addon1"/>
-                        <button className="btn btn-outline-secondary" type="button">Submit Grades</button>
+                        <button className="btn btn-dark" onClick={() =>
+                            this.submitGrades(team.id)
+                        } type="button">Submit Grades</button>
                       </div>
                     </If>
               ))}
