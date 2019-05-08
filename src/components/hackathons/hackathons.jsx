@@ -34,13 +34,13 @@ class Hackathons extends Form {
     if (getJWTAdminStatus) this.setState({ isAdmin: true });
 
     setHeader();
-
     axios.get("http://localhost:8080/hackathons").then(response => {
       this.setState({
         hackathons: response.data
       });
     });
     const ID = localStorage.getItem("id");
+    setHeader();
     axios.get("http://localhost:8080/users/" + ID).then(response => {
       console.log(response.data);
       this.setState({
@@ -54,6 +54,7 @@ class Hackathons extends Form {
   };
 
   doSubmit = e => {
+    setHeader();
     axios
       .get(
         "http://localhost:8080/hackathons/name/" +
