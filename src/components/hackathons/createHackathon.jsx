@@ -26,28 +26,6 @@ class CreateHackathon extends Form {
     };
   }
 
-  // <<<<<<< Updated upstream
-
-  //   doSubmit = async e  => {
-
-  //         var startDateLocale = this.state.data.start_date;
-  //         var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
-
-  //         var endDateLocale = this.state.data.end_date;
-  //         var endDate = moment(endDateLocale, "YYYY-MM-DD").toDate();
-
-  //       var data = {
-  //         "name" : this.state.data.name,
-  //         "description" : this.state.data.description,
-  //         "startDate" : startDate,
-  //         "endDate" : endDate,
-  //         "fee" : this.state.data.fee,
-  //         "minSize" : this.state.data.min_size,
-  //         "maxSize" : this.state.data.max_size,
-  //         judges :  [],
-  //         sponsors : [] ,
-  //         discount : []
-  // =======
   doSubmit = async e => {
     var startDateLocale = this.state.data.start_date;
     var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
@@ -112,12 +90,12 @@ class CreateHackathon extends Form {
       },
       function() {
         console.log(this.state.dataSend);
+        this.submit();
       }
     );
   };
 
   async submit(e) {
-    e.preventDefault();
     var id = getJWTID();
     setHeader();
     await axios
@@ -225,15 +203,15 @@ class CreateHackathon extends Form {
               className="btn btn-primary"
               onClick={this.handleSubmit}
             >
-              Update
+              Create
             </button>{" "}
-            <button
+            {/* <button
               type="submit"
               className="btn btn-primary"
               onClick={this.submit.bind(this)}
             >
               Send
-            </button>{" "}
+            </button>{" "} */}
           </form>
         </div>
       </div>
