@@ -47,8 +47,8 @@ class CreateHackathon extends Form {
     };
 
     var judgesName = this.state.data.judges
-                          ? this.state.data.judges.split(";").map(e => e.trim())
-                          : [];
+      ? this.state.data.judges.split(";").map(e => e.trim())
+      : [];
 
     judgesName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
@@ -60,8 +60,8 @@ class CreateHackathon extends Form {
     });
 
     var discountsArray = this.state.data.discount
-                              ? this.state.data.discount.split(";")
-                              : [];
+      ? this.state.data.discount.split(";")
+      : [];
 
     data["discount"] = discountsArray.map(e => Number.parseInt(e.trim(), 10));
 
@@ -101,7 +101,8 @@ class CreateHackathon extends Form {
       )
       .then(response => {
         window.alert("Hackathon created successfully.");
-        window.location.reload();
+        // window.location.reload();
+        this.props.history.push("/hackathons");
       });
   }
 
@@ -133,7 +134,7 @@ class CreateHackathon extends Form {
                 onChange={this.handleChange}
               />
               <label>Description</label>
-                 <textarea
+              <textarea
                 required
                 name="description"
                 placeholder="Atleast 10 characters"
@@ -159,7 +160,7 @@ class CreateHackathon extends Form {
               />
               <label>Entry Fee</label>
               <input
-                type="number" 
+                type="number"
                 name="fee"
                 required
                 className="form-control"
@@ -184,7 +185,7 @@ class CreateHackathon extends Form {
                 placeholder="Maximum 10"
                 onChange={this.handleChange}
               />
-              <label>Judges</label>              
+              <label>Judges</label>
               <input
                 type="text"
                 name="judges"
@@ -193,7 +194,7 @@ class CreateHackathon extends Form {
                 placeholder=" Atleast 1 with Semi-colon(;) separated"
                 onChange={this.handleChange}
               />
-              <label>Sponsors (Optional)</label>              
+              <label>Sponsors (Optional)</label>
               <input
                 type="text"
                 name="sponsors"
@@ -201,7 +202,7 @@ class CreateHackathon extends Form {
                 placeholder="Semi-colon(;) separated"
                 onChange={this.handleChange}
               />
-              <label>Discount in % </label>              
+              <label>Discount in % </label>
               <input
                 type="text"
                 name="discount"
@@ -211,23 +212,23 @@ class CreateHackathon extends Form {
               />
             </div>
             <div>
-            <button
-              type="submit"
-              style={{marginLeft : "41%", width: "fit-content"}}            
-              className="btn btn-primary"
-              onClick={this.handleSubmit}
-            >
-              Finalize Hackathon
-            </button>{" "}
-            <br/>
-            <button
-              type="submit"
-            style={{marginLeft : "41%", width: "fit-content"}}
-              className="btn btn-primary"
-              onClick={this.submit.bind(this)}
-            >
-              Ready ? Create  
-            </button>{" "}
+              <button
+                type="submit"
+                style={{ marginLeft: "41%", width: "fit-content" }}
+                className="btn btn-primary"
+                onClick={this.handleSubmit}
+              >
+                Finalize Hackathon
+              </button>{" "}
+              <br />
+              <button
+                type="submit"
+                style={{ marginLeft: "41%", width: "fit-content" }}
+                className="btn btn-primary"
+                onClick={this.submit.bind(this)}
+              >
+                Ready ? Create
+              </button>{" "}
             </div>
           </form>
         </div>

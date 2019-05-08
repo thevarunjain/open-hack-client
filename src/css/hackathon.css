@@ -64,3 +64,18 @@ input[type="date"] {
   margin-left: 170%;
   margin-top: 4%;
 }
+
+.hacker-hackathon-team a {
+  color: white;
+}
+
+.hacker-hackathon-team a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.hacker-hackathon-team {
+  width: 30%;
+  margin-left: 60%;
+  margin-top: -13%;
+}
