@@ -227,7 +227,7 @@ class MyAdminHackathon extends Component {
               </div>
             ))}
         </div>
-        <div div className="button-hacks">
+        <div div className="button-hacks-admin">
           <button
             type="button"
             onClick={this.handleOpenStatus}
