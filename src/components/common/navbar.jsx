@@ -1,23 +1,26 @@
 import React, { Component } from "react";
 import "../../css/navbar.css";
 import { Redirect } from "react-router";
-import { If,Then,Else } from "react-if";
-import {Link} from "react-router-dom";
+
+import { If, Then, Else } from "react-if";
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus
+} from "../common/auth";
 
 class Navbar extends Component {
   handleLogout = () => {
-    localStorage.removeItem("id");
-    localStorage.removeItem("username");
-    sessionStorage.removeItem("isAdmin");
+    localStorage.removeItem("token");
     console.log("Logged out successfully.");
-    return <Redirect to="/home" />;
+    window.location.reload();
   };
   render() {
-    localStorage.setItem("username", "shishir.kulkarni@sjsu.edu");
-    localStorage.setItem("id", "1");
-    var id = localStorage.getItem("id");
-    var username = localStorage.getItem("username");
-  console.log((sessionStorage.getItem("isAdmin")));
+    var id = getJWTID();
+    var screenName = getJWTScreenName();
+
     return (
       <div>
         <If condition={!id}>
@@ -46,7 +49,7 @@ class Navbar extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                {username}
+                {screenName}
               </a>
               <div class="dropdown-menu item" aria-labelledby="navbarDropdown">
                 <a className="dropdown-item" href="/profile">
@@ -56,19 +59,22 @@ class Navbar extends Component {
                   My Organizations
                 </a>
 
-                <If condition={(sessionStorage.getItem("isAdmin"))}>
+                <If condition={sessionStorage.getItem("isAdmin")}>
                   <Then>
-                    <a className="dropdown-item" href="/hackathons/adminHackathons">
+                    <a
+                      className="dropdown-item"
+                      href="/hackathons/adminHackathons"
+                    >
                       My Hackathons
                     </a>
-
                   </Then>
                   <Else>
-                    <a className="dropdown-item" href="/hackathons/hackerHackathons">
+                    <a
+                      className="dropdown-item"
+                      href="/hackathons/hackerHackathons"
+                    >
                       My Hackathons
                     </a>
-
-
                   </Else>
                 </If>
                 <a className="dropdown-item" onClick={this.handleLogout}>
