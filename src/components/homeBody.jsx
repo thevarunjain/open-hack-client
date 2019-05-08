@@ -1,11 +1,19 @@
 import React, { Component } from "react";
 import "../css/home.css";
 import { Redirect } from "react-router";
+import {
+  getToken,
+  getJWTUsername,
+  getJWTID,
+  getJWTScreenName,
+  getJWTAdminStatus,
+  setHeader
+} from "./common/auth";
 
 class HomeBody extends Component {
   render() {
     let redirectVar = null;
-    var id = localStorage.getItem("id");
+    var id = getJWTID();
     if (id) {
       redirectVar = <Redirect to="/hackathons" />;
     }
