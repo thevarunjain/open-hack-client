@@ -61,7 +61,7 @@ class Navbar extends Component {
                   My Organizations
                 </a>
 
-                <If condition={sessionStorage.getItem("isAdmin")}>
+                <If condition={getJWTAdminStatus()}>
                   <Then>
                     <a
                       className="dropdown-item"
