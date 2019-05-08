@@ -75,6 +75,7 @@ class CreateHackathon extends Form {
         console.log(this.state.dataSend)
       }  )
     
+      window.alert("Are you sure ?");
   };
 
 
@@ -96,7 +97,7 @@ class CreateHackathon extends Form {
       redirectVar = <Redirect to="/home" />;
     }
     return (
-      <div className="home">
+      <div className="create-hack-container">
         {redirectVar}
         <Navbar />
         <hr />
@@ -183,14 +184,14 @@ class CreateHackathon extends Form {
               className="btn btn-primary"
               onClick={this.handleSubmit}
             >
-              Update
+              Finalize
             </button>{" "}
             <button
               type="submit"
               className="btn btn-primary"
               onClick={this.submit.bind(this)}
             >
-              Send
+              Create Hackathon
             </button>{" "}
           </form>
         </div>
