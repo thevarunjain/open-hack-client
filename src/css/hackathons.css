@@ -44,6 +44,7 @@ span {
 
 .hackathon {
   width: 100%;
+  margin-left: 6%;
 }
 
 .hackathons-list img {
@@ -53,7 +54,7 @@ span {
 
 .hackathon-info {
   color: white;
-  text-align: center;
+  /*text-align: center;*/
   margin-left: 6%;
   width: 90%;
 }
