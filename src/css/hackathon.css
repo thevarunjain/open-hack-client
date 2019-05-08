@@ -79,3 +79,9 @@ input[type="date"] {
   margin-left: 60%;
   margin-top: -13%;
 }
+
+.button-hacks-admin {
+  margin-left: 10%;
+  margin-top: 12%;
+  width: 40%;
+}
