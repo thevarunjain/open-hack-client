@@ -31,8 +31,8 @@ class AdminHackathons extends Form {
 
   componentDidMount() {
     if (getJWTAdminStatus()) this.setState({ isAdmin: true });
-
-    axios.get("http://localhost:8080/hackathons/my").then(response => {
+    const ID= getJWTID();
+    axios.get("http://localhost:8080/users/" + ID + "/hackathons").then(response => {
       console.log(response.data);
       this.setState({
         hackathons: response.data

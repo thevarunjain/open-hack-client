@@ -42,6 +42,7 @@ class Hackathons extends Form {
     });
     const ID = localStorage.getItem("id");
     axios.get("http://localhost:8080/users/" + ID).then(response => {
+      console.log(response.data);
       this.setState({
         profile: response.data
       });
@@ -65,7 +66,7 @@ class Hackathons extends Form {
 
   render() {
     console.log("id=", getJWTID());
-    console.log(this.state.hackathons);
+    console.log(this.state.profile);
 
     let redirectVar = null;
     var id = getJWTID();
