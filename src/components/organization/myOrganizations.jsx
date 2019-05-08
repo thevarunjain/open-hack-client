@@ -18,16 +18,94 @@ class MyOrganizations extends Form {
       memberStatus: []
     };
   }
-  handleAccept = e => {
-    window.alert(e);
+  handleAccept(member, org) {
+    var requesterId = localStorage.getItem("id");
+
+    axios
+      .put(
+        "http://localhost:8080/organizations/" +
+          org.id +
+          "/memberships?requesterId=" +
+          requesterId +
+          "&memberId=" +
+          member.id +
+          "&toState=Approved"
+      )
+      .then(response => {
+        window.alert("Accepted!");
+      });
+  }
+
+  handleReject(member, org) {
+    var requesterId = localStorage.getItem("id");
+
+    axios
+      .put(
+        "http://localhost:8080/organizations/" +
+          org.id +
+          "/memberships?requesterId=" +
+          requesterId +
+          "&memberId=" +
+          member.id +
+          "&toState=Rejected"
+      )
+      .then(response => {
+        window.alert("Rejected!");
+      });
+  }
+
+  handleLeave(org) {
+    var requesterId = localStorage.getItem("id");
+
+    axios
+      .put(
+        "http://localhost:8080/organizations/" +
+          org.id +
+          "/memberships?requesterId=" +
+          requesterId +
+          "&memberId=" +
+          requesterId +
+          "&toState=Left"
+      )
+      .then(response => {
+        window.alert("Left!");
+      });
+  }
+
+  handleSearch = () => {
+    var requesterId = localStorage.getItem("id");
+
+    axios
+      .get(
+        "http://localhost:8080/organizations?name=" + this.state.data.org_name
+      )
+      .then(response => {
+        this.setState({ search_results: response.data });
+      });
   };
-  handleReject = e => {
-    window.alert("reject");
+
+  handleJoin = e => {
+    var requesterId = localStorage.getItem("id");
+
+    console.log(
+      "http://localhost:8080/organizations/" +
+        this.state.search_results[0].id +
+        "/memberships?requesterId=" +
+        requesterId
+    );
+    axios
+      .post(
+        "http://localhost:8080/organizations/" +
+          this.state.search_results[0].id +
+          "/memberships?requesterId=" +
+          requesterId
+      )
+      .then(response => {
+        window.alert("Request sent successfully!");
+      });
   };
-  handleLeave = e => {
-    window.alert("leave");
-  };
-  componentDidMount() {
+
+  async componentDidMount() {
     var id = localStorage.getItem("id");
 
     axios.get("http://localhost:8080/users/" + id).then(response => {
@@ -36,7 +114,7 @@ class MyOrganizations extends Form {
           memberOf: response.data.memberOf,
           ownerOf: response.data.ownerOf
         },
-        function() {
+        async function() {
           var ids = [];
           for (let i = 0; i < this.state.ownerOf.length; i++) {
             ids[i] = this.state.ownerOf[i].id;
@@ -45,19 +123,24 @@ class MyOrganizations extends Form {
           var member = [];
           var memberStatus = [];
           for (let i = 0; i < ids.length; i++) {
-            axios
+            await axios
               .get(
                 "http://localhost:8080/organizations/" + ids[i] + "/memberships"
               )
               .then(response => {
+                var temp = [];
+                var tempStatus = [];
                 for (let j = 0; j < response.data.length; j++) {
-                  member[j] = response.data[j].member;
-                  memberStatus[j] = response.data[j].status;
+                  temp.push(response.data[j].member);
+                  tempStatus.push(response.data[j].status);
                 }
-                this.setState({ member: member });
-                this.setState({ memberStatus: memberStatus });
+                member.push(temp);
+                memberStatus.push(tempStatus);
               });
           }
+
+          this.setState({ member: member });
+          this.setState({ memberStatus: memberStatus });
         }
       );
     });
@@ -70,15 +153,8 @@ class MyOrganizations extends Form {
     });
   };
 
-  handleJoin = () => {
-    const id = this.state.search_results.id;
-    axios
-      .post("http://localhost:8080/organizations/" + id + "/memberships")
-      .then(response => {
-        window.alert("Organization joined successfully.");
-      });
-  };
   render() {
+    console.log(this.state.search_results);
     let redirectVar = null;
     var id = localStorage.getItem("id");
     if (!id) {
@@ -97,7 +173,7 @@ class MyOrganizations extends Form {
         <br />
         <div className="owner-orgs">
           <h2>Owner of</h2>
-          {this.state.ownerOf.map(data => (
+          {this.state.ownerOf.map((data, index) => (
             <div>
               <div className="owner">
                 <h3>{data.name}</h3>
@@ -116,29 +192,51 @@ class MyOrganizations extends Form {
                   <tbody>
                     {this.state.member.map((data1, index1) => (
                       <React.Fragment>
-                        {this.state.memberStatus.map((data2, index2) => (
-                          <If condition={index1 == index2}>
-                            <tr>
-                              <td>{data1.screenName}</td>
-                              <td>{data2}</td>
-                              <td>
-                                <button
-                                  className="btn btn-success"
-                                  onClick={this.handleAccept}
-                                >
-                                  Accept
-                                </button>
-                              </td>
-                              <td>
-                                <button
-                                  className="btn btn-danger"
-                                  onClick={this.handleReject}
-                                >
-                                  Reject
-                                </button>
-                              </td>
-                            </tr>
-                          </If>
+                        {data1.map((data3, index3) => (
+                          <React.Fragment>
+                            {this.state.memberStatus.map((data2, index2) => (
+                              <React.Fragment>
+                                {data2.map((data4, index4) => (
+                                  <If
+                                    condition={
+                                      index1 == index2 &&
+                                      index1 == index &&
+                                      index3 == index4
+                                    }
+                                  >
+                                    <tr>
+                                      <td>{data3.screenName}</td>
+                                      <td>{data4}</td>
+                                      <td>
+                                        <If condition={data4 == "Pending"}>
+                                          <button
+                                            className="btn btn-success"
+                                            onClick={() =>
+                                              this.handleAccept(data3, data)
+                                            }
+                                          >
+                                            Accept
+                                          </button>
+                                        </If>
+                                      </td>
+                                      <td>
+                                        <If condition={data4 == "Pending"}>
+                                          <button
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                              this.handleReject(data3, data)
+                                            }
+                                          >
+                                            Reject
+                                          </button>
+                                        </If>
+                                      </td>
+                                    </tr>
+                                  </If>
+                                ))}
+                              </React.Fragment>
+                            ))}
+                          </React.Fragment>
                         ))}
                       </React.Fragment>
                     ))}
@@ -151,7 +249,7 @@ class MyOrganizations extends Form {
         </div>
         <br />
         <br />
-        <If condition={this.state.memberOf && this.state.memberOf.length == 0}>
+        <If condition={!this.state.memberOf}>
           <Then>
             {" "}
             <div className="member">
@@ -167,19 +265,25 @@ class MyOrganizations extends Form {
               <button
                 type="submit"
                 className="btn btn-primary btn-submit"
-                onClick={this.handleSubmit}
+                onClick={this.handleSearch}
               >
                 Search
               </button>
               <div className="search-results">
                 <If condition={this.state.search_results.length == 0}>
-                  <Then>No organization found with this name</Then>
+                  <Then>No organization found </Then>
                   <Else>
-                    {this.state.search_results.map(data => ({ data }))}
+                    {this.state.search_results.map(data => (
+                      <div>
+                        <h3>{data.name}</h3> <br />
+                        {data.description}
+                      </div>
+                    ))}
+
                     <button
                       type="submit"
-                      className="btn btn-primary"
-                      onClick={this.handleJoin}
+                      className="btn btn-primary btn-join"
+                      onClick={this.handleJoin.bind(this)}
                     >
                       Join
                     </button>
@@ -192,11 +296,11 @@ class MyOrganizations extends Form {
             <div className="owner-orgs">
               <h2>Member of</h2>
               <div className="member">
-                <h3>{this.state.memberOf.name}</h3>
-                {this.state.memberOf.description}
+                <h3>{this.state.memberOf ? this.state.memberOf.name : ""}</h3>
+                {this.state.memberOf ? this.state.memberOf.description : ""}
                 <button
                   className="btn btn-warning btn-leave"
-                  onClick={this.handleLeave}
+                  onClick={() => this.handleLeave(this.state.memberOf)}
                 >
                   Leave
                 </button>

@@ -5,14 +5,22 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { Redirect } from "react-router";
 import Form from "../common/form";
+var moment = require('moment');
 
-class Hackathon extends Component {
+class MyAdminHackathon extends Component {
   constructor() {
     super();
     this.state = {
       hackathon: [],
+      startDate: "",
+      endDate: "",
+      currentDate:"",
       teams: []
     };
+    this.handleOpenStatus = this.handleOpenStatus.bind(this);
+    this.handleClosedStatus = this.handleClosedStatus.bind(this);
+    this.handleFinalizedStatus = this.handleFinalizedStatus.bind(this);
+    this.changeHandle = this.changeHandle.bind(this);
   }
 
   componentDidMount() {
@@ -33,6 +41,66 @@ class Hackathon extends Component {
       });
   }
 
+  handleOpenStatus = e =>{
+    e.preventDefault();
+    const ID = this.props.location.state.id;
+    var data = {
+      toState : "Open"
+    };
+    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Status updated successfully.");
+    });
+  }
+
+  handleClosedStatus = e =>{
+    e.preventDefault();
+    const ID = this.props.location.state.id;
+    var data = {
+      toState : "Closed"
+    };
+    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Status updated successfully.");
+    });
+
+  }
+
+  handleFinalizedStatus = e =>{
+    e.preventDefault();
+    const ID = this.props.location.state.id;
+    var data = {
+      toState : "Finalized"
+    };
+    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Status updated successfully.");
+    });
+
+  }
+
+  changeHandle(e) {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  submitChanges = e =>{
+    e.preventDefault();
+    const ID = this.props.location.state.id;
+
+    var startDateLocale = this.state.startDate;
+    var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
+
+    var endDateLocale = this.state.endDate;
+    var endDate = moment(endDateLocale, "YYYY-MM-DD").toDate();
+
+    var currentDate = new Date();
+    var data = {
+      "startDate" : startDate,
+      "currentDate" : currentDate,
+      "endDate" : endDate
+    };
+    axios.patch("http://localhost:8080/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Date updated successfully.");
+    });
+  }
+
   render() {
     let redirectVar = null;
     var id = localStorage.getItem("id");
@@ -50,22 +118,28 @@ class Hackathon extends Component {
           <br />
           {this.state.hackathon ? this.state.hackathon.description : ""}
           <br />
-          <label> Start Date:</label>
+          <label> Hackathon Start Date:</label> &nbsp;
+          {this.state.hackathon ? this.state.hackathon.startDate : ""}
+          <br/>
+          <label> Hackathon End Date:</label> &nbsp;
+          {this.state.hackathon ? this.state.hackathon.endDate : ""}
+          <br/>
+          <label> New Start Date:</label>
           <input
               type="date"
               name="startDate"
-              value={this.state.hackathon ? this.state.hackathon.startDate : ""}
+              // value={this.state.hackathon ? this.state.hackathon.startDate : ""}
               className="form-control"
-              disabled
+              onChange={this.changeHandle}
           />
-          <label> End Date:</label>
+          <label> New End Date:</label>
           <br/>
           <input
               type="date"
               name="endDate"
-              value={this.state.hackathon ? this.state.hackathon.endDate : ""}
+              // value={this.state.hackathon ? this.state.hackathon.endDate : ""}
               className="form-control"
-              disabled
+              onChange={this.changeHandle}
           />
           <label>Fee:</label>
           <input
@@ -137,9 +211,15 @@ class Hackathon extends Component {
               </div>
             ))}
         </div>
+        <div div className="button-hacks">
+        <button type="button" onClick={this.handleOpenStatus} style={{margin:20}} className="btn btn-primary btn-lg">Open</button>
+        <button type="button" onClick={this.handleClosedStatus} style={{margin:20}} className="btn btn-warning btn-lg">Closed</button>
+        <button type="button" onClick={this.handleFinalizedStatus} style={{margin:20}} className="btn btn-success btn-lg">Finalized</button>
+          <button type="button" onClick={this.submitChanges} style={{margin:20}} className="btn btn-success btn-lg">Save Changes</button>
+      </div>
       </div>
     );
   }
 }
 
-export default Hackathon;
+export default MyAdminHackathon;

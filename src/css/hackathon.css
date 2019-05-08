@@ -3,7 +3,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh;
+  height: 100vw;
   color: white;
 }
 
@@ -13,7 +13,14 @@
   width: 40%;
 }
 
+.button-hacks{
+  margin-left: 10%;
+  margin-top: 3%;
+  width: 40%;
+}
+
 .hackathon-team a {
+  margin-top: -20%;
   color: white;
 }
 
@@ -25,7 +32,7 @@
 .hackathon-team {
   width: 30%;
   margin-left: 60%;
-  margin-top: -13%;
+  margin-top: -25%;
 }
 
 .hackathon-judge {

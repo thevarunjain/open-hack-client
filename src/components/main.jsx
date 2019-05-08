@@ -6,13 +6,17 @@ import Login from "./user/login";
 import Signup from "./user/signup";
 import SignupConfirmation from "./user/signupConfirmation";
 import Hackathons from "./hackathons/hackathons";
-import Hackathon from "./hackathons/hackathon";
 import ViewProfile from "./user/viewProfile";
 import EditProfile from "./user/editProfile";
 import Firebase from "./Firebase";
 import CreateOrganization from "./organization/createOrganization";
 import MyOrganizations from "./organization/myOrganizations";
 import CreateHackathon from "./hackathons/createHackathon";
+import HackerHackathons from "./hackathons/hackerHackathons";
+import AdminHackathons from "./hackathons/adminHackathons";
+import MyHackerHackathon from "./hackathons/myHackerHackathon";
+import MyAdminHackathon from "./hackathons/myAdminHackathon";
+import Hackathon from "./hackathons/hackathon";
 
 class Main extends Component {
   render() {
@@ -27,6 +31,10 @@ class Main extends Component {
         <Route path="/profile" exact component={ViewProfile} />
         <Route path="/profile-edit" exact component={EditProfile} />
         <Route path="/hackathon/create" exact component={CreateHackathon} />
+        <Route path="/hackathons/hackerHackathons" exact component={HackerHackathons} />
+        <Route path="/hackathons/adminHackathons" exact component={AdminHackathons} />
+        <Route path="/hackathons/hackerHackathons/hackathon-view" exact component={MyHackerHackathon} />
+          <Route path="/hackathons/adminHackathons/hackathon-view" exact component={MyAdminHackathon} />
         <Route
           path="/organization/create"
           exact
