@@ -118,8 +118,9 @@ class AdminHackathons extends Form {
             </div>
           </Then>
           <Else>
-            {" "}
-            <div>no</div>
+            <div className="empty-admin">
+              <h3>There are no hackathons to display</h3>
+            </div>
           </Else>
         </If>
       </div>
