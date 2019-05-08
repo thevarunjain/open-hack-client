@@ -31,8 +31,7 @@ class CreateOrganization extends Form {
     };
 
     console.log(org);
-    axios
-      .post("http://localhost:8080/organizations?ownerId=" + ownerId, org)
+    axios.post("http://localhost:8080/organizations?ownerId=" + ownerId, org)
       .then(response => {
         window.alert("Organization created successfully.");
       });
