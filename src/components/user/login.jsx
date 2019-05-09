@@ -18,30 +18,31 @@ class Login extends Form {
     user: ""
   };
 
-  doSubmit = () => {
-    // if (isUserVerified()) {
-    console.log(isUserVerified());
-    var loggedInUser = loginWithCredentials(
+  doSubmit = async () => {
+    
+    var loggedInUser = await loginWithCredentials(
       this.state.data.username,
       this.state.data.password
-    );
+      );
 
-    var data = {
-      email: this.state.data.username,
-      password: this.state.data.password
-    };
-    axios.post("http://localhost:8080/auth/signin", data).then(response => {
-      console.log("Status Code : ", response.data);
-      if (response.status === 200) {
-        console.log("Login successful.");
-        localStorage.setItem("token", response.data.accessToken);
-        this.props.history.push("/hackathons");
-      }
-    });
-    // }else{
-    //     window.alert("Email is not verified. Check your mail");
-    //     window.location.reload();
-    // }
+    if (isUserVerified()) {
+        var data = {
+          email: this.state.data.username,
+          password: this.state.data.password
+                  };
+      axios.post("http://localhost:8080/auth/signin", data).then(response => {
+          console.log("Status Code : ", response.data);
+          if (response.status === 200) {
+            console.log("Login successful.");
+            localStorage.setItem("token", response.data.accessToken);
+            this.props.history.push("/hackathons");
+          }
+      });
+    }else{
+        // window.alert("Email is not verified. Check your mail");
+        console.log("Email not verified");
+        // window.location.reload();
+    }
   };
 
   render() {

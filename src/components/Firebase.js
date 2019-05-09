@@ -63,7 +63,7 @@ export function signUpWithFacebook() {
     });
 }
 
-export var signout = () => {
+export var signoutFirebase = () => {
   firebase
     .auth()
     .signOut()
@@ -88,6 +88,7 @@ export var signUpWithCredentials = (email, password) => {
 };
 
 export var loginWithCredentials = (email, password) => {
+    console.log("Firebase login", email, password); 
   firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
@@ -133,18 +134,6 @@ class Firebase extends Component {
   render() {
     return (
       <div>
-        <button className="fa fa-facebook" onClick={signUpWithFacebook}>
-          {" "}
-          Log in with Facebook{" "}
-        </button>
-        <button className="googlebutton" onClick={signUpWithGoogle}>
-          {" "}
-          Log in with Google{" "}
-        </button>
-        <button className="googlebutton" onClick={signout}>
-          {" "}
-          Sign Out{" "}
-        </button>
       </div>
     );
   }

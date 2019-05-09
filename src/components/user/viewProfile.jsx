@@ -64,7 +64,10 @@ class ViewProfile extends Component {
             <br />
             <br />
             <div>Title: {profile.businessTitle} </div>
-            <div>Organization: {this.state.Organization}</div>
+            <div>Organization:{" "}
+              {profile.memberOf
+                ? profile.memberOf.name
+                : "No organization joined"}</div>
             <div>
               Address: {profile.address ? profile.address.street : ""},{" "}
               {profile.address ? profile.address.city : ""},{" "}
@@ -74,11 +77,11 @@ class ViewProfile extends Component {
           </div>
         </div>
 
-        <If condition={profile.admin}>
+        {/* <If condition={profile.admin}> */}
           <div className="edit_profile">
             <Link to="/profile-edit">Edit Profile</Link>
           </div>{" "}
-        </If>
+        {/* </If> */}
       </div>
     );
   }
