@@ -49,6 +49,14 @@ class Hackathons extends Form {
     });
   }
 
+  handleSearchChange = e => {
+    const data = { ...this.state.data };
+    data[e.target.name] = e.target.value;
+    this.setState({ data }, function() {
+      this.doSubmit();
+    });
+  };
+
   handlePageChange = page => {
     this.setState({ currentPage: page });
   };
@@ -69,7 +77,6 @@ class Hackathons extends Form {
     // console.log("id=", getJWTID());
     // console.log(this.state.profile);
 
-    console.log(this.state.isAdmin);
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -101,17 +108,17 @@ class Hackathons extends Form {
             type="text"
             name="hackathon_name"
             className="form-control"
-            placeholder="Hackathon name"
-            onChange={this.handleChange}
+            placeholder="Search Hackathon"
+            onChange={this.handleSearchChange}
             autoFocus
           />
-          <button
+          {/* <button
             type="submit"
             className="btn btn-primary"
             onClick={this.handleSubmit}
           >
             Search
-          </button>
+          </button> */}
         </div>
 
         {paginatedData.map(hackathon => (
