@@ -38,28 +38,20 @@ class EditProfile extends FormEventHandlers {
   componentDidMount() {
     const ID = getJWTID();
     setHeader();
-    axios
-      .get(rootUrl + "/users/" + ID)
-      .then(response => {
-        this.setState({
-          screenname: response.data.screenName,
-          first: response.data.name.first,
-          last: response.data.name.last,
-          businessTitle: response.data.businessTitle,
-          aboutMe: response.data.aboutMe,
-          street: response.data.address.street,
-          city: response.data.address.city,
-          state: response.data.address.state,
-          zipcode: response.data.address.zip,
-          id: response.data.id
-        });
-      })
-      .catch(error => {
-        this.setState({
-          // dbErrors: error.response.data.code
-          dbErrors: error
-        });
+    axios.get(rootUrl + "/users/" + ID).then(response => {
+      this.setState({
+        screenname: response.data.screenName,
+        first: response.data.name.first,
+        last: response.data.name.last,
+        businessTitle: response.data.businessTitle,
+        aboutMe: response.data.aboutMe,
+        street: response.data.address.street,
+        city: response.data.address.city,
+        state: response.data.address.state,
+        zipcode: response.data.address.zip,
+        id: response.data.id
       });
+    });
   }
 
   doSubmit = e => {
@@ -79,13 +71,23 @@ class EditProfile extends FormEventHandlers {
       }
     };
 
-    console.log(profile);
-
+    console.group("profile=", profile);
     const ID = getJWTID();
     setHeader();
-    axios.put(rootUrl + "/users/" + ID, profile).then(response => {
-      window.alert("Profile updated successfully.");
-    });
+    axios
+      .put(rootUrl + "/users/" + ID, profile)
+      .then(response => {
+        window.alert("Profile updated successfully.");
+
+        this.props.history.push("/profile");
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({
+          dbErrors: error.response.data.code
+          // dbErrors: error
+        });
+      });
   };
 
   schema = {
@@ -119,6 +121,7 @@ class EditProfile extends FormEventHandlers {
       .label("Zipcode")
       .max(6)
       .min(5)
+      .regex(/^[0-9]*$/)
   };
 
   render() {
