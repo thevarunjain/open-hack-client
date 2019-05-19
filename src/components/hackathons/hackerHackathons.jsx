@@ -16,6 +16,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import { rootUrl } from "../common/constant";
 
 class HackerHackathons extends Form {
   constructor() {
@@ -32,7 +33,7 @@ class HackerHackathons extends Form {
     if (getJWTAdminStatus) this.setState({ isAdmin: true });
     setHeader();
     const ID= getJWTID();
-    axios.get("http://localhost:8080/users/" + ID + "/hackathons").then(response => {
+    axios.get(rootUrl+"/users/" + ID + "/hackathons").then(response => {
         console.log(response.data);
       this.setState({
         hackathons: response.data

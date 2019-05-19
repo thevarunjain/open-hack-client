@@ -13,6 +13,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import { rootUrl } from "../common/constant";
 
 var moment = require("moment");
 
@@ -36,14 +37,14 @@ class MyAdminHackathon extends Component {
     const ID = this.props.location.state.id;
     console.log("id=", ID);
     setHeader();
-    axios.get("http://localhost:8080/hackathons/" + ID).then(response => {
+    axios.get(rootUrl+"/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
       });
     });
     setHeader();
     axios
-      .get("http://localhost:8080/hackathons/" + ID + "/teams")
+      .get(rootUrl+"/hackathons/" + ID + "/teams")
       .then(response => {
         this.setState({
           teams: response.data
@@ -59,7 +60,7 @@ class MyAdminHackathon extends Component {
     };
     setHeader();
     axios
-      .patch("http://localhost:8080/hackathons/" + ID, data)
+      .patch(rootUrl+"/hackathons/" + ID, data)
       .then(response => {
         window.alert("Hackathon Status updated successfully.");
       });
@@ -73,7 +74,7 @@ class MyAdminHackathon extends Component {
     };
     setHeader();
     axios
-      .patch("http://localhost:8080/hackathons/" + ID, data)
+      .patch(rootUrl+"/hackathons/" + ID, data)
       .then(response => {
         window.alert("Hackathon Status updated successfully.");
       });
@@ -87,7 +88,7 @@ class MyAdminHackathon extends Component {
     };
     setHeader();
     axios
-      .patch("http://localhost:8080/hackathons/" + ID, data)
+      .patch(rootUrl+"/hackathons/" + ID, data)
       .then(response => {
         window.alert("Hackathon Status updated successfully.");
       });
@@ -115,7 +116,7 @@ class MyAdminHackathon extends Component {
     };
     setHeader();
     axios
-      .patch("http://localhost:8080/hackathons/" + ID, data)
+      .patch(rootUrl+"/hackathons/" + ID, data)
       .then(response => {
         window.alert("Hackathon Date updated successfully.");
       });

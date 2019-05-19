@@ -13,6 +13,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import { rootUrl } from "../common/constant";
 
 class MyOrganizations extends Form {
   constructor() {
@@ -31,7 +32,7 @@ class MyOrganizations extends Form {
     setHeader();
     axios
       .put(
-        "http://localhost:8080/organizations/" +
+        rootUrl+"/organizations/" +
           org.id +
           "/memberships?requesterId=" +
           requesterId +
@@ -49,7 +50,7 @@ class MyOrganizations extends Form {
     setHeader();
     axios
       .put(
-        "http://localhost:8080/organizations/" +
+        rootUrl+"/organizations/" +
           org.id +
           "/memberships?requesterId=" +
           requesterId +
@@ -67,7 +68,7 @@ class MyOrganizations extends Form {
     setHeader();
     axios
       .put(
-        "http://localhost:8080/organizations/" +
+        rootUrl+"/organizations/" +
           org.id +
           "/memberships?requesterId=" +
           requesterId +
@@ -85,7 +86,7 @@ class MyOrganizations extends Form {
     setHeader();
     axios
       .get(
-        "http://localhost:8080/organizations?name=" + this.state.data.org_name
+        rootUrl+"/organizations?name=" + this.state.data.org_name
       )
       .then(response => {
         this.setState({ search_results: response.data });
@@ -97,7 +98,7 @@ class MyOrganizations extends Form {
     setHeader();
     axios
       .post(
-        "http://localhost:8080/organizations/" +
+        rootUrl+"/organizations/" +
           this.state.search_results[0].id +
           "/memberships?requesterId=" +
           requesterId
@@ -110,7 +111,7 @@ class MyOrganizations extends Form {
   async componentDidMount() {
     var id = getJWTID();
     setHeader();
-    axios.get("http://localhost:8080/users/" + id).then(response => {
+    axios.get(rootUrl+"/users/" + id).then(response => {
       this.setState(
         {
           memberOf: response.data.memberOf,
@@ -129,7 +130,7 @@ class MyOrganizations extends Form {
             setHeader();
             await axios
               .get(
-                "http://localhost:8080/organizations/" + ids[i] + "/memberships"
+                rootUrl+"/organizations/" + ids[i] + "/memberships"
               )
               .then(response => {
                 var temp = [];
@@ -153,7 +154,7 @@ class MyOrganizations extends Form {
   doSubmit = () => {
     const name = this.state.data;
     setHeader();
-    axios.get("http://localhost:8080/organizations/" + name).then(response => {
+    axios.get(rootUrl+"/organizations/" + name).then(response => {
       this.setState({ search_results: response.data });
     });
   };

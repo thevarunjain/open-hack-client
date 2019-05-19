@@ -12,6 +12,7 @@ import Form from "../common/form";
 import axios from "axios";
 import { Redirect } from "react-router";
 import "../../css/createHackathon.css";
+import { rootUrl } from "../common/constant";
 
 class CreateTeam extends Form {
   constructor() {
@@ -35,7 +36,7 @@ class CreateTeam extends Form {
     membersName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
         setHeader();
-        var res = await axios.get("http://localhost:8080/users?name=" + name);
+        var res = await axios.get(rootUrl+"/users?name=" + name);
         var jid = Number.parseInt(res.data[0].id, 10) - 1;
         data["members"].push(jid + 1);
       }
@@ -64,7 +65,7 @@ class CreateTeam extends Form {
     setHeader();
     await axios
       .post(
-        "http://localhost:8080/hackathons/" +
+        rootUrl+"/hackathons/" +
           hackathon_id +
           "/teams?ownerId=" +
           id,
