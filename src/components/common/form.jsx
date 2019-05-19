@@ -13,10 +13,12 @@ class Form extends Component {
   };
 
   handleChange = e => {
-    const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(e.currentTarget);
-    if (errorMessage) errors[e.currentTarget.name] = errorMessage;
-    else delete errors[e.currentTarget.name];
+    if (e.currentTarget.name != "org_name") {
+      const errors = { ...this.state.errors };
+      const errorMessage = this.validateProperty(e.currentTarget);
+      if (errorMessage) errors[e.currentTarget.name] = errorMessage;
+      else delete errors[e.currentTarget.name];
+    }
 
     const data = { ...this.state.data };
     data[e.target.name] = e.target.value;
