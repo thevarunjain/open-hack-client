@@ -12,6 +12,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import {rootUrl} from "../common/constant";
 var moment = require("moment");
 
 class CreateHackathon extends Form {
@@ -53,7 +54,7 @@ class CreateHackathon extends Form {
     judgesName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
         setHeader();
-        var res = await axios.get("http://localhost:8080/users?name=" + name);
+        var res = await axios.get(rootUrl+"/users?name=" + name);
         var jid = Number.parseInt(res.data[0].id, 10) - 1;
         data["judges"].push(jid + 1);
       }
@@ -72,9 +73,7 @@ class CreateHackathon extends Form {
     sponsorsName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
         setHeader();
-        var res = await axios.get(
-          "http://localhost:8080/organizations?name=" + name
-        );
+        var res = await axios.get(rootUrl+"/organizations?name=" + name);
         var sid = Number.parseInt(res.data[0].id, 10) - 1;
         data["sponsors"][i] = sid + 1;
       }
@@ -96,7 +95,7 @@ class CreateHackathon extends Form {
     setHeader();
     await axios
       .post(
-        "http://localhost:8080/hackathons?ownerId=" + id,
+        rootUrl+"/hackathons?ownerId=" + id,
         this.state.dataSend
       )
       .then(response => {

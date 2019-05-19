@@ -16,6 +16,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import { rootUrl } from "../common/constant";
 
 class Hackathons extends Form {
   constructor() {
@@ -34,14 +35,14 @@ class Hackathons extends Form {
     if (getJWTAdminStatus) this.setState({ isAdmin: true });
 
     setHeader();
-    axios.get("http://localhost:8080/hackathons").then(response => {
+    axios.get(rootUrl+"/hackathons").then(response => {
       this.setState({
         hackathons: response.data
       });
     });
     const ID = localStorage.getItem("id");
     setHeader();
-    axios.get("http://localhost:8080/users/" + ID).then(response => {
+    axios.get(rootUrl+"/users/" + ID).then(response => {
       console.log(response.data);
       this.setState({
         profile: response.data
@@ -65,7 +66,7 @@ class Hackathons extends Form {
     setHeader();
     axios
       .get(
-        "http://localhost:8080/hackathons?name=" +
+        rootUrl+"/hackathons?name=" +
           this.state.data.hackathon_name
       )
       .then(response => {

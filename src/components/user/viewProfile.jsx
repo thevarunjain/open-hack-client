@@ -13,6 +13,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import { rootUrl } from "../common/constant";
 
 class ViewProfile extends Component {
   constructor() {
@@ -26,7 +27,7 @@ class ViewProfile extends Component {
   componentDidMount() {
     const ID = getJWTID();
     setHeader();
-    axios.get("http://localhost:8080/users/" + ID).then(response => {
+    axios.get(rootUrl+"/users/" + ID).then(response => {
       this.setState({
         profiles: response.data
       });

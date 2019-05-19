@@ -9,6 +9,7 @@ import { loginWithCredentials } from "../Firebase";
 import { isUserVerified } from "../Firebase";
 import { getFirebaseUser } from "../Firebase";
 import { Redirect } from "react-router";
+import { rootUrl } from "../common/constant";
 var firebase = require("firebase/app");
 require("firebase/auth");
 
@@ -30,7 +31,7 @@ class Login extends Form {
           email: this.state.data.username,
           password: this.state.data.password
                   };
-      axios.post("http://localhost:8080/auth/signin", data).then(response => {
+      axios.post(rootUrl+"/auth/signin", data).then(response => {
           console.log("Status Code : ", response.data);
           if (response.status === 200) {
             console.log("Login successful.");

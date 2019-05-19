@@ -12,6 +12,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import { rootUrl } from "../common/constant";
 
 class CreateOrganization extends Form {
   constructor() {
@@ -41,7 +42,7 @@ class CreateOrganization extends Form {
     console.log(org);
     setHeader();
     axios
-      .post("http://localhost:8080/organizations?ownerId=" + ownerId, org)
+      .post(rootUrl+"/organizations?ownerId=" + ownerId, org)
       .then(response => {
         window.alert("Organization created successfully.");
       });

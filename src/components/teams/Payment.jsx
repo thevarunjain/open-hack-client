@@ -3,6 +3,7 @@ import axios from "axios";
 import Hackathon from '../hackathons/hackathon';
 import {setHeader} from "../common/auth";
 import "../../css/createHackathon.css";
+import { rootUrl } from '../common/constant';
 export default class Payment extends Component {
     constructor(props){
         super(props);
@@ -16,7 +17,7 @@ export default class Payment extends Component {
         setHeader();
         var tid = this.props.match.params.tid;
         var hid = this.props.match.params.hid;
-        var url = `http://localhost:8080/hackathons/${hid}/teams/${tid}/payment`;
+        var url = `${rootUrl}/hackathons/${hid}/teams/${tid}/payment`;
         console.log(url);
           axios.get(url).then(res=>{
                  console.log(res.data);
