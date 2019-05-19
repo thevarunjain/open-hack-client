@@ -12,6 +12,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import {rootUrl} from "../common/constant";
 import { If } from "react-if";
 
 class MyHackerHackathon extends Component {
@@ -36,7 +37,7 @@ class MyHackerHackathon extends Component {
     console.log("id=", ID);
     const userId = getJWTID();
     setHeader();
-    axios.get("http://localhost:8080/hackathons/" + ID).then(response => {
+    axios.get(rootUrl+"/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
       });
@@ -50,7 +51,7 @@ class MyHackerHackathon extends Component {
 
     setHeader();
     axios
-      .get("http://localhost:8080/users/" + userId + "/hackathons")
+      .get(rootUrl+"/users/" + userId + "/hackathons")
       .then(response => {
         console.log(response.data);
         this.setState({
@@ -59,7 +60,7 @@ class MyHackerHackathon extends Component {
       });
     setHeader();
     axios
-      .get("http://localhost:8080/hackathons/" + ID + "/teams")
+      .get(rootUrl+"/hackathons/" + ID + "/teams")
       .then(response => {
         console.log(response.data);
         this.setState({
@@ -82,7 +83,7 @@ class MyHackerHackathon extends Component {
     setHeader();
     axios
       .patch(
-        "http://localhost:8080/hackathons/"+ID+"/teams/"+team_ID,
+        rootUrl+"/hackathons/"+ID+"/teams/"+team_ID,
         data
       )
       .then(response => {
@@ -100,7 +101,7 @@ class MyHackerHackathon extends Component {
     setHeader();
     axios
       .patch(
-        "http://localhost:8080/hackathons/"+ID+"/teams/"+team_ID,
+        rootUrl+"/hackathons/"+ID+"/teams/"+team_ID,
         data
       )
       .then(response => {

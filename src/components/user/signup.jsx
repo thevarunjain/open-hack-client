@@ -7,6 +7,7 @@ import { Redirect } from "react-router";
 import { signUpWithFacebook } from "../Firebase";
 import { signUpWithGoogle } from "../Firebase";
 import { signUpWithCredentials } from "../Firebase";
+import { rootUrl } from "../common/constant";
 
 class Signup extends Form {
   constructor(props) {
@@ -41,7 +42,7 @@ class Signup extends Form {
     };
 
     console.log("from signup page ", signedUpUser);
-    axios.post("http://localhost:8080/users", data).then(response => {
+    axios.post(rootUrl+"/users", data).then(response => {
       console.log("res=" + response);
       if (response.status === 201) {
         window.alert("Sign up successful.");

@@ -13,6 +13,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import { rootUrl } from "../common/constant";
 
 class EditProfile extends FormEventHandlers {
   constructor() {
@@ -34,7 +35,7 @@ class EditProfile extends FormEventHandlers {
   componentDidMount() {
     const ID = getJWTID();
     setHeader();
-    axios.get("http://localhost:8080/users/" + ID).then(response => {
+    axios.get(rootUrl+"/users/" + ID).then(response => {
       this.setState({
         screenname: response.data.screenName,
         first: response.data.name.first,
@@ -71,7 +72,7 @@ class EditProfile extends FormEventHandlers {
 
     const ID = getJWTID();
     setHeader();
-    axios.put("http://localhost:8080/users/" + ID, profile).then(response => {
+    axios.put(rootUrl+"/users/" + ID, profile).then(response => {
       window.alert("Profile updated successfully.");
     });
   };

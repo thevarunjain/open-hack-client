@@ -14,6 +14,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import { rootUrl } from "../common/constant";
 
 class Hackathon extends Component {
   constructor() {
@@ -27,14 +28,14 @@ class Hackathon extends Component {
   componentDidMount() {
     const ID = this.props.location.state ? this.props.location.state.id : "";
     setHeader();
-    axios.get("http://localhost:8080/hackathons/" + ID).then(response => {
+    axios.get(rootUrl+"/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
       });
     });
     setHeader();
     axios
-      .get("http://localhost:8080/hackathons/" + ID + "/teams")
+      .get(rootUrl+"/hackathons/" + ID + "/teams")
       .then(response => {
         this.setState({
           teams: response.data
