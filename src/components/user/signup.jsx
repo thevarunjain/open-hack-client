@@ -7,11 +7,8 @@ import { Redirect } from "react-router";
 import { signUpWithFacebook } from "../Firebase";
 import { signUpWithGoogle } from "../Firebase";
 import { signUpWithCredentials } from "../Firebase";
-<<<<<<< HEAD
 import Joi from "joi-browser";
-=======
 import { rootUrl } from "../common/constant";
->>>>>>> f48adc9a926d957a329748b279771babb5999460
 
 class Signup extends Form {
   constructor(props) {
@@ -48,9 +45,8 @@ class Signup extends Form {
     };
 
     console.log("from signup page ", signedUpUser);
-<<<<<<< HEAD
     axios
-      .post("http://localhost:8080/users", data)
+      .post(rootUrl + "/users", data)
       .then(response => {
         console.log("res=" + response);
         if (response.status === 201) {
@@ -62,7 +58,7 @@ class Signup extends Form {
       })
       .catch(error => {
         this.setState({
-          dbErrors: error.response.data.code
+          // dbErrors: error.response.data.code
         });
       });
   };
@@ -94,17 +90,6 @@ class Signup extends Form {
       .max(20)
       .min(3)
       .regex(/^[a-zA-Z0-9]*$/)
-=======
-    axios.post(rootUrl+"/users", data).then(response => {
-      console.log("res=" + response);
-      if (response.status === 201) {
-        window.alert("Sign up successful.");
-        this.props.history.push("/confirm");
-      } else {
-        console.log("Error in sign up.");
-      }
-    });
->>>>>>> f48adc9a926d957a329748b279771babb5999460
   };
 
   render() {

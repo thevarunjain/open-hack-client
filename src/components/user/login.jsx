@@ -9,11 +9,8 @@ import { loginWithCredentials } from "../Firebase";
 import { isUserVerified } from "../Firebase";
 import { getFirebaseUser } from "../Firebase";
 import { Redirect } from "react-router";
-<<<<<<< HEAD
 import Joi from "joi-browser";
-=======
 import { rootUrl } from "../common/constant";
->>>>>>> f48adc9a926d957a329748b279771babb5999460
 var firebase = require("firebase/app");
 require("firebase/auth");
 
@@ -32,21 +29,13 @@ class Login extends Form {
     );
 
     if (isUserVerified()) {
-<<<<<<< HEAD
       var data = {
         email: this.state.data.username,
         password: this.state.data.password
       };
       axios
-        .post("http://localhost:8080/auth/signin", data)
+        .post(rootUrl + "/auth/signin", data)
         .then(response => {
-=======
-        var data = {
-          email: this.state.data.username,
-          password: this.state.data.password
-                  };
-      axios.post(rootUrl+"/auth/signin", data).then(response => {
->>>>>>> f48adc9a926d957a329748b279771babb5999460
           console.log("Status Code : ", response.data);
           if (response.status === 200) {
             console.log("Login successful.");
@@ -56,7 +45,7 @@ class Login extends Form {
         })
         .catch(error => {
           this.setState({
-            dbErrors: error.response.data.code
+            // dbErrors: error.response.data.code
           });
         });
     } else {
