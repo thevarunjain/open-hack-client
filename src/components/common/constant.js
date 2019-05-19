@@ -1,5 +1,3 @@
-var rootUrl = "https://open-hack-backend.herokuapp.com/";
+var rootUrl = "https://open-hack-backend.herokuapp.com";
 
-export {
-    rootUrl
-};
+export { rootUrl };

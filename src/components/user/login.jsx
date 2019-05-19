@@ -9,6 +9,7 @@ import { loginWithCredentials } from "../Firebase";
 import { isUserVerified } from "../Firebase";
 import { getFirebaseUser } from "../Firebase";
 import { Redirect } from "react-router";
+import Joi from "joi-browser";
 import { rootUrl } from "../common/constant";
 var firebase = require("firebase/app");
 require("firebase/auth");
@@ -16,34 +17,55 @@ require("firebase/auth");
 class Login extends Form {
   state = {
     data: { username: "", password: "" },
-    user: ""
+    user: "",
+    errors: {},
+    dbErrors: ""
   };
 
   doSubmit = async () => {
-    
     var loggedInUser = await loginWithCredentials(
       this.state.data.username,
       this.state.data.password
-      );
+    );
 
     if (isUserVerified()) {
-        var data = {
-          email: this.state.data.username,
-          password: this.state.data.password
-                  };
-      axios.post(rootUrl+"/auth/signin", data).then(response => {
+      var data = {
+        email: this.state.data.username,
+        password: this.state.data.password
+      };
+      axios
+        .post(rootUrl + "/auth/signin", data)
+        .then(response => {
           console.log("Status Code : ", response.data);
           if (response.status === 200) {
             console.log("Login successful.");
             localStorage.setItem("token", response.data.accessToken);
             this.props.history.push("/hackathons");
           }
-      });
-    }else{
-        // window.alert("Email is not verified. Check your mail");
-        console.log("Email not verified");
-        // window.location.reload();
+        })
+        .catch(error => {
+          this.setState({
+            // dbErrors: error.response.data.code
+          });
+        });
+    } else {
+      // window.alert("Email is not verified. Check your mail");
+      console.log("Email not verified");
+      // window.location.reload();
     }
+  };
+
+  schema = {
+    username: Joi.string()
+      .required()
+      .max(30)
+      .regex(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+      .label("Email address"),
+    password: Joi.string()
+      .required()
+      .label("Password")
+      .max(20)
+      .min(6)
   };
 
   render() {
@@ -74,7 +96,11 @@ class Login extends Form {
               placeholder="Email address"
               onChange={this.handleChange}
               value={this.state.username}
+              error={this.state.errors.username}
             />
+            {this.state.errors.username && (
+              <div className="red">{this.state.errors.username} </div>
+            )}
             <br />
             <input
               type="password"
@@ -83,13 +109,17 @@ class Login extends Form {
               placeholder="Password"
               onChange={this.handleChange}
               value={this.state.password}
+              error={this.state.errors.password}
             />
+            {this.state.errors.password && (
+              <div className="red">{this.state.errors.password} </div>
+            )}
             <form onSubmit={this.handleSubmit}>
               <button type="submit" className="login-btn">
                 Login
               </button>
-              <input type="checkbox" />
-              <label> &nbsp; Keep me signed in</label>
+              {/* <input type="checkbox" />
+              <label> &nbsp; Keep me signed in</label> */}
             </form>
 
             <button

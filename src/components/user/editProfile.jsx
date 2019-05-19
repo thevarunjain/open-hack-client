@@ -13,6 +13,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
+import Joi from "joi-browser";
 import { rootUrl } from "../common/constant";
 
 class EditProfile extends FormEventHandlers {
@@ -28,27 +29,37 @@ class EditProfile extends FormEventHandlers {
       city: "",
       state: "",
       zipcode: "",
-      id: ""
+      id: "",
+      errors: {},
+      dbErrors: ""
     };
   }
 
   componentDidMount() {
     const ID = getJWTID();
     setHeader();
-    axios.get(rootUrl+"/users/" + ID).then(response => {
-      this.setState({
-        screenname: response.data.screenName,
-        first: response.data.name.first,
-        last: response.data.name.last,
-        businessTitle: response.data.businessTitle,
-        aboutMe: response.data.aboutMe,
-        street: response.data.address.street,
-        city: response.data.address.city,
-        state: response.data.address.state,
-        zipcode: response.data.address.zip,
-        id: response.data.id
+    axios
+      .get(rootUrl + "/users/" + ID)
+      .then(response => {
+        this.setState({
+          screenname: response.data.screenName,
+          first: response.data.name.first,
+          last: response.data.name.last,
+          businessTitle: response.data.businessTitle,
+          aboutMe: response.data.aboutMe,
+          street: response.data.address.street,
+          city: response.data.address.city,
+          state: response.data.address.state,
+          zipcode: response.data.address.zip,
+          id: response.data.id
+        });
+      })
+      .catch(error => {
+        this.setState({
+          // dbErrors: error.response.data.code
+          dbErrors: error
+        });
       });
-    });
   }
 
   doSubmit = e => {
@@ -72,10 +83,44 @@ class EditProfile extends FormEventHandlers {
 
     const ID = getJWTID();
     setHeader();
-    axios.put(rootUrl+"/users/" + ID, profile).then(response => {
+    axios.put(rootUrl + "/users/" + ID, profile).then(response => {
       window.alert("Profile updated successfully.");
     });
   };
+
+  schema = {
+    first: Joi.string()
+      .required()
+      .max(15)
+      .regex(/^[a-zA-Z]*$/)
+      .label("First Name"),
+    last: Joi.string()
+      .required()
+      .max(15)
+      .regex(/^[a-zA-Z]*$/)
+      .label("Last Name"),
+    businessTitle: Joi.string()
+      .max(20)
+      .min(0)
+      .label("Business Title"),
+    aboutMe: Joi.string()
+      .label("About me")
+      .max(200),
+    street: Joi.string()
+      .label("Street Address")
+      .max(30),
+    city: Joi.string()
+      .label("City")
+      .max(20),
+    state: Joi.string()
+      .label("state")
+      .max(20),
+    zipcode: Joi.string()
+      .label("Zipcode")
+      .max(6)
+      .min(5)
+  };
+
   render() {
     let redirectVar = null;
     var id = getJWTID();
@@ -124,7 +169,11 @@ class EditProfile extends FormEventHandlers {
                 placeholder="First Name"
                 defaultValue={this.state.first}
                 onChange={this.handleChangeFirstName}
+                error={this.state.errors.first}
               />
+              {this.state.errors.first && (
+                <div className="red">{this.state.errors.first} </div>
+              )}
               <input
                 type="text"
                 name="last"
@@ -132,7 +181,11 @@ class EditProfile extends FormEventHandlers {
                 placeholder="Last Name"
                 defaultValue={this.state.last}
                 onChange={this.handleChangeLastName}
+                error={this.state.errors.last}
               />
+              {this.state.errors.last && (
+                <div className="red">{this.state.errors.last} </div>
+              )}
               <input
                 type="text"
                 name="businessTitle"
@@ -140,15 +193,23 @@ class EditProfile extends FormEventHandlers {
                 placeholder="Business Title"
                 defaultValue={this.state.businessTitle}
                 onChange={this.handleChangeTitle}
+                error={this.state.errors.businessTitle}
               />
+              {this.state.errors.businessTitle && (
+                <div className="red">{this.state.errors.businessTitle} </div>
+              )}
               <input
                 type="text"
-                name="about"
+                name="aboutMe"
                 placeholder="About me"
                 className="form-control"
                 defaultValue={this.state.aboutMe}
                 onChange={this.handleChangeAbout}
+                error={this.state.errors.aboutMe}
               />
+              {this.state.errors.aboutMe && (
+                <div className="red">{this.state.errors.aboutMe} </div>
+              )}
               <input
                 type="text"
                 name="street"
@@ -156,7 +217,11 @@ class EditProfile extends FormEventHandlers {
                 placeholder="Street Address"
                 defaultValue={this.state.street}
                 onChange={this.handleChangeStreet}
+                error={this.state.errors.street}
               />
+              {this.state.errors.street && (
+                <div className="red">{this.state.errors.street} </div>
+              )}
               <input
                 type="text"
                 name="city"
@@ -164,7 +229,11 @@ class EditProfile extends FormEventHandlers {
                 placeholder="City"
                 defaultValue={this.state.city}
                 onChange={this.handleChangeCity}
+                error={this.state.errors.city}
               />
+              {this.state.errors.city && (
+                <div className="red">{this.state.errors.city} </div>
+              )}
               <input
                 type="text"
                 name="state"
@@ -172,7 +241,11 @@ class EditProfile extends FormEventHandlers {
                 placeholder="State"
                 defaultValue={this.state.state}
                 onChange={this.handleChangeState}
+                error={this.state.errors.state}
               />
+              {this.state.errors.state && (
+                <div className="red">{this.state.errors.state} </div>
+              )}
               <input
                 type="text"
                 name="zipcode"
@@ -180,7 +253,11 @@ class EditProfile extends FormEventHandlers {
                 placeholder="Zipcode"
                 defaultValue={this.state.zipcode}
                 onChange={this.handleChangeZipcode}
+                error={this.state.errors.zipcode}
               />
+              {this.state.errors.zipcode && (
+                <div className="red">{this.state.errors.zipcode} </div>
+              )}
             </div>
             <div className="view_profile">
               <Link
