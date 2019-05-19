@@ -23,7 +23,7 @@ class Hackathons extends Form {
     super();
     this.state = {
       hackathons: [],
-      profile: [],
+      // profile: [],
       data: {},
       isAdmin: false,
       currentPage: 1,
@@ -35,19 +35,19 @@ class Hackathons extends Form {
     if (getJWTAdminStatus) this.setState({ isAdmin: true });
 
     setHeader();
-    axios.get(rootUrl+"/hackathons").then(response => {
+    axios.get(rootUrl + "/hackathons").then(response => {
       this.setState({
         hackathons: response.data
       });
     });
     const ID = localStorage.getItem("id");
     setHeader();
-    axios.get(rootUrl+"/users/" + ID).then(response => {
-      console.log(response.data);
-      this.setState({
-        profile: response.data
-      });
-    });
+    // axios.get(rootUrl+"/users/" + ID).then(response => {
+    //   console.log(response.data);
+    //   this.setState({
+    //     profile: response.data
+    //   });
+    // });
   }
 
   handleSearchChange = e => {
@@ -65,10 +65,7 @@ class Hackathons extends Form {
   doSubmit = e => {
     setHeader();
     axios
-      .get(
-        rootUrl+"/hackathons?name=" +
-          this.state.data.hackathon_name
-      )
+      .get(rootUrl + "/hackathons?name=" + this.state.data.hackathon_name)
       .then(response => {
         this.setState({ hackathons: response.data });
       });

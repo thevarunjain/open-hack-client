@@ -4,6 +4,7 @@ import Navbar from "../common/navbar";
 import Form from "../common/form";
 import { Redirect } from "react-router";
 import axios from "axios";
+import Joi from "joi-browser";
 import {
   getToken,
   getJWTUsername,
@@ -12,7 +13,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
-import {rootUrl} from "../common/constant";
+import { rootUrl } from "../common/constant";
 var moment = require("moment");
 
 class CreateHackathon extends Form {
@@ -23,9 +24,48 @@ class CreateHackathon extends Form {
       currentDate: "",
       localStartDate: "",
       localEndDate: "",
-      dataSend: ""
+      dataSend: "",
+      errors: {},
+      dbErrors: ""
     };
   }
+
+  schema = {
+    name: Joi.string()
+      .required()
+      .max(50)
+      .label("Name"),
+    description: Joi.string()
+      .max(300)
+      .required()
+      .min(10)
+      .label("Description"),
+    start_date: Joi.string()
+      .required()
+      .label("Start Date"),
+    end_date: Joi.string()
+      .label("End Date")
+      .required(),
+    fee: Joi.string()
+      .label("Fee")
+      .regex(/^[0-9.]*$/)
+      .required(),
+    min_size: Joi.string()
+      .label("Minimum Team Size")
+      .required()
+      .regex(/^[0-9]*$/),
+    max_size: Joi.string()
+      .label("Maximum Team Size")
+      .required()
+      .regex(/^[0-9]*$/),
+    judges: Joi.string()
+      .label("Judges")
+      .required(),
+    sponsors: Joi.string().label("Sponsors"),
+    discount: Joi.string()
+      .label("Discount")
+      .regex(/^[0-9]*$/)
+  };
 
   doSubmit = async e => {
     var startDateLocale = this.state.data.start_date;
@@ -54,7 +94,7 @@ class CreateHackathon extends Form {
     judgesName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
         setHeader();
-        var res = await axios.get(rootUrl+"/users?name=" + name);
+        var res = await axios.get(rootUrl + "/users?name=" + name);
         var jid = Number.parseInt(res.data[0].id, 10) - 1;
         data["judges"].push(jid + 1);
       }
@@ -73,7 +113,7 @@ class CreateHackathon extends Form {
     sponsorsName.map(async (name, i) => {
       if (name.replace(/\s/gi, "").length != 0) {
         setHeader();
-        var res = await axios.get(rootUrl+"/organizations?name=" + name);
+        var res = await axios.get(rootUrl + "/organizations?name=" + name);
         var sid = Number.parseInt(res.data[0].id, 10) - 1;
         data["sponsors"][i] = sid + 1;
       }
@@ -94,13 +134,9 @@ class CreateHackathon extends Form {
     var id = getJWTID();
     setHeader();
     await axios
-      .post(
-        rootUrl+"/hackathons?ownerId=" + id,
-        this.state.dataSend
-      )
+      .post(rootUrl + "/hackathons?ownerId=" + id, this.state.dataSend)
       .then(response => {
         window.alert("Hackathon created successfully.");
-        // window.location.reload();
         this.props.history.push("/hackathons");
       });
   }
@@ -131,15 +167,23 @@ class CreateHackathon extends Form {
                 autoFocus
                 placeholder="Name"
                 onChange={this.handleChange}
+                error={this.state.errors.name}
               />
+              {this.state.errors.name && (
+                <div className="red">{this.state.errors.name} </div>
+              )}
               <label>Description</label>
               <textarea
                 required
                 name="description"
-                placeholder="Atleast 10 characters"
+                placeholder="Description"
                 className="form-control"
                 onChange={this.handleChange}
+                error={this.state.errors.description}
               />
+              {this.state.errors.description && (
+                <div className="red">{this.state.errors.description} </div>
+              )}
               <label>Start Date</label>
               <input
                 type="date"
@@ -147,8 +191,11 @@ class CreateHackathon extends Form {
                 name="start_date"
                 className="form-control"
                 onChange={this.handleChange}
+                error={this.state.errors.start_date}
               />
-
+              {this.state.errors.start_date && (
+                <div className="red">{this.state.errors.start_date} </div>
+              )}
               <label>End Date</label>
               <input
                 required
@@ -156,34 +203,50 @@ class CreateHackathon extends Form {
                 name="end_date"
                 className="form-control"
                 onChange={this.handleChange}
+                error={this.state.errors.end_date}
               />
+              {this.state.errors.end_date && (
+                <div className="red">{this.state.errors.end_date} </div>
+              )}
               <label>Entry Fee</label>
               <input
                 type="number"
                 name="fee"
                 required
                 className="form-control"
-                placeholder="Fee"
+                placeholder="Fee in USD"
                 onChange={this.handleChange}
+                error={this.state.errors.fee}
               />
+              {this.state.errors.fee && (
+                <div className="red">{this.state.errors.fee} </div>
+              )}
               <label>Minimum coders</label>
               <input
                 type="text"
                 name="min_size"
                 required
                 className="form-control"
-                placeholder="Atleat 1"
+                placeholder="Minimum Team Size (inclusive)"
                 onChange={this.handleChange}
+                error={this.state.errors.min_size}
               />
+              {this.state.errors.min_size && (
+                <div className="red">{this.state.errors.min_size} </div>
+              )}
               <label>Maximum coders</label>
               <input
                 type="text"
                 name="max_size"
                 required
                 className="form-control"
-                placeholder="Maximum 10"
+                placeholder="Maximum Team Size (inclusive)"
                 onChange={this.handleChange}
+                error={this.state.errors.max_size}
               />
+              {this.state.errors.max_size && (
+                <div className="red">{this.state.errors.max_size} </div>
+              )}
               <label>Judges</label>
               <input
                 type="text"
@@ -192,7 +255,11 @@ class CreateHackathon extends Form {
                 className="form-control"
                 placeholder=" Atleast 1 with Semi-colon(;) separated"
                 onChange={this.handleChange}
+                error={this.state.errors.judges}
               />
+              {this.state.errors.judges && (
+                <div className="red">{this.state.errors.judges} </div>
+              )}
               <label>Sponsors (Optional)</label>
               <input
                 type="text"
@@ -200,7 +267,11 @@ class CreateHackathon extends Form {
                 className="form-control"
                 placeholder="Semi-colon(;) separated"
                 onChange={this.handleChange}
+                error={this.state.errors.sponsors}
               />
+              {this.state.errors.sponsors && (
+                <div className="red">{this.state.errors.sponsors} </div>
+              )}
               <label>Discount in % </label>
               <input
                 type="text"
@@ -208,7 +279,11 @@ class CreateHackathon extends Form {
                 className="form-control"
                 placeholder="Semi-colon(;) separated"
                 onChange={this.handleChange}
+                error={this.state.errors.discount}
               />
+              {this.state.errors.discount && (
+                <div className="red">{this.state.errors.discount} </div>
+              )}
             </div>
             <div>
               <button

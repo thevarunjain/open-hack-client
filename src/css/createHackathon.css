@@ -10,12 +10,12 @@ input[type="date"] {
   margin-left: 80%;
 }
 
-.create-hack-container{
+.create-hack-container {
   background: url("../images/home.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vw;
+  height: 100%;
 }
 
 .create-hack-body {
