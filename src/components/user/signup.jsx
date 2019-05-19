@@ -7,6 +7,7 @@ import { Redirect } from "react-router";
 import { signUpWithFacebook } from "../Firebase";
 import { signUpWithGoogle } from "../Firebase";
 import { signUpWithCredentials } from "../Firebase";
+import Joi from "joi-browser";
 
 class Signup extends Form {
   constructor(props) {
@@ -18,7 +19,9 @@ class Signup extends Form {
         screenname: "",
         username: "",
         password: ""
-      }
+      },
+      errors: {},
+      dbErrors: ""
     };
   }
 
@@ -41,15 +44,50 @@ class Signup extends Form {
     };
 
     console.log("from signup page ", signedUpUser);
-    axios.post("http://localhost:8080/users", data).then(response => {
-      console.log("res=" + response);
-      if (response.status === 201) {
-        window.alert("Sign up successful.");
-        this.props.history.push("/confirm");
-      } else {
-        console.log("Error in sign up.");
-      }
-    });
+    axios
+      .post("http://localhost:8080/users", data)
+      .then(response => {
+        console.log("res=" + response);
+        if (response.status === 201) {
+          window.alert("Sign up successful.");
+          this.props.history.push("/confirm");
+        } else {
+          console.log("Error in sign up.");
+        }
+      })
+      .catch(error => {
+        this.setState({
+          dbErrors: error.response.data.code
+        });
+      });
+  };
+
+  schema = {
+    firstname: Joi.string()
+      .required()
+      .max(15)
+      .regex(/^[a-zA-Z\s]*$/)
+      .label("First Name"),
+    lastname: Joi.string()
+      .required()
+      .max(15)
+      .regex(/^[a-zA-Z\s]*$/)
+      .label("Last Name"),
+    username: Joi.string()
+      .required()
+      .max(30)
+      .regex(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+      .label("Email address"),
+    password: Joi.string()
+      .required()
+      .label("Password")
+      .max(20)
+      .min(6),
+    screenname: Joi.string()
+      .required()
+      .label("Screen Name")
+      .max(20)
+      .min(3)
   };
 
   render() {
@@ -80,7 +118,11 @@ class Signup extends Form {
               placeholder="First Name"
               onChange={this.handleChange}
               value={this.state.firstname}
+              error={this.state.errors.firstname}
             />
+            {this.state.errors.firstname && (
+              <div>{this.state.errors.firstname} </div>
+            )}
             <br />
             <input
               type="input"
@@ -89,7 +131,11 @@ class Signup extends Form {
               placeholder="Last Name"
               onChange={this.handleChange}
               value={this.state.lastname}
+              error={this.state.errors.lastname}
             />
+            {this.state.errors.lastname && (
+              <div>{this.state.errors.lastname} </div>
+            )}
             <br />
             <input
               type="input"
@@ -98,7 +144,11 @@ class Signup extends Form {
               placeholder="Screen Name"
               onChange={this.handleChange}
               value={this.state.screenname}
+              error={this.state.errors.screenname}
             />
+            {this.state.errors.screenname && (
+              <div>{this.state.errors.screenname} </div>
+            )}
             <br />
             <input
               type="email"
@@ -107,7 +157,11 @@ class Signup extends Form {
               placeholder="Email Address"
               onChange={this.handleChange}
               value={this.state.username}
+              error={this.state.errors.username}
             />
+            {this.state.errors.username && (
+              <div>{this.state.errors.username} </div>
+            )}
             <br />
             <input
               type="password"
@@ -116,8 +170,11 @@ class Signup extends Form {
               placeholder="Password"
               onChange={this.handleChange}
               value={this.state.password}
+              error={this.state.errors.password}
             />
-
+            {this.state.errors.password && (
+              <div>{this.state.errors.password} </div>
+            )}
             <form onSubmit={this.handleSubmit}>
               <button type="submit" className="login-btn">
                 Sign up
