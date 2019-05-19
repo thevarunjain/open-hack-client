@@ -121,6 +121,7 @@ class EditProfile extends FormEventHandlers {
       .label("Zipcode")
       .max(6)
       .min(5)
+      .regex(/^[0-9]*$/)
   };
 
   render() {

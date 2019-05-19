@@ -45,7 +45,7 @@ class Login extends Form {
         })
         .catch(error => {
           this.setState({
-            // dbErrors: error.response.data.code
+            dbErrors: error.response.data.code
           });
         });
     } else {
