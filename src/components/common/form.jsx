@@ -34,12 +34,10 @@ class Form extends Component {
   };
 
   validateProperty = input => {
-    if (input.name !== "gender") {
-      const obj = { [input.name]: input.value };
-      const subSchema = { [input.name]: this.schema[input.name] };
-      const { error } = Joi.validate(obj, subSchema); //should abort early
-      return error ? error.details[0].message : null;
-    }
+    const obj = { [input.name]: input.value };
+    const subSchema = { [input.name]: this.schema[input.name] };
+    const { error } = Joi.validate(obj, subSchema); //should abort early
+    return error ? error.details[0].message : null;
   };
 }
 

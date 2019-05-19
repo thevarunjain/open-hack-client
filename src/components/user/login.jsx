@@ -98,7 +98,7 @@ class Login extends Form {
               error={this.state.errors.username}
             />
             {this.state.errors.username && (
-              <div>{this.state.errors.username} </div>
+              <div className="red">{this.state.errors.username} </div>
             )}
             <br />
             <input
@@ -111,7 +111,7 @@ class Login extends Form {
               error={this.state.errors.password}
             />
             {this.state.errors.password && (
-              <div>{this.state.errors.password} </div>
+              <div className="red">{this.state.errors.password} </div>
             )}
             <form onSubmit={this.handleSubmit}>
               <button type="submit" className="login-btn">

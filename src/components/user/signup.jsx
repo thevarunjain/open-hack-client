@@ -66,12 +66,12 @@ class Signup extends Form {
     firstname: Joi.string()
       .required()
       .max(15)
-      .regex(/^[a-zA-Z\s]*$/)
+      .regex(/^[a-zA-Z]*$/)
       .label("First Name"),
     lastname: Joi.string()
       .required()
       .max(15)
-      .regex(/^[a-zA-Z\s]*$/)
+      .regex(/^[a-zA-Z]*$/)
       .label("Last Name"),
     username: Joi.string()
       .required()
@@ -88,6 +88,7 @@ class Signup extends Form {
       .label("Screen Name")
       .max(20)
       .min(3)
+      .regex(/^[a-zA-Z0-9]*$/)
   };
 
   render() {
@@ -121,7 +122,7 @@ class Signup extends Form {
               error={this.state.errors.firstname}
             />
             {this.state.errors.firstname && (
-              <div>{this.state.errors.firstname} </div>
+              <div className="red">{this.state.errors.firstname} </div>
             )}
             <br />
             <input
@@ -134,7 +135,7 @@ class Signup extends Form {
               error={this.state.errors.lastname}
             />
             {this.state.errors.lastname && (
-              <div>{this.state.errors.lastname} </div>
+              <div className="red">{this.state.errors.lastname} </div>
             )}
             <br />
             <input
@@ -147,7 +148,7 @@ class Signup extends Form {
               error={this.state.errors.screenname}
             />
             {this.state.errors.screenname && (
-              <div>{this.state.errors.screenname} </div>
+              <div className="red">{this.state.errors.screenname} </div>
             )}
             <br />
             <input
@@ -160,7 +161,7 @@ class Signup extends Form {
               error={this.state.errors.username}
             />
             {this.state.errors.username && (
-              <div>{this.state.errors.username} </div>
+              <div className="red">{this.state.errors.username} </div>
             )}
             <br />
             <input
@@ -173,7 +174,7 @@ class Signup extends Form {
               error={this.state.errors.password}
             />
             {this.state.errors.password && (
-              <div>{this.state.errors.password} </div>
+              <div className="red">{this.state.errors.password} </div>
             )}
             <form onSubmit={this.handleSubmit}>
               <button type="submit" className="login-btn">
