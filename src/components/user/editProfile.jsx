@@ -15,6 +15,7 @@ import {
 } from "../common/auth";
 import Joi from "joi-browser";
 import { rootUrl } from "../common/constant";
+import { ENGINE_METHOD_DIGESTS } from "constants";
 
 class EditProfile extends FormEventHandlers {
   constructor() {
@@ -107,15 +108,19 @@ class EditProfile extends FormEventHandlers {
       .label("Business Title"),
     aboutMe: Joi.string()
       .label("About me")
-      .max(200),
+      .max(200)
+      .min(0),
     street: Joi.string()
       .label("Street Address")
+      .min(0)
       .max(30),
     city: Joi.string()
       .label("City")
+      .min(0)
       .max(20),
     state: Joi.string()
       .label("state")
+      .min(0)
       .max(20),
     zipcode: Joi.string()
       .label("Zipcode")
@@ -125,6 +130,7 @@ class EditProfile extends FormEventHandlers {
   };
 
   render() {
+    console.log(Object.entries(this.state.errors).length === 0);
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -277,6 +283,7 @@ class EditProfile extends FormEventHandlers {
               type="submit"
               className="btn btn-primary"
               onClick={this.handleSubmit}
+              disabled={Object.entries(this.state.errors).length !== 0}
             >
               Save
             </button>{" "}
