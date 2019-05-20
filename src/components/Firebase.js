@@ -84,11 +84,15 @@ export var signUpWithCredentials = (email, password) => {
       console.log(user);
       sendVerificationEmail();
       return user;
+    })
+    .catch(function(error) {
+      console.log(error);
+      window.alert(error.message);
     });
 };
 
 export var loginWithCredentials = (email, password) => {
-    console.log("Firebase login", email, password); 
+  console.log("Firebase login", email, password);
   firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
@@ -132,10 +136,7 @@ class Firebase extends Component {
   }
 
   render() {
-    return (
-      <div>
-      </div>
-    );
+    return <div />;
   }
 }
 export default Firebase;
