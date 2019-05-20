@@ -99,6 +99,10 @@ export var loginWithCredentials = (email, password) => {
     .then(user => {
       console.log(user);
       return user;
+    })
+    .catch(function(error) {
+      console.log(error);
+      window.alert(error.message);
     });
 };
 
