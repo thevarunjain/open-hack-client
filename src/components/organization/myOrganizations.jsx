@@ -43,6 +43,7 @@ class MyOrganizations extends Form {
       )
       .then(response => {
         window.alert("Accepted!");
+        window.location.reload();
       });
   }
 
@@ -62,6 +63,7 @@ class MyOrganizations extends Form {
       )
       .then(response => {
         window.alert("Rejected!");
+        window.location.reload();
       });
   }
 
@@ -81,17 +83,22 @@ class MyOrganizations extends Form {
       )
       .then(response => {
         window.alert("Left!");
+        window.location.reload();
       });
   }
 
   handleSearch = () => {
-    var requesterId = getJWTID();
-    setHeader();
-    axios
-      .get(rootUrl + "/organizations?name=" + this.state.data.org_name)
-      .then(response => {
-        this.setState({ search_results: response.data });
-      });
+    if (this.state.data.org_name == null)
+      window.alert("Organization Name cannot be empty");
+    else {
+      var requesterId = getJWTID();
+      setHeader();
+      axios
+        .get(rootUrl + "/organizations?name=" + this.state.data.org_name)
+        .then(response => {
+          this.setState({ search_results: response.data });
+        });
+    }
   };
 
   handleJoin = id => {
@@ -327,6 +334,7 @@ class MyOrganizations extends Form {
                         >
                           Join
                         </button>
+                        {/* <hr /> */}
                       </div>
                     ))}
                   </Else>

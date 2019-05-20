@@ -19,7 +19,7 @@
   border: 1px solid white;
   margin-left: 25%;
   width: 50%;
-  height: 20%;
+  height: auto;
   padding: 2% 3% 2% 3%;
 }
 
@@ -61,4 +61,11 @@
 .btn-join {
   margin-left: 85%;
   margin-top: -15%;
+}
+
+hr {
+  height: 1px;
+  color: white;
+  background-color: white;
+  border: none;
 }
