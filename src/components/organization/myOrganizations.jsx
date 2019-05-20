@@ -90,19 +90,18 @@ class MyOrganizations extends Form {
     axios
       .get(rootUrl + "/organizations?name=" + this.state.data.org_name)
       .then(response => {
-        console.log(response.data);
         this.setState({ search_results: response.data });
       });
   };
 
-  handleJoin = e => {
+  handleJoin = id => {
     var requesterId = getJWTID();
     setHeader();
     axios
       .post(
         rootUrl +
           "/organizations/" +
-          this.state.search_results[0].id +
+          id +
           "/memberships?requesterId=" +
           requesterId
       )
@@ -317,19 +316,19 @@ class MyOrganizations extends Form {
                   <Then>No organization found </Then>
                   <Else>
                     {this.state.search_results.map(data => (
-                      <div>
+                      <div key={data.id}>
                         <h3>{data.name}</h3> <br />
                         {data.description}
+                        <button
+                          type="submit"
+                          className="btn btn-primary btn-join"
+                          // onClick={this.handleJoin.bind(this)}
+                          onClick={() => this.handleJoin(data.id)}
+                        >
+                          Join
+                        </button>
                       </div>
                     ))}
-
-                    <button
-                      type="submit"
-                      className="btn btn-primary btn-join"
-                      onClick={this.handleJoin.bind(this)}
-                    >
-                      Join
-                    </button>
                   </Else>
                 </If>
               </div>

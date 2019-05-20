@@ -28,19 +28,17 @@ class Hackathon extends Component {
   componentDidMount() {
     const ID = this.props.location.state ? this.props.location.state.id : "";
     setHeader();
-    axios.get(rootUrl+"/hackathons/" + ID).then(response => {
+    axios.get(rootUrl + "/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
       });
     });
     setHeader();
-    axios
-      .get(rootUrl+"/hackathons/" + ID + "/teams")
-      .then(response => {
-        this.setState({
-          teams: response.data
-        });
+    axios.get(rootUrl + "/hackathons/" + ID + "/teams").then(response => {
+      this.setState({
+        teams: response.data
       });
+    });
   }
 
   render() {
@@ -128,7 +126,8 @@ class Hackathon extends Component {
           <h3>Teams</h3>
           {this.state.teams.map(team => (
             <div>
-              <Link to="/hackathon">{team.name}</Link>
+              {/* <Link to="/hackathon">{team.name}</Link> */}
+              {team.name}
               <br />
             </div>
           ))}
