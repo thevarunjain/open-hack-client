@@ -46,20 +46,27 @@ class Signup extends Form {
 
     console.log("from signup page ", signedUpUser);
     axios
-      .post(rootUrl + "/users", data)
+      .get(rootUrl + "/users/checkScreenName?screenName=" + data.screenName)
       .then(response => {
-        console.log("res=" + response);
-        if (response.status === 201) {
-          window.alert("Sign up successful.");
-          this.props.history.push("/confirm");
-        } else {
-          console.log("Error in sign up.");
-        }
+        axios
+          .post(rootUrl + "/users", data)
+          .then(response => {
+            console.log("res=" + response);
+            if (response.status === 201) {
+              window.alert("Sign up successful.");
+              this.props.history.push("/confirm");
+            } else {
+              console.log("Error in sign up.");
+            }
+          })
+          .catch(error => {
+            this.setState({
+              dbErrors: error.response.data.code
+            });
+          });
       })
       .catch(error => {
-        this.setState({
-          dbErrors: error.response.data.code
-        });
+        window.alert("Screen name is already used by another user.");
       });
   };
 
