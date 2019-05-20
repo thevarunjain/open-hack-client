@@ -36,11 +36,13 @@ class Login extends Form {
       axios
         .post(rootUrl + "/auth/signin", data)
         .then(response => {
-          console.log("Status Code : ", response.data);
+          console.log("Status Code : ", response.status);
           if (response.status === 200) {
             console.log("Login successful.");
             localStorage.setItem("token", response.data.accessToken);
             this.props.history.push("/hackathons");
+          } else if (response.status === 400) {
+            window.alert("Username and/or password is incorrect");
           }
         })
         .catch(error => {
