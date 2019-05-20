@@ -141,7 +141,7 @@ class EditProfile extends FormEventHandlers {
       <div className="profile-home">
         {redirectVar}
         <Navbar />
-        <hr />
+
         <div className="profile">
           <div className="profile-photo">
             <input type="file" className="upload_profile_photo" name="files" />
