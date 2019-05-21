@@ -161,16 +161,29 @@ class CreateHackathon extends Form {
       .regex(/^[0-9]*$/)
   };
 
-  doSubmit = e => {
-    console.log("dfjdsfskdhf")
-    console.log(this.state);
+  doSubmit = async e => {
+    var today = new Date();
+    var start_date = new Date(this.state.data.start_date);
+    var end_date = new Date(this.state.data.end_date);
+    if (start_date < today)
+      window.alert("Start Date cannot be less than today");
+    else if (end_date < today)
+      window.alert("End Date cannot be less than today");
+    else if (end_date < start_date)
+      window.alert("End Date cannot be less than start date");
+    else if (this.state.data.max_size <= 0)
+      window.alert("Maximum team size cannot be less 1");
+    else if (this.state.data.min_size <= 0)
+      window.alert("Minimum team size cannot be less than 1");
+    else if (this.state.data.max_size < this.state.data.min_size)
+      window.alert("Maximum team size cannot be less than minimum team size");
+    else {
+      var startDateLocale = this.state.data.start_date;
+      var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
 
-    var startDateLocale = this.state.data.start_date;
-    var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
-
-    var endDateLocale = this.state.data.end_date;
-    var endDate = moment(endDateLocale, "YYYY-MM-DD").toDate();
-
+      var endDateLocale = this.state.data.end_date;
+      var endDate = moment(endDateLocale, "YYYY-MM-DD").toDate();
+    }
     var data = {
       name: this.state.data.name,
       description: this.state.data.description,
@@ -277,7 +290,7 @@ class CreateHackathon extends Form {
               {this.state.errors.fee && (
                 <div className="red">{this.state.errors.fee} </div>
               )}
-              <label>Minimum coders</label>
+              <label>Minimum Team Size</label>
               <input
                 type="text"
                 name="min_size"
@@ -290,7 +303,7 @@ class CreateHackathon extends Form {
               {this.state.errors.min_size && (
                 <div className="red">{this.state.errors.min_size} </div>
               )}
-              <label>Maximum coders</label>
+              <label>Maximum Team Size</label>
               <input
                 type="text"
                 name="max_size"

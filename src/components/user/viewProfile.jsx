@@ -27,7 +27,7 @@ class ViewProfile extends Component {
   componentDidMount() {
     const ID = getJWTID();
     setHeader();
-    axios.get(rootUrl+"/users/" + ID).then(response => {
+    axios.get(rootUrl + "/users/" + ID).then(response => {
       this.setState({
         profiles: response.data
       });
@@ -45,7 +45,6 @@ class ViewProfile extends Component {
       <div className="home">
         {redirectVar}
         <Navbar />
-
         <div className="view-profile-container">
           <div className="view-photo">
             <img
@@ -60,28 +59,85 @@ class ViewProfile extends Component {
             </span>
           </div>
           <div className="about">
-            <h3>About me</h3>
-            {profile.aboutMe}
+            {profile.aboutMe ? (
+              <div>
+                <h3>About</h3>
+                {profile.aboutMe}
+              </div>
+            ) : (
+              ""
+            )}
+            {/* {profile.aboutMe ? profile.aboutMe : "No description provided"} */}
             <br />
             <br />
-            <div>Title: {profile.businessTitle} </div>
-            <div>Organization:{" "}
-              {profile.memberOf
-                ? profile.memberOf.name
-                : "No organization joined"}</div>
             <div>
-              Address: {profile.address ? profile.address.street : ""},{" "}
+              {profile.businessTitle ? (
+                <div>Title: {profile.businessTitle}</div>
+              ) : (
+                ""
+              )}
+            </div>
+            <div>
+              {profile.memberOf ? (
+                profile.memberOf.name ? (
+                  <div>Organization: {profile.memberOf.name}</div>
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
+            </div>
+            <div>
+              {profile.address ? (
+                profile.address.street ? (
+                  <div>Street: {profile.address.street}</div>
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
+              <br />
+              {profile.address ? (
+                profile.address.city ? (
+                  <div>City: {profile.address.city}</div>
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
+              {profile.address ? (
+                profile.address.state ? (
+                  <div>State: {profile.address.state}</div>
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
+
+              {profile.address ? (
+                profile.address.zip ? (
+                  <div>Zipcode: {profile.address.zip}</div>
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
+              {/* Address: {profile.address ? profile.address.street : ""},{" "}
               {profile.address ? profile.address.city : ""},{" "}
               {profile.address ? profile.address.state : ""} -{" "}
-              {profile.address ? profile.address.zip : ""}{" "}
+              {profile.address ? profile.address.zip : ""}{" "} */}
             </div>
           </div>
         </div>
-
         {/* <If condition={profile.admin}> */}
-          <div className="edit_profile">
-            <Link to="/profile-edit">Edit Profile</Link>
-          </div>{" "}
+        <div className="edit_profile">
+          <Link to="/profile-edit">Edit Profile</Link>
+        </div>{" "}
         {/* </If> */}
       </div>
     );

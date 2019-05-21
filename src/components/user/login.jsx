@@ -68,7 +68,7 @@ class Login extends Form {
     password: Joi.string()
       .required()
       .label("Password")
-      .max(20)
+      .max(30)
       .min(6)
   };
 

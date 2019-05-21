@@ -42,6 +42,7 @@ class Hackathon extends Component {
   }
 
   render() {
+    console.log(this.state.hackathon);
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -54,7 +55,11 @@ class Hackathon extends Component {
         <Navbar />
 
         <div className="hackathon-details">
-          <If condition={!getJWTAdminStatus()}>
+          <If
+            condition={
+              !getJWTAdminStatus() && this.state.hackathon.status === "Open"
+            }
+          >
             <Link
               className="btn btn-primary create-team"
               to={{
