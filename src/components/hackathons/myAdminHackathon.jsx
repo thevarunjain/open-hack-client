@@ -25,7 +25,8 @@ class MyAdminHackathon extends Component {
       startDate: "",
       endDate: "",
       currentDate: "",
-      teams: []
+      teams: [],
+      teamDetails: []
     };
     this.handleOpenStatus = this.handleOpenStatus.bind(this);
     this.handleClosedStatus = this.handleClosedStatus.bind(this);
@@ -44,9 +45,37 @@ class MyAdminHackathon extends Component {
     });
     setHeader();
     axios.get(rootUrl + "/hackathons/" + ID + "/teams").then(response => {
-      this.setState({
-        teams: response.data
-      });
+      this.setState(
+        {
+          teams: response.data
+        },
+        async function() {
+          var ids = [];
+          if (this.state.teams)
+            for (let i = 0; i < this.state.teams.length; i++) {
+              ids[i] = this.state.teams[i].id;
+            }
+
+          var member = [];
+          for (let i = 0; i < ids.length; i++) {
+            setHeader();
+            await axios
+              .get(rootUrl + "/hackathons/" + ID + "/teams/" + ids[i])
+              .then(response => {
+                // console.log(response.data);
+                var temp = [];
+                if (response.data) {
+                  for (let j = 0; j < response.data.members.length; j++) {
+                    temp.push(response.data.members[j]);
+                  }
+                }
+                member.push(temp);
+              });
+          }
+
+          this.setState({ teamDetails: member });
+        }
+      );
     });
   }
 
@@ -118,7 +147,7 @@ class MyAdminHackathon extends Component {
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
-    console.log(this.state.hackathon);
+    console.log(this.state.teamDetails[0]);
     return (
       <div className="hackathon-home">
         {redirectVar}
@@ -190,12 +219,23 @@ class MyAdminHackathon extends Component {
         </div>
         <div className="hackathon-team">
           <h3>Teams</h3>
-          {this.state.teams.map(team => (
-            <div>
-              {team.name}
-              <br />
-            </div>
-          ))}
+          <table className="table table-striped table-hover">
+            <thead>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Fee Paid</th>
+            </thead>
+            <tbody>
+              {this.state.teamDetails[0] &&
+                this.state.teamDetails[0].map(team_data => (
+                  <tr>
+                    <td>{team_data.firstName}</td>
+                    <td>{team_data.role}</td>
+                    <td>{team_data.feePaid === false ? "No" : "Yes"}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
         </div>
         <div className="hackathon-judge">
           <h3>Judges</h3>
