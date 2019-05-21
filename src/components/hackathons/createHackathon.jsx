@@ -341,9 +341,10 @@ class CreateHackathon extends Form {
                       }}
                     />
                     <input
+                    type="number"
                       required
                       className="form-control"
-                      placeholder="discount"
+                      placeholder="Discount"
                       style={{
                         marginLeft: "12px",
                         borderRadius: "4px",
@@ -357,12 +358,12 @@ class CreateHackathon extends Form {
                       class="input-group-append"
                       style={{ marginTop: "-11px" }}
                     >
-                      <button
+                      {/* <button
                         class="btn btn-primary btn-remove"
                         onClick={e => this.removeSponsor(e, i)}
                       >
                         Remove
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 );

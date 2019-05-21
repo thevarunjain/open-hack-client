@@ -65,10 +65,12 @@ class MyAdminHackathon extends Component {
               .get(rootUrl + "/hackathons/" + ID + "/teams/" + ids[i])
               .then(response => {
                 console.log(response.data);
+                this.setState({teamGrades : response.data});
                 var temp = [];
                 if (response.data) {
                   for (let j = 0; j < response.data.members.length; j++) {
                     temp.push(response.data.members[j]);
+                    /// add grades 
                   }
                 }
                 member.push(temp);  
@@ -239,11 +241,9 @@ console.log(this.state.hackathon)
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
-
-    console.log(this.state);
     var teamTable = this.state.teamDetails.map((teams,i)=>{
-      console.log(teams,i);
-      console.log(this.state.teams[i].name);
+      // console.log(this.state.teamGrades);
+      // console.log(this.state.teamGrades[i]);
       return(
         <div>
         <div className="col-md-12">
@@ -285,6 +285,7 @@ console.log(this.state.hackathon)
 
         <div className="hackathon-details">
           <h2>{this.state.hackathon ? this.state.hackathon.name : ""}</h2>
+    
           <br />
           {this.state.hackathon ? this.state.hackathon.description : ""}
           <br />
