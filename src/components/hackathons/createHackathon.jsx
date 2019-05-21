@@ -46,6 +46,7 @@ class CreateHackathon extends Form {
 
   removeSponsor(e,i){
     e.preventDefault();
+    
     this.state.sponsors.splice(i,1);
     this.setState({sponsors: this.state.sponsors})
 
@@ -54,10 +55,11 @@ class CreateHackathon extends Form {
 
     this.state.x.splice(i,1);
     this.setState({x: this.state.x})
+
+    console.log(this.state);
   }
 
   handleDiscountChange(e,i){
-    console.log("In discount change", e.target.value, i)
     e.preventDefault();
     this.state.discounts[i]=e.target.value;
     this.setState({discounts: this.state.discounts})
@@ -65,6 +67,7 @@ class CreateHackathon extends Form {
 
   handleSelectionChange = (selectedOption) => {
     var judgeById = [];
+    
     selectedOption.map(e=>{
       judgeById.push(e.id);
     })
@@ -74,12 +77,22 @@ class CreateHackathon extends Form {
 
   handleSponsorSelection = (selectedOption,i) => {
     var sponsorById=this.state.x;
-    
-    if(sponsorById && !sponsorById.includes(selectedOption.id)){
-      sponsorById[i]=selectedOption.id;
+
+    if(sponsorById && !sponsorById.includes(selectedOption.id)){    // for unique insertion in x object
+          sponsorById[i]=selectedOption.id;
+          this.setState({ selectedOption });
+          this.setState({ x : sponsorById });
+    }else if(this.state.x && this.state.x.includes(selectedOption.id)){
+      window.alert("already added")
+          this.state.sponsors.splice(i,1);        // to remove the <div>
+          this.setState({sponsors: this.state.sponsors})
+      
+          this.state.discounts.splice(i,1);       //to remove its discount    
+          this.setState({discounts: this.state.discounts})
+      
+          this.state.x.splice(i,1);               // to remove as a sponsor
+          this.setState({x: this.state.x})
     }
-    this.setState({ selectedOption });
-    this.setState({ x : sponsorById });
   }
   
   componentDidMount(){
@@ -87,12 +100,13 @@ class CreateHackathon extends Form {
     axios.get(rootUrl + "/users")
     .then(users=>{
       // remove isadmin true users.
-      users.data.map(e=>{
+      var nonAdminUsers = users.data.filter(e=> !e.admin);
+      nonAdminUsers.map(e=>{
         e["label"] = e.name.first+ " "+e.name.last;
         e["value"] = e.id
       })
       this.setState({
-        allJudges : users.data
+        allJudges : nonAdminUsers
       })
     }).catch(err=>{
 
@@ -181,6 +195,8 @@ class CreateHackathon extends Form {
   };
 
   render() {
+    console.log(this.state);
+       console.log(this.refs)
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -299,7 +315,7 @@ class CreateHackathon extends Form {
                 this.state.sponsors.map((sponsor,i)=>{
                   return(
                     <div class="input-group mb-3" key={i}>
-                      <Select className="css-1pcexqc-container-spon"  options={this.state.allSponsors} onChange={(e)=>{this.handleSponsorSelection(e,i)}} /> 
+                      <Select key={i} className="css-1pcexqc-container-spon"  value={this.state.x[i] ? this.state.x[i].name : ""}  options={this.state.allSponsors.filter((e) => !this.state.x.includes(e.id))} onChange={(e)=>{this.handleSponsorSelection(e,i)}} /> 
                        <input 
                         required
                         className="form-control"
