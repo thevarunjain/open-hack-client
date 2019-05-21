@@ -36,9 +36,10 @@ class MyAdminHackathon extends Component {
 
   componentDidMount() {
     const ID = this.props.location.state.id;
-    // console.log("id=", ID);
+    console.log("id=", ID);
     setHeader();
     axios.get(rootUrl + "/hackathons/" + ID).then(response => {
+      console.log("........",response.data);
       this.setState({
         hackathon: response.data
       });
@@ -63,7 +64,7 @@ class MyAdminHackathon extends Component {
             await axios
               .get(rootUrl + "/hackathons/" + ID + "/teams/" + ids[i])
               .then(response => {
-                // console.log(response.data);
+                console.log(response.data);
                 var temp = [];
                 if (response.data) {
                   for (let j = 0; j < response.data.members.length; j++) {
@@ -238,7 +239,45 @@ console.log(this.state.hackathon)
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
-    console.log(this.state.teamDetails[0]);
+
+    console.log(this.state);
+    var teamTable = this.state.teamDetails.map((teams,i)=>{
+      console.log(teams,i);
+      console.log(this.state.teams[i].name);
+      return(
+        <div>
+        <div className="col-md-12">
+        <div className="hackathon-team-name">{this.state.teams[i].name}  {this.state.teams[i].isFinalized ? "- Finalized" : "- Payment Pending" }</div>
+
+        </div>
+        <table className="table table-striped table-hover">
+        <thead>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Amount</th>
+          <th>Fee Paid</th>
+        </thead>
+        <tbody>
+          {teams &&
+              teams.map(team_data => (
+              <tr>
+                <td>{team_data.firstName}</td>
+                <td>{team_data.role}</td>
+                <td>{team_data.amount ? "$"+team_data.amount : "-" }</td>
+                <td>{team_data.feePaid === false ? "No" : "Yes"}</td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
+      
+      )
+      
+    })
+     
+    
+
+
     return (
       <div className="hackathon-home">
         {redirectVar}
@@ -310,25 +349,7 @@ console.log(this.state.hackathon)
         </div>
         <div className="hackathon-team">
           <h3>Teams</h3>
-          <table className="table table-striped table-hover">
-            <thead>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Amount</th>
-              <th>Fee Paid</th>
-            </thead>
-            <tbody>
-              {this.state.teamDetails[0] &&
-                this.state.teamDetails[0].map(team_data => (
-                  <tr>
-                    <td>{team_data.firstName}</td>
-                    <td>{team_data.role}</td>
-                    <td>{team_data.amount ? "$"+team_data.amount : "-" }</td>
-                    <td>{team_data.feePaid === false ? "No" : "Yes"}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+          {teamTable}
         </div>
         <div className="hackathon-judge">
           <h3>Judges</h3>
