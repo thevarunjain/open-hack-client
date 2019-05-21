@@ -67,7 +67,6 @@ class CreateHackathon extends Form {
 
   handleSelectionChange = (selectedOption) => {
     var judgeById = [];
-    
     selectedOption.map(e=>{
       judgeById.push(e.id);
     })
@@ -210,7 +209,6 @@ class CreateHackathon extends Form {
 
   render() {
     console.log(this.state);
-       console.log(this.refs)
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
