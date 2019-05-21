@@ -17,7 +17,8 @@ export default class Payment extends Component {
         setHeader();
         var tid = this.props.match.params.tid;
         var hid = this.props.match.params.hid;
-        var url = `${rootUrl}/hackathons/${hid}/teams/${tid}/payment`;
+        var mid = this.props.match.params.mid;
+        var url = `${rootUrl}/hackathons/${hid}/teams/${tid}/payment?participantId=${mid}`;
         console.log(url);
           axios.get(url).then(res=>{
                  console.log(res.data);
@@ -29,6 +30,11 @@ export default class Payment extends Component {
          })
     }
     foo(){
+        var url = `${rootUrl}/hackathons/${hid}/teams/${tid}/payment?participantId=${mid}&amount=${this.state.amount}`;
+        console.log(url);
+        axios.post(url).then(res=>{
+               console.log(res.data);
+       })
         window.alert("Payment Done");
     }
 
