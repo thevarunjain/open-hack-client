@@ -200,7 +200,7 @@ class MyOrganizations extends Form {
                       {data.description}
                       <br />
                       <br />
-                      <table class="table table-striped table-hover">
+                      <table className="table table-striped table-hover">
                         <thead>
                           <tr>
                             <th scope="col">Member</th>
