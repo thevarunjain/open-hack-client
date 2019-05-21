@@ -37,19 +37,17 @@ class MyAdminHackathon extends Component {
     const ID = this.props.location.state.id;
     console.log("id=", ID);
     setHeader();
-    axios.get(rootUrl+"/hackathons/" + ID).then(response => {
+    axios.get(rootUrl + "/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
       });
     });
     setHeader();
-    axios
-      .get(rootUrl+"/hackathons/" + ID + "/teams")
-      .then(response => {
-        this.setState({
-          teams: response.data
-        });
+    axios.get(rootUrl + "/hackathons/" + ID + "/teams").then(response => {
+      this.setState({
+        teams: response.data
       });
+    });
   }
 
   handleOpenStatus = e => {
@@ -59,11 +57,9 @@ class MyAdminHackathon extends Component {
       toState: "Open"
     };
     setHeader();
-    axios
-      .patch(rootUrl+"/hackathons/" + ID, data)
-      .then(response => {
-        window.alert("Hackathon Status updated successfully.");
-      });
+    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Status updated successfully.");
+    });
   };
 
   handleClosedStatus = e => {
@@ -73,11 +69,9 @@ class MyAdminHackathon extends Component {
       toState: "Closed"
     };
     setHeader();
-    axios
-      .patch(rootUrl+"/hackathons/" + ID, data)
-      .then(response => {
-        window.alert("Hackathon Status updated successfully.");
-      });
+    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Status updated successfully.");
+    });
   };
 
   handleFinalizedStatus = e => {
@@ -87,11 +81,9 @@ class MyAdminHackathon extends Component {
       toState: "Finalized"
     };
     setHeader();
-    axios
-      .patch(rootUrl+"/hackathons/" + ID, data)
-      .then(response => {
-        window.alert("Hackathon Status updated successfully.");
-      });
+    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Status updated successfully.");
+    });
   };
 
   changeHandle(e) {
@@ -115,11 +107,9 @@ class MyAdminHackathon extends Component {
       endDate: endDate
     };
     setHeader();
-    axios
-      .patch(rootUrl+"/hackathons/" + ID, data)
-      .then(response => {
-        window.alert("Hackathon Date updated successfully.");
-      });
+    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+      window.alert("Hackathon Date updated successfully.");
+    });
   };
 
   render() {
@@ -202,7 +192,7 @@ class MyAdminHackathon extends Component {
           <h3>Teams</h3>
           {this.state.teams.map(team => (
             <div>
-              <Link to="/hackathon">{team.name}</Link>
+              {team.name}
               <br />
             </div>
           ))}
@@ -249,7 +239,7 @@ class MyAdminHackathon extends Component {
             type="button"
             onClick={this.handleFinalizedStatus}
             style={{ margin: 20 }}
-            className="btn btn-success btn-lg"
+            className="btn btn-danger btn-lg"
           >
             Finalized
           </button>

@@ -12,7 +12,7 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
-import {rootUrl} from "../common/constant";
+import { rootUrl } from "../common/constant";
 import { If } from "react-if";
 
 class MyHackerHackathon extends Component {
@@ -37,7 +37,7 @@ class MyHackerHackathon extends Component {
     console.log("id=", ID);
     const userId = getJWTID();
     setHeader();
-    axios.get(rootUrl+"/hackathons/" + ID).then(response => {
+    axios.get(rootUrl + "/hackathons/" + ID).then(response => {
       this.setState({
         hackathon: response.data
       });
@@ -50,23 +50,20 @@ class MyHackerHackathon extends Component {
     });
 
     setHeader();
-    axios
-      .get(rootUrl+"/users/" + userId + "/hackathons")
-      .then(response => {
-        console.log(response.data);
-        this.setState({
-          hackathons: response.data
-        });
+    axios.get(rootUrl + "/users/" + userId + "/hackathons").then(response => {
+      console.log(response.data);
+      this.setState({
+        hackathons: response.data
       });
+    });
+
     setHeader();
-    axios
-      .get(rootUrl+"/hackathons/" + ID + "/teams")
-      .then(response => {
-        console.log(response.data);
-        this.setState({
-          teams: response.data
-        });
+    axios.get(rootUrl + "/hackathons/" + ID + "/teams").then(response => {
+      console.log(response.data);
+      this.setState({
+        teams: response.data
       });
+    });
   }
 
   handleChange(e) {
@@ -82,10 +79,7 @@ class MyHackerHackathon extends Component {
     };
     setHeader();
     axios
-      .patch(
-        rootUrl+"/hackathons/"+ID+"/teams/"+team_ID,
-        data
-      )
+      .patch(rootUrl + "/hackathons/" + ID + "/teams/" + team_ID, data)
       .then(response => {
         window.alert("Grade Submitted successfully.");
       });
@@ -96,14 +90,11 @@ class MyHackerHackathon extends Component {
     const team_ID = teamId;
     console.log(team_ID, ID);
     const data = {
-      submissionURL : this.state.submissionLink
+      submissionURL: this.state.submissionLink
     };
     setHeader();
     axios
-      .patch(
-        rootUrl+"/hackathons/"+ID+"/teams/"+team_ID,
-        data
-      )
+      .patch(rootUrl + "/hackathons/" + ID + "/teams/" + team_ID, data)
       .then(response => {
         window.alert("Submission Link Submitted successfully.");
       });
@@ -176,7 +167,7 @@ class MyHackerHackathon extends Component {
           <h3>Teams</h3>
           {this.state.teams.map(team => (
             <div>
-              <Link to="/hackathon">{team.name}</Link>
+              {team.name}
               {this.state.hackathon.judges &&
                 this.state.hackathon.judges.map(judge_hackathon => (
                   <If condition={getJWTID() === judge_hackathon.id}>
