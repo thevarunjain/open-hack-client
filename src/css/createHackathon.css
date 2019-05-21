@@ -25,3 +25,37 @@ input[type="date"] {
   background-size: cover;
   height: 100vw;
 }
+<<<<<<< HEAD
+
+.btn-dyn{
+  width: 65%;
+}
+
+.btn-add{
+  width: auto !important;
+  margin-left: 0px !important;
+  color: #fff !important;
+  background-color: 	#32CD32 !important;
+  border-color: 	#32CD32 !important;
+}
+.btn-remove{
+  margin-top: 18px !important;
+  /* margin-left: 60px; */
+  margin-right: 108px !important;
+  color: #fff !important;
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+  width: auto !important; 
+  border-radius: 26px !important;
+}
+
+.css-1pcexqc-container{
+  width : 80%;
+  color: black;
+}
+
+.css-1pcexqc-container-spon{
+  width : 35%;
+  color: black;
+
+}

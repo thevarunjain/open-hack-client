@@ -74,6 +74,7 @@ class CreateTeam extends Component {
         this.props.history.push("/hackathons");
       });
   }
+
   render() {
     let redirectVar = null;
     var id = getJWTID();
@@ -100,7 +101,30 @@ class CreateTeam extends Component {
                 onChange={this.handleChange}
               />
               <label>Add Members to team</label>
-              <input
+              
+              {
+                this.state.members.map((sponsor,i)=>{
+                  return(
+                    <div class="input-group mb-3" key={i}>
+                      {/* <Select key={i} className="css-1pcexqc-container-spon"  value={this.state.x[i] ? this.state.x[i].name : ""}  options={this.state.allMember.filter((e) => !this.state.x.includes(e.id))} onChange={(e)=>{this.handleMemberSelection(e,i)}} />  */}
+                       <input 
+                        required
+                        className="form-control"
+                        placeholder="discount"
+                        style={{marginLeft: "12px", borderRadius: "4px", height: "59px",  marginTop: "0px"}}
+                      onChange={(e)=>this.handleDiscountChange(e,i)}
+                      value ={this.state.discounts[i]}
+                      />
+                    <div class="input-group-append" style={{    marginTop: "-11px"}}>  
+                      <button class="btn btn-primary btn-remove" onClick={(e)=>this.removeMember(e,i)}>Remove</button>
+                    </div>
+                    </div>
+                  )
+                })
+              }
+              <br/>
+              <button className="btn-add" onClick={(e)=>this.addMember(e)}>Add Sponsor </button>
+              {/* <input
                 type="text"
                 name="members"
                 className="form-control"
@@ -114,7 +138,7 @@ class CreateTeam extends Component {
                 className="form-control"
                 placeholder="Semi-colon(;) separated"
                 onChange={this.handleChange}
-              />
+              /> */}
             </div>
             <div>
               <button

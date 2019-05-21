@@ -28,7 +28,9 @@ class Login extends Form {
       this.state.data.password
     );
 
-    if (isUserVerified()) {
+// console.log(loggedInUser);
+// console.log(isUserVerified());
+//     if (isUserVerified()) {
       var data = {
         email: this.state.data.username,
         password: this.state.data.password
@@ -50,11 +52,11 @@ class Login extends Form {
             dbErrors: error.response.data.code
           });
         });
-    } else {
-      // window.alert("Email is not verified. Check your mail");
-      console.log("Email not verified");
-      // window.location.reload();
-    }
+    // } else {
+    //   // window.alert("Email is not verified. Check your mail");
+    //   console.log("Email not verified");
+    //   // window.location.reload();
+    // }
   };
 
   schema = {

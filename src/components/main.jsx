@@ -19,6 +19,7 @@ import MyAdminHackathon from "./hackathons/myAdminHackathon";
 import Hackathon from "./hackathons/hackathon";
 import CreateTeam from "./teams/createTeam";
 import Payment from "./teams/Payment";
+import awss3 from "./common/awss3";
 
 class Main extends Component {
   render() {
@@ -64,6 +65,7 @@ class Main extends Component {
         <Route path="/" exact component={Home} />
         <Route path="/firebase" exact component={Firebase} />
         <Route path="/payments/:hid/:tid" exact component={Payment} />
+        <Route path="/s3" exact component={awss3}/>
         <Redirect to="/not-found" />
 
       </Switch>
