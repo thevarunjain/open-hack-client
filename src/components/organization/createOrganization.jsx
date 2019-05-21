@@ -13,14 +13,45 @@ import {
   setHeader
 } from "../common/auth";
 import { rootUrl } from "../common/constant";
+import Joi from "joi-browser";
 
 class CreateOrganization extends Form {
   constructor() {
     super();
     this.state = {
-      data: {}
+      data: {},
+      errors: {},
+      dbErrors: ""
     };
   }
+
+  schema = {
+    name: Joi.string()
+      .required()
+      .max(25)
+      .label("Name"),
+    description: Joi.string()
+      .max(200)
+      .min(0)
+      .label("Description"),
+    street: Joi.string()
+      .max(20)
+      .min(0)
+      .label("Street"),
+    city: Joi.string()
+      .label("City")
+      .min(0)
+      .max(20),
+    state: Joi.string()
+      .label("State")
+      .min(0)
+      .max(10),
+    zipcode: Joi.string()
+      .label("Zipcode")
+      .max(6)
+      .min(5)
+      .regex(/^[0-9]*$/)
+  };
 
   doSubmit = e => {
     var ownerId = getJWTID();
@@ -42,9 +73,15 @@ class CreateOrganization extends Form {
     console.log(org);
     setHeader();
     axios
-      .post(rootUrl+"/organizations?ownerId=" + ownerId, org)
+      .post(rootUrl + "/organizations?ownerId=" + ownerId, org)
       .then(response => {
         window.alert("Organization created successfully.");
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({
+          dbErrors: error.response.data.code
+        });
       });
   };
 
@@ -78,42 +115,66 @@ class CreateOrganization extends Form {
                 autoFocus
                 placeholder="Name"
                 onChange={this.handleChange}
+                error={this.state.errors.name}
               />
+              {this.state.errors.name && (
+                <div className="red">{this.state.errors.name} </div>
+              )}
 
               <textarea
                 name="description"
                 placeholder="Description"
                 className="form-control"
                 onChange={this.handleChange}
+                error={this.state.errors.description}
               />
+              {this.state.errors.description && (
+                <div className="red">{this.state.errors.description} </div>
+              )}
               <input
                 type="text"
                 name="street"
                 className="form-control"
                 placeholder="Street"
                 onChange={this.handleChange}
+                error={this.state.errors.street}
               />
+              {this.state.errors.street && (
+                <div className="red">{this.state.errors.street} </div>
+              )}
               <input
                 type="text"
                 name="city"
                 className="form-control"
                 placeholder="City"
                 onChange={this.handleChange}
+                error={this.state.errors.city}
               />
+              {this.state.errors.city && (
+                <div className="red">{this.state.errors.city} </div>
+              )}
               <input
                 type="text"
                 name="state"
                 className="form-control"
                 placeholder="State"
                 onChange={this.handleChange}
+                error={this.state.errors.state}
               />
+              {this.state.errors.state && (
+                <div className="red">{this.state.errors.state} </div>
+              )}
               <input
                 type="text"
                 name="zipcode"
                 className="form-control"
                 placeholder="Zipcode"
                 onChange={this.handleChange}
+                error={this.state.errors.zipcode}
               />
+              {this.state.errors.zipcode && (
+                <div className="red">{this.state.errors.zipcode} </div>
+              )}
             </div>
             <button
               type="submit"

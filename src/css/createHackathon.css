@@ -10,12 +10,12 @@ input[type="date"] {
   margin-left: 80%;
 }
 
-.create-hack-container{
+.create-hack-container {
   background: url("../images/home.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vw;
+  height: 100%;
 }
 
 .create-hack-body {
@@ -25,6 +25,7 @@ input[type="date"] {
   background-size: cover;
   height: 100vw;
 }
+<<<<<<< HEAD
 
 .btn-dyn{
   width: 65%;
@@ -46,4 +47,15 @@ input[type="date"] {
   border-color: #dc3545 !important;
   width: auto !important; 
   border-radius: 26px !important;
+}
+
+.css-1pcexqc-container{
+  width : 80%;
+  color: black;
+}
+
+.css-1pcexqc-container-spon{
+  width : 35%;
+  color: black;
+
 }

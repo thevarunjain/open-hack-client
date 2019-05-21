@@ -32,7 +32,8 @@ class MyOrganizations extends Form {
     setHeader();
     axios
       .put(
-        rootUrl+"/organizations/" +
+        rootUrl +
+          "/organizations/" +
           org.id +
           "/memberships?requesterId=" +
           requesterId +
@@ -50,7 +51,8 @@ class MyOrganizations extends Form {
     setHeader();
     axios
       .put(
-        rootUrl+"/organizations/" +
+        rootUrl +
+          "/organizations/" +
           org.id +
           "/memberships?requesterId=" +
           requesterId +
@@ -68,7 +70,8 @@ class MyOrganizations extends Form {
     setHeader();
     axios
       .put(
-        rootUrl+"/organizations/" +
+        rootUrl +
+          "/organizations/" +
           org.id +
           "/memberships?requesterId=" +
           requesterId +
@@ -85,21 +88,20 @@ class MyOrganizations extends Form {
     var requesterId = getJWTID();
     setHeader();
     axios
-      .get(
-        rootUrl+"/organizations?name=" + this.state.data.org_name
-      )
+      .get(rootUrl + "/organizations?name=" + this.state.data.org_name)
       .then(response => {
         this.setState({ search_results: response.data });
       });
   };
 
-  handleJoin = e => {
+  handleJoin = id => {
     var requesterId = getJWTID();
     setHeader();
     axios
       .post(
-        rootUrl+"/organizations/" +
-          this.state.search_results[0].id +
+        rootUrl +
+          "/organizations/" +
+          id +
           "/memberships?requesterId=" +
           requesterId
       )
@@ -111,7 +113,7 @@ class MyOrganizations extends Form {
   async componentDidMount() {
     var id = getJWTID();
     setHeader();
-    axios.get(rootUrl+"/users/" + id).then(response => {
+    axios.get(rootUrl + "/users/" + id).then(response => {
       this.setState(
         {
           memberOf: response.data.memberOf,
@@ -129,9 +131,7 @@ class MyOrganizations extends Form {
           for (let i = 0; i < ids.length; i++) {
             setHeader();
             await axios
-              .get(
-                rootUrl+"/organizations/" + ids[i] + "/memberships"
-              )
+              .get(rootUrl + "/organizations/" + ids[i] + "/memberships")
               .then(response => {
                 var temp = [];
                 var tempStatus = [];
@@ -154,14 +154,12 @@ class MyOrganizations extends Form {
   doSubmit = () => {
     const name = this.state.data;
     setHeader();
-    axios.get(rootUrl+"/organizations/" + name).then(response => {
+    axios.get(rootUrl + "/organizations/" + name).then(response => {
       this.setState({ search_results: response.data });
     });
   };
 
   render() {
-    console.log(Object.keys(this.state.memberOf).length == 0);
-
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -318,19 +316,19 @@ class MyOrganizations extends Form {
                   <Then>No organization found </Then>
                   <Else>
                     {this.state.search_results.map(data => (
-                      <div>
+                      <div key={data.id}>
                         <h3>{data.name}</h3> <br />
                         {data.description}
+                        <button
+                          type="submit"
+                          className="btn btn-primary btn-join"
+                          // onClick={this.handleJoin.bind(this)}
+                          onClick={() => this.handleJoin(data.id)}
+                        >
+                          Join
+                        </button>
                       </div>
                     ))}
-
-                    <button
-                      type="submit"
-                      className="btn btn-primary btn-join"
-                      onClick={this.handleJoin.bind(this)}
-                    >
-                      Join
-                    </button>
                   </Else>
                 </If>
               </div>

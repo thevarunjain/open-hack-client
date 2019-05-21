@@ -4,6 +4,7 @@ import Navbar from "../common/navbar";
 import Form from "../common/form";
 import { Redirect } from "react-router";
 import axios from "axios";
+import Joi from "joi-browser";
 import {
   getToken,
   getJWTUsername,
@@ -16,15 +17,6 @@ import {rootUrl} from "../common/constant";
 import Select from 'react-select';
 var moment = require("moment");
 
-const scaryAnimals = [
-  { label: "Alligators", value: 1 },
-  { label: "Crocodiles", value: 2 },
-  { label: "Sharks", value: 3 },
-  { label: "Small crocodiles", value: 4 },
-  { label: "Smallest crocodiles", value: 5 },
-  { label: "Snakes", value: 6 },
-];
-
 class CreateHackathon extends Form {
   constructor() {
     super();
@@ -33,30 +25,16 @@ class CreateHackathon extends Form {
       currentDate: "",
       localStartDate: "",
       localEndDate: "",
-      dataSend: "", 
       judges : [],
       sponsors : [],
       discounts: [],
-      selectedOption : null
-    };
-  }
-
-  addJudge(e){
-    e.preventDefault();
-    this.setState({
-      judges : [...this.state.judges, ""]
-    })
-  }
-
-  handleJudgeChange(e,i){
-    e.preventDefault();
-    this.state.judges[i]=e.target.value;
-    this.setState({judges: this.state.judges})
-  }
-
-  removeJudge(i){
-    this.state.judges.splice(i,1);
-    this.setState({judges: this.state.judges})
+      selectedOption : null,
+      errors: {},
+      dbErrors: "",
+      allJudges : [],
+      allSponsors :[],
+      x : []
+       };
   }
 
   addSponsor(e){
@@ -66,12 +44,6 @@ class CreateHackathon extends Form {
     })
   }
 
-  handleSponsorChange(e,i){
-    e.preventDefault();
-    this.state.sponsors[i]=e.target.value;
-    this.setState({sponsors: this.state.sponsors})
-  }
-
   removeSponsor(e,i){
     e.preventDefault();
     this.state.sponsors.splice(i,1);
@@ -79,14 +51,10 @@ class CreateHackathon extends Form {
 
     this.state.discounts.splice(i,1);
     this.setState({discounts: this.state.discounts})
-  }
 
-  // addDiscount(e){
-  //   e.preventDefault();
-  //   this.setState({
-  //     discounts : [...this.state.discounts, ""]
-  //   })
-  // }
+    this.state.x.splice(i,1);
+    this.setState({x: this.state.x})
+  }
 
   handleDiscountChange(e,i){
     console.log("In discount change", e.target.value, i)
@@ -95,17 +63,93 @@ class CreateHackathon extends Form {
     this.setState({discounts: this.state.discounts})
   }
 
-  // removeDiscount(i){
-  //   this.state.discounts.splice(i,1);
-  //   this.setState({discounts: this.state.judges})
-  // }
-
   handleSelectionChange = (selectedOption) => {
+    var judgeById = [];
+    selectedOption.map(e=>{
+      judgeById.push(e.id);
+    })
     this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
+    this.setState({ judges : judgeById });
   }
 
-  doSubmit = async e => {
+  handleSponsorSelection = (selectedOption,i) => {
+    var sponsorById=this.state.x;
+    
+    if(sponsorById && !sponsorById.includes(selectedOption.id)){
+      sponsorById[i]=selectedOption.id;
+    }
+    this.setState({ selectedOption });
+    this.setState({ x : sponsorById });
+  }
+  
+  componentDidMount(){
+    setHeader();
+    axios.get(rootUrl + "/users")
+    .then(users=>{
+      // remove isadmin true users.
+      users.data.map(e=>{
+        e["label"] = e.name.first+ " "+e.name.last;
+        e["value"] = e.id
+      })
+      this.setState({
+        allJudges : users.data
+      })
+    }).catch(err=>{
+
+    })
+
+    axios.get(rootUrl + "/organizations").then(org=>{
+      org.data.map(e=>{
+        e["label"] = e.name;
+        e["value"] = e.id
+      })
+      this.setState({
+        allSponsors : org.data
+      })
+    })
+  }
+
+  schema = {
+    name: Joi.string()
+      .required()
+      .max(50)
+      .label("Name"),
+    description: Joi.string()
+      .max(300)
+      .required()
+      .min(10)
+      .label("Description"),
+    start_date: Joi.string()
+      .required()
+      .label("Start Date"),
+    end_date: Joi.string()
+      .label("End Date")
+      .required(),
+    fee: Joi.string()
+      .label("Fee")
+      .regex(/^[0-9.]*$/)
+      .required(),
+    min_size: Joi.string()
+      .label("Minimum Team Size")
+      .required()
+      .regex(/^[0-9]*$/),
+    max_size: Joi.string()
+      .label("Maximum Team Size")
+      .required()
+      .regex(/^[0-9]*$/),
+    judges: Joi.string()
+      .label("Judges")
+      .required(),
+    sponsors: Joi.string().label("Sponsors"),
+    discount: Joi.string()
+      .label("Discount")
+      .regex(/^[0-9]*$/)
+  };
+
+  doSubmit = e => {
+    console.log("dfjdsfskdhf")
+    console.log(this.state);
+
     var startDateLocale = this.state.data.start_date;
     var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
 
@@ -120,73 +164,23 @@ class CreateHackathon extends Form {
       fee: this.state.data.fee,
       minSize: this.state.data.min_size,
       maxSize: this.state.data.max_size,
-      judges: [],
-      sponsors: [],
-      discount: []
+      judges: this.state.judges,
+      sponsors:this.state.x,
+      discount: this.state.discounts
     };
 
-
-
-    // var judgesName = this.state.data.judges
-    //   ? this.state.data.judges.split(";").map(e => e.trim())
-    //   : [];
-
-    // judgesName.map(async (name, i) => {
-    //   if (name.replace(/\s/gi, "").length != 0) {
-    //     setHeader();
-    //     var res = await axios.get(rootUrl+"/users?name=" + name);
-    //     var jid = Number.parseInt(res.data[0].id, 10) - 1;
-    //     data["judges"].push(jid + 1);
-    //   }
-    // });
-
-    // var discountsArray = this.state.data.discount
-    //   ? this.state.data.discount.split(";")
-    //   : [];
-
-    // data["discount"] = discountsArray.map(e => Number.parseInt(e.trim(), 10));
-
-    // var sponsorsName = this.state.data.sponsors
-    //   ? this.state.data.sponsors.split(";").map(e => e.trim())
-    //   : [];
-
-    // sponsorsName.map(async (name, i) => {
-    //   if (name.replace(/\s/gi, "").length != 0) {
-    //     setHeader();
-    //     var res = await axios.get(rootUrl+"/organizations?name=" + name);
-    //     var sid = Number.parseInt(res.data[0].id, 10) - 1;
-    //     data["sponsors"][i] = sid + 1;
-    //   }
-    // });
-
-    this.setState(
-      {
-        dataSend: data
-      },
-      function() {
-        console.log(this.state.dataSend);
-      }
-    );
-  };
-
-  async submit(e) {
-    e.preventDefault();
+    console.log("data to send",data);
     var id = getJWTID();
     setHeader();
-    await axios
-      .post(
-        rootUrl+"/hackathons?ownerId=" + id,
-        this.state.dataSend
-      )
+    axios
+      .post(rootUrl + "/hackathons", data)
       .then(response => {
         window.alert("Hackathon created successfully.");
-        // window.location.reload();
         this.props.history.push("/hackathons");
       });
-  }
+  };
 
   render() {
-    console.log(this.state);
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -212,15 +206,23 @@ class CreateHackathon extends Form {
                 autoFocus
                 placeholder="Name"
                 onChange={this.handleChange}
+                error={this.state.errors.name}
               />
+              {this.state.errors.name && (
+                <div className="red">{this.state.errors.name} </div>
+              )}
               <label>Description</label>
               <textarea
                 required
                 name="description"
-                placeholder="Atleast 10 characters"
+                placeholder="Description"
                 className="form-control"
                 onChange={this.handleChange}
+                error={this.state.errors.description}
               />
+              {this.state.errors.description && (
+                <div className="red">{this.state.errors.description} </div>
+              )}
               <label>Start Date</label>
               <input
                 type="date"
@@ -228,8 +230,11 @@ class CreateHackathon extends Form {
                 name="start_date"
                 className="form-control"
                 onChange={this.handleChange}
+                error={this.state.errors.start_date}
               />
-
+              {this.state.errors.start_date && (
+                <div className="red">{this.state.errors.start_date} </div>
+              )}
               <label>End Date</label>
               <input
                 required
@@ -237,114 +242,73 @@ class CreateHackathon extends Form {
                 name="end_date"
                 className="form-control"
                 onChange={this.handleChange}
+                error={this.state.errors.end_date}
               />
+              {this.state.errors.end_date && (
+                <div className="red">{this.state.errors.end_date} </div>
+              )}
               <label>Entry Fee</label>
               <input
                 type="number"
                 name="fee"
                 required
                 className="form-control"
-                placeholder="Fee"
+                placeholder="Fee in USD"
                 onChange={this.handleChange}
+                error={this.state.errors.fee}
               />
+              {this.state.errors.fee && (
+                <div className="red">{this.state.errors.fee} </div>
+              )}
               <label>Minimum coders</label>
               <input
                 type="text"
                 name="min_size"
                 required
                 className="form-control"
-                placeholder="Atleat 1"
+                placeholder="Minimum Team Size (inclusive)"
                 onChange={this.handleChange}
+                error={this.state.errors.min_size}
               />
+              {this.state.errors.min_size && (
+                <div className="red">{this.state.errors.min_size} </div>
+              )}
               <label>Maximum coders</label>
               <input
                 type="text"
                 name="max_size"
                 required
                 className="form-control"
-                placeholder="Maximum 10"
+                placeholder="Maximum Team Size (inclusive)"
                 onChange={this.handleChange}
+                error={this.state.errors.max_size}
               />
+              {this.state.errors.max_size && (
+                <div className="red">{this.state.errors.max_size} </div>
+              )}
               <label>Judges</label>
-              {/* <input
-                type="text"
-                name="judges"
-                required
-                className="form-control"
-                placeholder=" Atleast 1 with Semi-colon(;) separated"
-                onChange={this.handleChange}
-              /> */}
-              
-     
-
-              <Select isMulti options={scaryAnimals}  onChange={this.handleSelectionChange} />
-
-
-
-              {
-                this.state.judges.map((judge,i)=>{
-                  return(
-
-                    <div class="input-group mb-3" key={i}>
-                    <input 
-                            required
-                            className="form-control"
-                          onChange={(e)=>this.handleJudgeChange(e,i)}
-                          value ={judge}
-                          />
-                      <div class="input-group-append">
-                        <button  class="btn btn-primary btn-remove" type="button"  onClick={(e)=>this.removeJudge(i)}>Remove</button>
-
-                      </div>
-                    </div>
-        
-
-                  )
-                })
-              }
-              <div>
-              <button className = "btn-add" onClick={(e)=>this.addJudge(e)}>Add Judge</button>
-
-              </div>
+              <Select isMulti options={this.state.allJudges} onChange={this.handleSelectionChange} />
                 <br/>
+
+              {/* {this.state.errors.judges && (
+                <div className="red">{this.state.errors.judges} </div>
+              )} */}
               <label>Sponsors (Optional)</label>
-              {/* <input
-                type="text"
-                name="sponsors"
-                className="form-control"
-                placeholder="Semi-colon(;) separated"
-                onChange={this.handleChange}
-              />
-              <label>Discount in % </label>
-              <input
-                type="text"
-                name="discount"
-                className="form-control"
-                placeholder="Semi-colon(;) separated"
-                onChange={this.handleChange}
-              /> */}
 
               {
                 this.state.sponsors.map((sponsor,i)=>{
                   return(
                     <div class="input-group mb-3" key={i}>
-                      <input 
-                         required
-                        placeholder="Sponsor"
-                        className="form-control"
-                        style={{borderRadius: "4px"}}
-                      onChange={(e)=>this.handleSponsorChange(e,i)}
-                      value ={sponsor}
-                      />
+                      <Select className="css-1pcexqc-container-spon"  options={this.state.allSponsors} onChange={(e)=>{this.handleSponsorSelection(e,i)}} /> 
                        <input 
                         required
                         className="form-control"
                         placeholder="discount"
-                        style={{marginLeft: "12px", borderRadius: "4px"}}
+                        style={{marginLeft: "12px", borderRadius: "4px", height: "59px",  marginTop: "0px"}}
                       onChange={(e)=>this.handleDiscountChange(e,i)}
                       value ={this.state.discounts[i]}
                       />
-                    <div class="input-group-append">  
+                    <div class="input-group-append" style={{    marginTop: "-11px"}}>  
                       <button class="btn btn-primary btn-remove" onClick={(e)=>this.removeSponsor(e,i)}>Remove</button>
                     </div>
                     </div>
@@ -353,6 +317,7 @@ class CreateHackathon extends Form {
               }
               <br/>
               <button className="btn-add" onClick={(e)=>this.addSponsor(e)}>Add Sponsor </button>
+           
             </div>
             <div>
               <button
@@ -361,16 +326,7 @@ class CreateHackathon extends Form {
                 className="btn btn-primary"
                 onClick={this.handleSubmit}
               >
-                Finalize Hackathon
-              </button>{" "}
-              <br />
-              <button
-                type="submit"
-                style={{ marginLeft: "41%", width: "fit-content" }}
-                className="btn btn-primary"
-                onClick={this.submit.bind(this)}
-              >
-                Ready ? Create
+                Post Hackathon
               </button>{" "}
             </div>
           </form>
