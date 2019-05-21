@@ -82,12 +82,11 @@ class EditProfile extends FormEventHandlers {
             this.setState({
               profileUrl : e.data
             })
-          console.log(e);
+          console.log("Photo URL"+e.data);
+              this.doSubmit();
         }).catch(err=>{
-          window.alert("Problem in uploading the picture");
           console.log(err);
         })
-        this.doSubmit();
   }
 
 
