@@ -32,14 +32,16 @@ class EditProfile extends FormEventHandlers {
       zipcode: "",
       id: "",
       errors: {},
-      dbErrors: ""
+      dbErrors: "",
+      profileUrl :""
     };
+    this.changePhoto = this.changePhoto.bind(this);
   }
 
-  componentDidMount() {
+ async componentDidMount() {
     const ID = getJWTID();
     setHeader();
-    axios.get(rootUrl + "/users/" + ID).then(response => {
+   await axios.get(rootUrl + "/users/" + ID).then(response => {
       this.setState({
         screenname: response.data.screenName,
         first: response.data.name.first,
@@ -50,12 +52,46 @@ class EditProfile extends FormEventHandlers {
         city: response.data.address.city,
         state: response.data.address.state,
         zipcode: response.data.address.zip,
-        id: response.data.id
+        id: response.data.id,
+        profileUrl : response.data.portraitURL
       });
     });
   }
 
-  doSubmit = e => {
+    async changePhoto(e){
+
+    e.preventDefault();
+    var fd = new FormData();
+      var filesList = document.getElementById("profilebox").files;
+      const id = getJWTID();
+
+      fd.append("file", filesList[0]);
+        const config = {
+          headers:{
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
+            'Access-Control-Allow-Headers': 'Access-Control-Allow-Methods, Access-Control-Allow-Origin, Origin, Accept, Content-Type',
+            'Accept': 'application/x-www-form-urlencoded',
+            'Content-Type':'application/x-www-form-urlencoded',
+            'Content-Type': 'multipart/form-data'
+           }
+         }
+        setHeader();
+     await axios.post(rootUrl+"/users/"+id+"/upload",fd, config)
+         .then(e=>{
+            this.setState({
+              profileUrl : e.data
+            })
+          console.log(e);
+        }).catch(err=>{
+          window.alert("Problem in uploading the picture");
+          console.log(err);
+        })
+        this.doSubmit();
+  }
+
+
+  doSubmit = () => {
     var profile = {
       screenName: this.state.screenname,
       name: {
@@ -69,7 +105,8 @@ class EditProfile extends FormEventHandlers {
         city: this.state.city,
         state: this.state.state,
         zip: this.state.zipcode
-      }
+      },
+      portraitURL : this.state.profileUrl
     };
 
     console.group("profile=", profile);
@@ -131,6 +168,7 @@ class EditProfile extends FormEventHandlers {
 
   render() {
     console.log(Object.entries(this.state.errors).length === 0);
+    console.log(this.state);
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -144,11 +182,17 @@ class EditProfile extends FormEventHandlers {
 
         <div className="profile">
           <div className="profile-photo">
-            <input type="file" className="upload_profile_photo" name="files" />
+
+            <input type="file"
+            className="upload_profile_photo" 
+            name="profilebox" id="profilebox"
+            onChange={(e) => this.changePhoto(e)} />
+
             <img
-              src={require("../../images/man.svg")}
+              src={this.state.profileUrl ? this.state.profileUrl :  require("../../images/man.svg")}
               width="300"
               height="200"
+              style={{borderRadius : "21%",width : "27%" }}
               alt="User has not uploaded anything yet"
             />
           </div>

@@ -21,15 +21,17 @@ class ViewProfile extends Component {
     this.state = {
       profiles: [],
       ID: "",
-      Organization: ""
+      Organization: "",
+      potraitUrl : ""
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
     const ID = getJWTID();
     setHeader();
-    axios.get(rootUrl + "/users/" + ID).then(response => {
+    await axios.get(rootUrl + "/users/" + ID).then(response => {
       this.setState({
-        profiles: response.data
+        profiles: response.data,
+        potraitUrl : response.data.potraitURL
       });
     });
   }
@@ -47,8 +49,9 @@ class ViewProfile extends Component {
         <Navbar />
         <div className="view-profile-container">
           <div className="view-photo">
+         { console.log(this.state.profiles.portraitURL)}
             <img
-              src={require("../../images/man.svg")}
+              src={this.state.profiles.portraitURL ? this.state.profiles.portraitURL :  require("../../images/man.svg")}
               alt="The Traveler hasn't uploaded anything yet"
             />
           </div>

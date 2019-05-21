@@ -23,40 +23,43 @@ class Login extends Form {
   };
 
   doSubmit = async () => {
-    var loggedInUser = await loginWithCredentials(
-      this.state.data.username,
-      this.state.data.password
-    );
 
-// console.log(loggedInUser);
-// console.log(isUserVerified());
-//     if (isUserVerified()) {
-      var data = {
-        email: this.state.data.username,
-        password: this.state.data.password
-      };
-      axios
-        .post(rootUrl + "/auth/signin", data)
-        .then(response => {
-          console.log("Status Code : ", response.status);
-          if (response.status === 200) {
-            console.log("Login successful.");
-            localStorage.setItem("token", response.data.accessToken);
-            this.props.history.push("/hackathons");
-          } else if (response.status === 400) {
-            window.alert("Username and/or password is incorrect");
+    var email = this.state.data.username;
+    var password = this.state.data.password;
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(data => {
+            if (data.user.emailVerified) {
+              var data = {
+                email,
+                password
+              };
+                    axios.post(rootUrl + "/auth/signin", data)
+                        .then(response => {
+                        console.log("Status Code : ", response.status);
+                        if (response.status === 200) {
+                          console.log("Login successful.");
+                          localStorage.setItem("token", response.data.accessToken);
+                          this.props.history.push("/hackathons");
+                        } else if (response.status === 400) {
+                          window.alert("Username and/or password is incorrect");
+                        }
+                      })
+                      .catch(error => {
+                        this.setState({
+                          dbErrors: error.response.data.code
+                        });
+                      });
+          } else {
+            window.alert("Email is not verified. Check your mail");
+            console.log("Email not verified");
+            // window.location.reload();
           }
-        })
-        .catch(error => {
-          this.setState({
-            dbErrors: error.response.data.code
-          });
-        });
-    // } else {
-    //   // window.alert("Email is not verified. Check your mail");
-    //   console.log("Email not verified");
-    //   // window.location.reload();
-    // }
+          })
+      .catch(function(error) {
+      console.log(error);
+      window.alert(error.message);
+    });
   };
 
   schema = {
