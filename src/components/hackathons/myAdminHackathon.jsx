@@ -285,7 +285,48 @@ console.log(this.state.hackathon)
 
         <div className="hackathon-details">
           <h2>{this.state.hackathon ? this.state.hackathon.name : ""}</h2>
-    
+          <div div className="button-hacks-admin" style={{display : "contents"}}>
+          <button
+            type="button"
+            onClick={this.handleOpenStatus}
+            style={{ margin: 20 }}
+            className="btn btn-primary btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
+          >
+            Open
+          </button>
+          <button
+            type="button"
+            onClick={this.handleClosedStatus}
+            style={{ margin: 20 }}
+            className="btn btn-warning btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
+          >
+            Closed
+          </button>
+          <button
+            type="button"
+            onClick={this.handleFinalizedStatus}
+            style={{ margin: 20 }}
+            className="btn btn-danger btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+          >
+            Finalized
+          </button>
+          
+          <button
+            type="button"
+            onClick={this.submitChanges}
+            style={{ margin: 20 }}
+            className="btn btn-success btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
+          >
+            Save Changes
+          </button>
+        </div>
           <br />
           {this.state.hackathon ? this.state.hackathon.description : ""}
           <br />
@@ -413,48 +454,6 @@ console.log(this.state.hackathon)
               </tr>
             </tbody>
           </table>
-        </div>
-        <div div className="button-hacks-admin">
-          <button
-            type="button"
-            onClick={this.handleOpenStatus}
-            style={{ margin: 20 }}
-            className="btn btn-primary btn-lg"
-            disabled={this.state.hackathon.status==="Finalized"}
-
-          >
-            Open
-          </button>
-          <button
-            type="button"
-            onClick={this.handleClosedStatus}
-            style={{ margin: 20 }}
-            className="btn btn-warning btn-lg"
-            disabled={this.state.hackathon.status==="Finalized"}
-
-          >
-            Closed
-          </button>
-          <button
-            type="button"
-            onClick={this.handleFinalizedStatus}
-            style={{ margin: 20 }}
-            className="btn btn-danger btn-lg"
-            disabled={this.state.hackathon.status==="Finalized"}
-          >
-            Finalized
-          </button>
-          
-          <button
-            type="button"
-            onClick={this.submitChanges}
-            style={{ margin: 20 }}
-            className="btn btn-success btn-lg"
-            disabled={this.state.hackathon.status==="Finalized"}
-
-          >
-            Save Changes
-          </button>
         </div>
       </div>
     );
