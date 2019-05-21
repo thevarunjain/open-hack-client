@@ -35,7 +35,7 @@ class MyAdminHackathon extends Component {
 
   componentDidMount() {
     const ID = this.props.location.state.id;
-    console.log("id=", ID);
+    // console.log("id=", ID);
     setHeader();
     axios.get(rootUrl + "/hackathons/" + ID).then(response => {
       this.setState({
@@ -118,7 +118,7 @@ class MyAdminHackathon extends Component {
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
-
+    console.log(this.state.hackathon);
     return (
       <div className="hackathon-home">
         {redirectVar}
@@ -217,6 +217,47 @@ class MyAdminHackathon extends Component {
                 <br />
               </div>
             ))}
+        </div>
+        <div className="hackathon-revenue">
+          <h3>Revenue</h3>
+          <table className="table table-striped table-hover">
+            <thead>
+              <th>Paid Registration Fee</th>
+              <th>Unpaid Registration Fee</th>
+              <th>Sponsor Revenue</th>
+              <th>Expense</th>
+              <th>Profit</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {this.state.hackathon.earningReport
+                    ? this.state.hackathon.earningReport.paidRegistrationFee
+                    : ""}
+                </td>
+                <td>
+                  {this.state.hackathon.earningReport
+                    ? this.state.hackathon.earningReport.unpaidRegistrationFee
+                    : ""}
+                </td>
+                <td>
+                  {this.state.hackathon.earningReport
+                    ? this.state.hackathon.earningReport.sponsorRevenue
+                    : ""}
+                </td>
+                <td>
+                  {this.state.hackathon.earningReport
+                    ? this.state.hackathon.earningReport.expense
+                    : ""}
+                </td>
+                <td>
+                  {this.state.hackathon.earningReport
+                    ? this.state.hackathon.earningReport.profit
+                    : ""}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div div className="button-hacks-admin">
           <button
