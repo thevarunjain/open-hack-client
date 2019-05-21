@@ -9,7 +9,10 @@ export default class Payment extends Component {
         super(props);
         this.state ={
             hackathon : "",
-            amount : ""
+            amount : "",
+            tid : "",
+            hid : "",
+            mid : "" 
         }
     }
 
@@ -18,6 +21,12 @@ export default class Payment extends Component {
         var tid = this.props.match.params.tid;
         var hid = this.props.match.params.hid;
         var mid = this.props.match.params.mid;
+
+        this.setState({
+            tid,
+            hid,
+            mid
+        })
         var url = `${rootUrl}/hackathons/${hid}/teams/${tid}/payment?participantId=${mid}`;
         console.log(url);
           axios.get(url).then(res=>{
@@ -30,6 +39,9 @@ export default class Payment extends Component {
          })
     }
     foo(){
+        var tid = this.state.tid;
+        var hid = this.state.hid;
+        var mid = this.state.mid;
         var url = `${rootUrl}/hackathons/${hid}/teams/${tid}/payment?participantId=${mid}&amount=${this.state.amount}`;
         console.log(url);
         axios.post(url).then(res=>{
