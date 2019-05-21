@@ -15,6 +15,7 @@ import {
 } from "../common/auth";
 import {rootUrl} from "../common/constant";
 import Select from 'react-select';
+import { writeSync } from "fs";
 var moment = require("moment");
 
 class CreateHackathon extends Form {
@@ -76,7 +77,9 @@ class CreateHackathon extends Form {
 
   handleSponsorSelection = (selectedOption,i) => {
     var sponsorById=this.state.x;
-
+    console.log(selectedOption);
+    console.log(selectedOption.value);
+    console.log(selectedOption.id);
     if(sponsorById && !sponsorById.includes(selectedOption.id)){    // for unique insertion in x object
           sponsorById[i]=selectedOption.id;
           this.setState({ selectedOption });
@@ -327,7 +330,7 @@ class CreateHackathon extends Form {
                 this.state.sponsors.map((sponsor,i)=>{
                   return(
                     <div class="input-group mb-3" key={i}>
-                      <Select key={i} className="css-1pcexqc-container-spon"  value={this.state.x[i] ? this.state.x[i].name : ""}  options={this.state.allSponsors.filter((e) => !this.state.x.includes(e.id))} onChange={(e)=>{this.handleSponsorSelection(e,i)}} /> 
+                      <Select key={i} className="css-1pcexqc-container-spon"   options={this.state.allSponsors.filter((e) => !this.state.x.includes(e.id))} onChange={(e)=>{this.handleSponsorSelection(e,i)}} /> 
                        <input 
                         required
                         className="form-control"

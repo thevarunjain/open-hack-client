@@ -8,7 +8,7 @@ class Form extends Component {
 
     const errors = this.validate();
     this.setState({ errors: errors || {} });
-    if (errors) return;
+    // if (errors) return;
     this.doSubmit();
   };
 

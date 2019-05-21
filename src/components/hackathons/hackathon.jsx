@@ -64,7 +64,7 @@ class Hackathon extends Component {
               className="btn btn-primary create-team"
               to={{
                 pathname: "/team/create",
-                state: { id: this.props.location.state.id }
+                state: { id: this.props.location.state.id, minSize : this.state.hackathon.minSize, maxSize : this.state.hackathon.maxSize  }
               }}
             >
               Create Team
