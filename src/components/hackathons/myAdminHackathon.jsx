@@ -16,7 +16,6 @@ import {
 import { rootUrl } from "../common/constant";
 
 var moment = require("moment");
-
 class MyAdminHackathon extends Component {
   constructor() {
     super();
@@ -26,7 +25,8 @@ class MyAdminHackathon extends Component {
       endDate: "",
       currentDate: "",
       teams: [],
-      teamDetails: []
+      teamDetails: [],
+      done : ""
     };
     this.handleOpenStatus = this.handleOpenStatus.bind(this);
     this.handleClosedStatus = this.handleClosedStatus.bind(this);
@@ -45,6 +45,7 @@ class MyAdminHackathon extends Component {
     });
     setHeader();
     axios.get(rootUrl + "/hackathons/" + ID + "/teams").then(response => {
+      console.log(response.data);
       this.setState(
         {
           teams: response.data
@@ -69,7 +70,7 @@ class MyAdminHackathon extends Component {
                     temp.push(response.data.members[j]);
                   }
                 }
-                member.push(temp);
+                member.push(temp);  
               });
           }
 
@@ -80,39 +81,87 @@ class MyAdminHackathon extends Component {
   }
 
   handleOpenStatus = e => {
+    console.log(this.state.hackathon.status);
+    console.log(this.state.hackathon.status==="Finalized");
+    
     e.preventDefault();
+    if(this.state.hackathon.status!=="Finalized"){
     const ID = this.props.location.state.id;
-    var data = {
-      toState: "Open"
-    };
-    setHeader();
-    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Status updated successfully.");
-    });
+    var currentDate = new Date();
+    // Check if any team is graded if yes then do not re open
+      console.log(this.state.teams);
+       var canHackathonOpen = true;
+      this.state.teams.map(e=>{
+          if(e.grades){
+            canHackathonOpen = false;
+            window.alert("Cannot re open hackathon as one or more teams has been graded");
+          }
+      })
+
+      if(canHackathonOpen){
+        var data = {
+          toState: "Open",
+          startDate: currentDate,
+        };
+        setHeader();
+        axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+          window.alert("Hackathon Status updated successfully.");
+        });
+      }
+    }else{
+      window.alert("Hackathon has been finalized. No more changes allowed");
+    }
+
   };
 
   handleClosedStatus = e => {
+    console.log(this.state.hackathon.status);
+    console.log(this.state.hackathon.status==="Finalized");
+    
     e.preventDefault();
-    const ID = this.props.location.state.id;
-    var data = {
-      toState: "Closed"
-    };
-    setHeader();
-    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Status updated successfully.");
-    });
+    if(this.state.hackathon.status!=="Finalized"){
+      const ID = this.props.location.state.id;
+      var currentDate = new Date();
+      var data = {
+        toState: "Closed",
+        endDate : currentDate
+      };
+      setHeader();
+      axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+        window.alert("Hackathon Status updated successfully.");
+      });
+    }else{
+      window.alert("Hackathon has been finalized. No more changes allowed");
+    }
+
   };
 
   handleFinalizedStatus = e => {
+    if(this.state.hackathon.status!=="Finalized"){
     e.preventDefault();
     const ID = this.props.location.state.id;
-    var data = {
-      toState: "Finalized"
-    };
-    setHeader();
-    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Status updated successfully.");
-    });
+   var canHackathonFinalize = true;
+
+    this.state.teams.map(e=>{
+          if(e.grades == null){
+            canHackathonFinalize = false;
+            window.alert("Cannot finalize hackathon as one or more teams has not been graded");
+          }
+      })
+
+      if(canHackathonFinalize){
+        console.log("....",this.state.done);
+        var data = {
+          toState: "Finalized"
+        };
+        setHeader();
+        axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+          window.alert("Hackathon Status updated successfully.");
+        });
+      }
+    }else{
+      window.alert("Hackathon is already finalized");
+    }
   };
 
   changeHandle(e) {
@@ -122,23 +171,65 @@ class MyAdminHackathon extends Component {
   submitChanges = e => {
     e.preventDefault();
     const ID = this.props.location.state.id;
-
-    var startDateLocale = this.state.startDate;
+    
+console.log(this.state.hackathon)
+    var startDateLocale = this.state.startDate ? this.state.startDate : this.state.hackathon.startDate ;
     var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
 
-    var endDateLocale = this.state.endDate;
+    var endDateLocale = this.state.endDate ? this.state.endDate : this.state.hackathon.endDate ;
     var endDate = moment(endDateLocale, "YYYY-MM-DD").toDate();
 
     var currentDate = new Date();
-    var data = {
-      startDate: startDate,
-      currentDate: currentDate,
-      endDate: endDate
-    };
-    setHeader();
-    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Date updated successfully.");
-    });
+    currentDate.setHours(0,0,0,0)
+    console.log(startDate, endDate, currentDate);
+    var status = "";
+  
+    if(startDate>=currentDate){         // if new start date is not in past 
+        if(endDate>=startDate){         // if end date is not less than start date
+        
+          if(currentDate<=endDate && currentDate>=startDate){
+            status="Open";
+          }else if(currentDate<startDate){
+            status="Created"
+          }else if(currentDate>endDate){
+            status="Closed"
+          }
+
+            var data = {
+              startDate: startDate,
+              currentDate: currentDate,
+              endDate: endDate,
+              toState : status
+            };
+            console.log("...", data);
+            setHeader();
+            console.log(this.state.hackathon.id);
+            axios.patch("http://localhost:8080" + "/hackathons/" + this.state.hackathon.id, data).then(response => {
+              window.alert("Hackathon Date updated successfully.");
+            }).then(e=>{
+              console.log(e);
+            }).catch(e=>{
+              console.log(e);
+            })
+          
+      
+        }else{
+           window.alert("End date cannot be less than start date");
+        }  
+    }else{
+      window.alert("Could not change open date to past. Must be today or after.");
+    }
+
+    if(endDate == startDate){
+      status = "Closed"
+   }else{
+      status = "Open" 
+   }
+   
+
+
+
+
   };
 
   render() {
@@ -307,6 +398,8 @@ class MyAdminHackathon extends Component {
             onClick={this.handleOpenStatus}
             style={{ margin: 20 }}
             className="btn btn-primary btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
           >
             Open
           </button>
@@ -315,6 +408,8 @@ class MyAdminHackathon extends Component {
             onClick={this.handleClosedStatus}
             style={{ margin: 20 }}
             className="btn btn-warning btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
           >
             Closed
           </button>
@@ -323,14 +418,18 @@ class MyAdminHackathon extends Component {
             onClick={this.handleFinalizedStatus}
             style={{ margin: 20 }}
             className="btn btn-danger btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
           >
             Finalized
           </button>
+          
           <button
             type="button"
             onClick={this.submitChanges}
             style={{ margin: 20 }}
             className="btn btn-success btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
           >
             Save Changes
           </button>
