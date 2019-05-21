@@ -13,69 +13,148 @@ import axios from "axios";
 import { Redirect } from "react-router";
 import "../../css/createHackathon.css";
 import { rootUrl } from "../common/constant";
+import Select from 'react-select';
+
+
+const allRoles = [
+  { value: 'Product Manger', label: 'Product Manger' },
+  { value: 'Engineer', label: 'Engineer' },
+  { value: 'Full Stack', label: 'Full Stack' },
+  { value: 'Designer', label: 'Designer' },
+  { value: 'Other', label: 'Other' }
+];
 
 class CreateTeam extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      data: {},
-      dataSend: ""
+      name: "",
+      x : [],
+      members : [],
+      role : [],
+      allMembers :[]
     };
   }
 
-  doSubmit = async e => {
-    var data = {
-      name: this.state.data.name,
-      members: [],
-      roles: []
-    };
 
-    var membersName = this.state.data.members
-      ? this.state.data.members.split(";").map(e => e.trim())
-      : [];
-    membersName.map(async (name, i) => {
-      if (name.replace(/\s/gi, "").length != 0) {
+  addMember(e){
+    e.preventDefault();
+    this.setState({
+      members : [...this.state.members, ""]
+    })
+  }
+
+  removeMember(e,i){
+    e.preventDefault();
+    
+    this.state.members.splice(i,1);
+    this.setState({members: this.state.members})
+
+    this.state.role.splice(i,1);
+    this.setState({role: this.state.role})
+
+    this.state.x.splice(i,1);
+    this.setState({x: this.state.x})
+
+    console.log(this.state);
+  }
+
+  handleMemberSelection = (selectedOption,i) => {
+    var memberById=this.state.x;
+
+    if(memberById && !memberById.includes(selectedOption.id)){    // for unique insertion in x object
+          memberById[i]=selectedOption.id;
+          this.setState({ selectedOption });
+          this.setState({ x : memberById });
+    } 
+  }
+
+  handleRoleSelection = (selectedOption,i) => {
+    console.log(selectedOption);
+    this.state.role[i]=selectedOption.label;
+    this.setState({role: this.state.role})
+  }
+
+  componentDidMount(){
+    var hackathon_id = this.props.location.state.id;
+    setHeader();
+    console.log("Com di dmunt", hackathon_id);
+
+    axios.get(`${rootUrl}/users`)
+    .then(allUsers=>{
+        console.log(allUsers.data);
+
+                  axios.get(`${rootUrl}/hackathons/${hackathon_id}/members`)
+                  .then(users=>{
+                    // remove isadmin true users.
+                    var nonEligibleTeamMember =[];
+                    if(users.data){
+                      if(users.data.judges){
+                        users.data.judges.map(e=>{nonEligibleTeamMember.push(e.id)});
+                      } 
+                      if(users.data.participants){
+                        users.data.participants.map(e=>{nonEligibleTeamMember.push(e.id)});
+                      }
+                    }  
+                    // Removed all Judges and particpants
+                    console.log(nonEligibleTeamMember);
+                    // Remove Admin users
+                    var eligibleTeamMember = allUsers.data.filter(e=> !e.admin);
+                    console.log(eligibleTeamMember);
+
+                    eligibleTeamMember = eligibleTeamMember.filter(e => !nonEligibleTeamMember.includes(e.id));
+                    eligibleTeamMember.map(e=>{
+                      e["label"] = e.name.first+ " "+e.name.last;
+                      e["value"] = e.id
+                    })
+                    this.setState({
+                      allMembers : eligibleTeamMember
+                    })
+                  }).catch(err=>{
+                         console.log(err);
+                  })
+  }).catch(err=>{
+    console.log(err);
+  })
+  }
+  
+  doSubmit = e => {
+    e.preventDefault();
+    var {id, maxSize, minSize} = this.props.location.state;
+    var teamSize = this.state.x.length;
+    console.log(teamSize,maxSize, minSize);
+    console.log(teamSize>=minSize && teamSize<=maxSize);
+    if(this.state.name.length == 0) window.alert("Team name is required")
+    if(teamSize>=minSize && teamSize<=maxSize){
+      var data = {
+        name: this.state.name,
+        members: this.state.x,
+        roles: this.state.role
+      };
+        var id = getJWTID();
+        var hackathon_id = this.props.location.state.id;
+        console.log(data);
         setHeader();
-        var res = await axios.get(rootUrl + "/users?name=" + name);
-        var jid = Number.parseInt(res.data[0].id, 10) - 1;
-        data["members"].push(jid + 1);
-      }
-    });
-
-    var rolesArray = this.state.data.roles
-      ? this.state.data.roles.split(";")
-      : [];
-
-    data["roles"] = rolesArray.map(e => e.trim());
-
-    this.setState(
-      {
-        dataSend: data
-      },
-      function() {
-        console.log(this.state.dataSend);
-      }
-    );
+        axios
+          .post(
+            rootUrl + "/hackathons/" + hackathon_id + "/teams",data)
+          .then(response => {
+            window.alert("Team created successfully.");
+            // window.location.reload();
+            this.props.history.push("/hackathons");
+          });
+    }else{
+      window.alert("Minimum "+ minSize+ " and Maximum "+maxSize+ " members are required");
+    }
   };
 
-  async submit(e) {
-    var id = getJWTID();
-    var hackathon_id = this.props.location.state.id;
-    console.log(this.state.dataSend);
-    setHeader();
-    await axios
-      .post(
-        rootUrl + "/hackathons/" + hackathon_id + "/teams?ownerId=" + id,
-        this.state.dataSend
-      )
-      .then(response => {
-        window.alert("Team created successfully.");
-        // window.location.reload();
-        this.props.history.push("/hackathons");
-      });
-  }
-
   render() {
+    console.log(this.state);
+    var {id, maxSize, minSize} = this.props.location.state;
+    var teamSize = this.state.x.length;
+    console.log(teamSize,maxSize, minSize);
+    console.log(teamSize>=minSize && teamSize<=maxSize);
+    
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -97,24 +176,19 @@ class CreateTeam extends Component {
                 name="name"
                 className="form-control"
                 autoFocus
+                required
                 placeholder="Name"
-                onChange={this.handleChange}
+                onChange={(e)=> this.setState({name: e.target.value})}
               />
               <label>Add Members to team</label>
               
               {
-                this.state.members.map((sponsor,i)=>{
+                this.state.members.map((member,i)=>{
                   return(
                     <div class="input-group mb-3" key={i}>
-                      {/* <Select key={i} className="css-1pcexqc-container-spon"  value={this.state.x[i] ? this.state.x[i].name : ""}  options={this.state.allMember.filter((e) => !this.state.x.includes(e.id))} onChange={(e)=>{this.handleMemberSelection(e,i)}} />  */}
-                       <input 
-                        required
-                        className="form-control"
-                        placeholder="discount"
-                        style={{marginLeft: "12px", borderRadius: "4px", height: "59px",  marginTop: "0px"}}
-                      onChange={(e)=>this.handleDiscountChange(e,i)}
-                      value ={this.state.discounts[i]}
-                      />
+                    <Select key={i} className="css-1pcexqc-container-spon" options={this.state.allMembers.filter((e) => !this.state.x.includes(e.id))} onChange={(e)=>{this.handleMemberSelection(e,i)}} /> 
+                      <Select key={i} className="css-1pcexqc-container-spon" options={allRoles} onChange={(e)=>{this.handleRoleSelection(e,i)}} /> 
+                    
                     <div class="input-group-append" style={{    marginTop: "-11px"}}>  
                       <button class="btn btn-primary btn-remove" onClick={(e)=>this.removeMember(e,i)}>Remove</button>
                     </div>
@@ -123,41 +197,18 @@ class CreateTeam extends Component {
                 })
               }
               <br/>
-              <button className="btn-add" onClick={(e)=>this.addMember(e)}>Add Sponsor </button>
-              {/* <input
-                type="text"
-                name="members"
-                className="form-control"
-                placeholder="Semi-colon(;) separated"
-                onChange={this.handleChange}
-              />
-              <label>Assign roles to members</label>
-              <input
-                type="text"
-                name="roles"
-                className="form-control"
-                placeholder="Semi-colon(;) separated"
-                onChange={this.handleChange}
-              /> */}
+              <button className="btn-add" onClick={(e)=>this.addMember(e)}>Add Member </button>
             </div>
             <div>
               <button
                 type="submit"
                 style={{ marginLeft: "41%", width: "fit-content" }}
                 className="btn btn-primary"
-                onClick={this.handleSubmit}
+                onClick={this.doSubmit.bind(this)}
               >
-                Finalize Team
+               Post Team
               </button>{" "}
               <br />
-              <button
-                type="submit"
-                style={{ marginLeft: "41%", width: "fit-content" }}
-                className="btn btn-primary"
-                onClick={this.submit.bind(this)}
-              >
-                Post Team
-              </button>{" "}
             </div>
           </form>
         </div>

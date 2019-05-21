@@ -223,6 +223,7 @@ class MyAdminHackathon extends Component {
             <thead>
               <th>Name</th>
               <th>Role</th>
+              <th>Amount</th>
               <th>Fee Paid</th>
             </thead>
             <tbody>
@@ -231,6 +232,7 @@ class MyAdminHackathon extends Component {
                   <tr>
                     <td>{team_data.firstName}</td>
                     <td>{team_data.role}</td>
+                    <td>{team_data.amount ? "$"+team_data.amount : "-" }</td>
                     <td>{team_data.feePaid === false ? "No" : "Yes"}</td>
                   </tr>
                 ))}
@@ -272,27 +274,27 @@ class MyAdminHackathon extends Component {
               <tr>
                 <td>
                   {this.state.hackathon.earningReport
-                    ? this.state.hackathon.earningReport.paidRegistrationFee
+                    ? "$"+this.state.hackathon.earningReport.paidRegistrationFee
                     : ""}
                 </td>
                 <td>
                   {this.state.hackathon.earningReport
-                    ? this.state.hackathon.earningReport.unpaidRegistrationFee
+                    ? "$"+this.state.hackathon.earningReport.unpaidRegistrationFee
                     : ""}
                 </td>
                 <td>
                   {this.state.hackathon.earningReport
-                    ? this.state.hackathon.earningReport.sponsorRevenue
+                    ? "$"+this.state.hackathon.earningReport.sponsorRevenue
                     : ""}
                 </td>
                 <td>
                   {this.state.hackathon.earningReport
-                    ? this.state.hackathon.earningReport.expense
+                    ? "$"+this.state.hackathon.earningReport.expense
                     : ""}
                 </td>
                 <td>
                   {this.state.hackathon.earningReport
-                    ? this.state.hackathon.earningReport.profit
+                    ? "$"+this.state.hackathon.earningReport.profit
                     : ""}
                 </td>
               </tr>

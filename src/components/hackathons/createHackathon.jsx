@@ -13,8 +13,9 @@ import {
   getJWTAdminStatus,
   setHeader
 } from "../common/auth";
-import { rootUrl } from "../common/constant";
-import Select from "react-select";
+import {rootUrl} from "../common/constant";
+import Select from 'react-select';
+import { writeSync } from "fs";
 var moment = require("moment");
 
 class CreateHackathon extends Form {
@@ -74,24 +75,24 @@ class CreateHackathon extends Form {
     this.setState({ judges: judgeById });
   };
 
-  handleSponsorSelection = (selectedOption, i) => {
-    var sponsorById = this.state.x;
 
-    if (sponsorById && !sponsorById.includes(selectedOption.id)) {
-      // for unique insertion in x object
-      sponsorById[i] = selectedOption.id;
-      this.setState({ selectedOption });
-      this.setState({ x: sponsorById });
-    } else if (this.state.x && this.state.x.includes(selectedOption.id)) {
-      window.alert("already added");
-      this.state.sponsors.splice(i, 1); // to remove the <div>
-      this.setState({ sponsors: this.state.sponsors });
+  handleSponsorSelection = (selectedOption,i) => {
+    var sponsorById=this.state.x;
 
-      this.state.discounts.splice(i, 1); //to remove its discount
-      this.setState({ discounts: this.state.discounts });
-
-      this.state.x.splice(i, 1); // to remove as a sponsor
-      this.setState({ x: this.state.x });
+    if(sponsorById && !sponsorById.includes(selectedOption.id)){    // for unique insertion in x object
+          sponsorById[i]=selectedOption.id;
+          this.setState({ selectedOption });
+          this.setState({ x : sponsorById });
+    }else if(this.state.x && this.state.x.includes(selectedOption.id)){
+      window.alert("already added")
+          this.state.sponsors.splice(i,1);        // to remove the <div>
+          this.setState({sponsors: this.state.sponsors})
+      
+          this.state.discounts.splice(i,1);       //to remove its discount    
+          this.setState({discounts: this.state.discounts})
+      
+          this.state.x.splice(i,1);               // to remove as a sponsor
+          this.setState({x: this.state.x})
     }
   };
 
