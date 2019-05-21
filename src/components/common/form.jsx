@@ -4,8 +4,6 @@ import Joi from "joi-browser";
 class Form extends Component {
   handleSubmit = e => {
     e.preventDefault(); //to avoid full page loading
-    console.log("dsadfkabfldabfladdbfjab")
-
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     // if (errors) return;

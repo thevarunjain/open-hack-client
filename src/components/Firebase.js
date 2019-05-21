@@ -13,14 +13,14 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    console.log("Current User", user);
-  } else {
-    console.log("No user", user);
-  }
-  return user ? user : null;
-});
+// firebase.auth().onAuthStateChanged(function(user) {
+//   if (user) {
+//     console.log("Current User", user);
+//   } else {
+//     console.log("No user", user);
+//   }
+//   return user ? user : null;
+// });
 
 export var signUpWithGoogle = () => {
   console.log("In google method");
@@ -123,9 +123,8 @@ export var sendVerificationEmail = () => {
   }
 };
 
-export var isUserVerified = () => {
-  var currentUser = firebase.auth().currentUser;
-  return currentUser ? currentUser.emailVerified : false;
+export var isUserVerified = (user) => {
+  return user ? user.emailVerified : false;
 };
 
 export var getFirebaseUser = () => {
