@@ -26,60 +26,59 @@ class CreateHackathon extends Form {
       currentDate: "",
       localStartDate: "",
       localEndDate: "",
-      judges : [],
-      sponsors : [],
+      judges: [],
+      sponsors: [],
       discounts: [],
-      selectedOption : null,
+      selectedOption: null,
       errors: {},
       dbErrors: "",
-      allJudges : [],
-      allSponsors :[],
-      x : []
-       };
+      allJudges: [],
+      allSponsors: [],
+      x: []
+    };
   }
 
-  addSponsor(e){
+  addSponsor(e) {
     e.preventDefault();
     this.setState({
-      sponsors : [...this.state.sponsors, ""]
-    })
+      sponsors: [...this.state.sponsors, ""]
+    });
   }
 
-  removeSponsor(e,i){
+  removeSponsor(e, i) {
     e.preventDefault();
-    
-    this.state.sponsors.splice(i,1);
-    this.setState({sponsors: this.state.sponsors})
 
-    this.state.discounts.splice(i,1);
-    this.setState({discounts: this.state.discounts})
+    this.state.sponsors.splice(i, 1);
+    this.setState({ sponsors: this.state.sponsors });
 
-    this.state.x.splice(i,1);
-    this.setState({x: this.state.x})
+    this.state.discounts.splice(i, 1);
+    this.setState({ discounts: this.state.discounts });
+
+    this.state.x.splice(i, 1);
+    this.setState({ x: this.state.x });
 
     console.log(this.state);
   }
 
-  handleDiscountChange(e,i){
+  handleDiscountChange(e, i) {
     e.preventDefault();
-    this.state.discounts[i]=e.target.value;
-    this.setState({discounts: this.state.discounts})
+    this.state.discounts[i] = e.target.value;
+    this.setState({ discounts: this.state.discounts });
   }
 
-  handleSelectionChange = (selectedOption) => {
+  handleSelectionChange = selectedOption => {
     var judgeById = [];
-    selectedOption.map(e=>{
+    selectedOption.map(e => {
       judgeById.push(e.id);
-    })
+    });
     this.setState({ selectedOption });
-    this.setState({ judges : judgeById });
-  }
+    this.setState({ judges: judgeById });
+  };
+
 
   handleSponsorSelection = (selectedOption,i) => {
     var sponsorById=this.state.x;
-    console.log(selectedOption);
-    console.log(selectedOption.value);
-    console.log(selectedOption.id);
+
     if(sponsorById && !sponsorById.includes(selectedOption.id)){    // for unique insertion in x object
           sponsorById[i]=selectedOption.id;
           this.setState({ selectedOption });
@@ -95,35 +94,35 @@ class CreateHackathon extends Form {
           this.state.x.splice(i,1);               // to remove as a sponsor
           this.setState({x: this.state.x})
     }
-  }
-  
-  componentDidMount(){
+  };
+
+  componentDidMount() {
     setHeader();
-    axios.get(rootUrl + "/users")
-    .then(users=>{
-      // remove isadmin true users.
-      var nonAdminUsers = users.data.filter(e=> !e.admin);
+    axios
+      .get(rootUrl + "/users")
+      .then(users => {
+        // remove isadmin true users.
+        var nonAdminUsers = users.data.filter(e => !e.admin);
 
-      nonAdminUsers.map(e=>{
-        e["label"] = e.name.first+ " "+e.name.last;
-        e["value"] = e.id
+        nonAdminUsers.map(e => {
+          e["label"] = e.name.first + " " + e.name.last;
+          e["value"] = e.id;
+        });
+        this.setState({
+          allJudges: nonAdminUsers
+        });
       })
-      this.setState({
-        allJudges : nonAdminUsers
-      })
-    }).catch(err=>{
+      .catch(err => {});
 
-    })
-
-    axios.get(rootUrl + "/organizations").then(org=>{
-      org.data.map(e=>{
+    axios.get(rootUrl + "/organizations").then(org => {
+      org.data.map(e => {
         e["label"] = e.name;
-        e["value"] = e.id
-      })
+        e["value"] = e.id;
+      });
       this.setState({
-        allSponsors : org.data
-      })
-    })
+        allSponsors: org.data
+      });
+    });
   }
 
   schema = {
@@ -195,19 +194,17 @@ class CreateHackathon extends Form {
       minSize: this.state.data.min_size,
       maxSize: this.state.data.max_size,
       judges: this.state.judges,
-      sponsors:this.state.x,
+      sponsors: this.state.x,
       discount: this.state.discounts
     };
 
-    console.log("data to send",data);
+    console.log("data to send", data);
     var id = getJWTID();
     setHeader();
-    axios
-      .post(rootUrl + "/hackathons", data)
-      .then(response => {
-        window.alert("Hackathon created successfully.");
-        this.props.history.push("/hackathons");
-      });
+    axios.post(rootUrl + "/hackathons", data).then(response => {
+      window.alert("Hackathon created successfully.");
+      this.props.history.push("/hackathons");
+    });
   };
 
   render() {
@@ -221,7 +218,6 @@ class CreateHackathon extends Form {
       <div className="create-hack-container">
         {redirectVar}
         <Navbar />
-        <hr />
 
         <div className="org-body">
           <form>
@@ -318,37 +314,63 @@ class CreateHackathon extends Form {
                 <div className="red">{this.state.errors.max_size} </div>
               )}
               <label>Judges</label>
-              <Select isMulti options={this.state.allJudges} onChange={this.handleSelectionChange} />
-                <br/>
+              <Select
+                isMulti
+                options={this.state.allJudges}
+                onChange={this.handleSelectionChange}
+              />
+              <br />
 
               {/* {this.state.errors.judges && (
                 <div className="red">{this.state.errors.judges} </div>
               )} */}
               <label>Sponsors (Optional)</label>
 
-              {
-                this.state.sponsors.map((sponsor,i)=>{
-                  return(
-                    <div class="input-group mb-3" key={i}>
-                      <Select key={i} className="css-1pcexqc-container-spon"   options={this.state.allSponsors.filter((e) => !this.state.x.includes(e.id))} onChange={(e)=>{this.handleSponsorSelection(e,i)}} /> 
-                       <input 
-                        required
-                        className="form-control"
-                        placeholder="discount"
-                        style={{marginLeft: "12px", borderRadius: "4px", height: "59px",  marginTop: "0px"}}
-                      onChange={(e)=>this.handleDiscountChange(e,i)}
-                      value ={this.state.discounts[i]}
-                      />
-                    <div class="input-group-append" style={{    marginTop: "-11px"}}>  
-                      <button class="btn btn-primary btn-remove" onClick={(e)=>this.removeSponsor(e,i)}>Remove</button>
+              {this.state.sponsors.map((sponsor, i) => {
+                return (
+                  <div class="input-group mb-3" key={i}>
+                    <Select
+                      key={i}
+                      className="css-1pcexqc-container-spon"
+                      value={this.state.x[i] ? this.state.x[i].name : ""}
+                      options={this.state.allSponsors.filter(
+                        e => !this.state.x.includes(e.id)
+                      )}
+                      onChange={e => {
+                        this.handleSponsorSelection(e, i);
+                      }}
+                    />
+                    <input
+                      required
+                      className="form-control"
+                      placeholder="discount"
+                      style={{
+                        marginLeft: "12px",
+                        borderRadius: "4px",
+                        height: "59px",
+                        marginTop: "0px"
+                      }}
+                      onChange={e => this.handleDiscountChange(e, i)}
+                      value={this.state.discounts[i]}
+                    />
+                    <div
+                      class="input-group-append"
+                      style={{ marginTop: "-11px" }}
+                    >
+                      <button
+                        class="btn btn-primary btn-remove"
+                        onClick={e => this.removeSponsor(e, i)}
+                      >
+                        Remove
+                      </button>
                     </div>
-                    </div>
-                  )
-                })
-              }
-              <br/>
-              <button className="btn-add" onClick={(e)=>this.addSponsor(e)}>Add Sponsor </button>
-           
+                  </div>
+                );
+              })}
+              <br />
+              <button className="btn-add" onClick={e => this.addSponsor(e)}>
+                Add Sponsor{" "}
+              </button>
             </div>
             <div>
               <button

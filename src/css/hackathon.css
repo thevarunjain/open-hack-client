@@ -32,7 +32,7 @@
 .hackathon-team {
   width: 30%;
   margin-left: 60%;
-  margin-top: -25%;
+  margin-top: -38%;
 }
 
 .hackathon-judge {
@@ -82,6 +82,12 @@ input[type="date"] {
 
 .button-hacks-admin {
   margin-left: 10%;
-  margin-top: 12%;
+  margin-top: 10%;
   width: 40%;
+}
+
+.hackathon-revenue {
+  width: 35%;
+  margin-left: 60%;
+  margin-top: 3%;
 }
