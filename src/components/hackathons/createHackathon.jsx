@@ -101,6 +101,7 @@ class CreateHackathon extends Form {
     .then(users=>{
       // remove isadmin true users.
       var nonAdminUsers = users.data.filter(e=> !e.admin);
+
       nonAdminUsers.map(e=>{
         e["label"] = e.name.first+ " "+e.name.last;
         e["value"] = e.id
