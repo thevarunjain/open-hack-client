@@ -135,14 +135,14 @@ class CreateTeam extends Component {
         var hackathon_id = this.props.location.state.id;
         console.log(data);
         setHeader();
-      //   await axios
-      //     .post(
-      //       rootUrl + "/hackathons/" + hackathon_id + "/teams",data)
-      //     .then(response => {
-      //       window.alert("Team created successfully.");
-      //       // window.location.reload();
-      //       this.props.history.push("/hackathons");
-      //     });
+        axios
+          .post(
+            rootUrl + "/hackathons/" + hackathon_id + "/teams",data)
+          .then(response => {
+            window.alert("Team created successfully.");
+            // window.location.reload();
+            this.props.history.push("/hackathons");
+          });
     }else{
       window.alert("Minimum "+ minSize+ " and Maximum "+maxSize+ " members are required");
     }
