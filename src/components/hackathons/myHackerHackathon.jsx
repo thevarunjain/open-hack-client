@@ -41,6 +41,7 @@ class MyHackerHackathon extends Component {
       this.setState({
         hackathon: response.data
       });
+
       for (var i = 0; i < response.data.judges.length; i++) {
         if (response.data.judges[i].id === userId) {
           this.setState({ role: "judge" });
@@ -63,6 +64,7 @@ class MyHackerHackathon extends Component {
       this.setState({
         teams: response.data
       });
+      console.log(this.state.teams);
     });
   }
 
@@ -74,15 +76,24 @@ class MyHackerHackathon extends Component {
     const ID = this.state.hackathon.id;
     const team_ID = teamId;
     console.log(team_ID);
-    const data = {
-      grades: this.state.grades
-    };
-    setHeader();
-    axios
-      .patch(rootUrl + "/hackathons/" + ID + "/teams/" + team_ID, data)
-      .then(response => {
-        window.alert("Grade Submitted successfully.");
-      });
+    var grades = parseFloat(this.state.grades);
+    if(grades >= "0" && grades <= "10"){
+      var data ={
+        grades : grades
+      }
+      console.log("Here");
+      setHeader();
+      axios
+          .patch(rootUrl + "/hackathons/" + ID + "/teams/" + team_ID, data)
+          .then(response => {
+            window.alert("Grade Submitted successfully.");
+            window.location.reload();
+          });
+    }
+    else{
+      window.alert("Grades value can only be in between 0 and 10");
+      window.location.reload();
+    }
   };
 
   submitSubmission = teamId => {
@@ -97,6 +108,7 @@ class MyHackerHackathon extends Component {
       .patch(rootUrl + "/hackathons/" + ID + "/teams/" + team_ID, data)
       .then(response => {
         window.alert("Submission Link Submitted successfully.");
+        window.location.reload();
       });
   };
 
@@ -110,9 +122,13 @@ class MyHackerHackathon extends Component {
     var data = [];
     {
       this.state.hackathons.participant &&
-        this.state.hackathons.participant.map(hackathonData =>
-          data.push(hackathonData.team)
+        this.state.hackathons.participant.map(hackathonData =>{
+            if(this.props.location.state.id === hackathonData.hackathon.id) {
+              data.push(hackathonData.team)
+            }
+        }
         );
+    console.log(data);
     }
     return (
       <div className="hackathon-home">
@@ -139,10 +155,12 @@ class MyHackerHackathon extends Component {
           <br />
           Status: {this.state.hackathon ? this.state.hackathon.status : ""}
           <br />
+          <br/>
           <If condition={this.state.role !== "judge"}>
             <h3> My Team( {data[0] && data[0].name}) Code Submission: </h3>
           </If>
-          <If condition={this.state.role !== "judge"}>
+          <If condition={this.state.role !== "judge" && this.state.hackathon.status === "Open"
+          && (data[0] && data[0].isFinalized.toString()) === "true"}>
             <div className="input-group-append">
               <input
                 type="text"
@@ -162,36 +180,149 @@ class MyHackerHackathon extends Component {
               </button>
             </div>
           </If>
+
+              <If condition={this.state.role !== "judge" && this.state.hackathon.status === "Open"
+              && (data[0] && data[0].isFinalized.toString()) === "false"}>
+                <h4 style = {{color: "red"}}>Please pay the Hackathon Fees and code.</h4>
+              </If>
+
+          <br/>
+
+          <If condition = {this.state.role !== "judge" && this.state.hackathon.status === "Closed"}>
+            <h4 style = {{color: "red"}}>Hackathon Closed, you must have already submitted your code.</h4>
+          </If>
         </div>
+        {/*------------------------------------JUDGES------------------------------------------*/}
         <div className="hacker-hackathon-team">
           <h3>Teams</h3>
-          {this.state.teams.map(team => (
-            <div>
-              {team.name}
-              {this.state.hackathon.judges &&
-                this.state.hackathon.judges.map(judge_hackathon => (
-                  <If condition={getJWTID() === judge_hackathon.id}>
-                    <div className="input-group-append">
-                      <input
-                        type="text"
-                        name="grades"
-                        onChange={this.handleChange}
-                        className="form-control"
-                        placeholder=""
-                        aria-label=""
-                        aria-describedby="basic-addon1"
-                      />
-                      <button
-                        className="btn btn-dark"
-                        onClick={() => this.submitGrades(team.id)}
-                        type="button"
-                      >
-                        Submit Grades
-                      </button>
-                    </div>
-                  </If>
+              <If condition = {(data[0] && data[0].isFinalized.toString()) === "true"}>
+          {this.state.hackathon.judges &&
+          this.state.hackathon.judges.map(judge_hackathon => (
+              <If condition = {this.state.hackathon.status === "Open" && getJWTID() !== judge_hackathon.id}>
+                <table className="table table-striped table-hover">
+                  <thead>
+                  <th>Team Participating</th>
+                  </thead>
+                  <tbody>
+                {this.state.teams &&
+                this.state.teams.map(teamData => (
+                    <If condition = {teamData.isFinalized.toString() === "true"}>
+                    <tr>
+                      <td>{teamData.name}</td>
+                    </tr>
+                    </If>
                 ))}
-            </div>
+                  </tbody>
+                </table>
+              </If>
+          ))}
+              </If>
+
+          {this.state.teams &&
+          this.state.teams.map(teamData => (
+              <If condition = {teamData.isFinalized.toString() === "true"}>
+          {this.state.hackathon.judges &&
+          this.state.hackathon.judges.map(judge_hackathon => (
+              <If condition = {this.state.hackathon.status === "Open" && getJWTID() === judge_hackathon.id}>
+                <table className="table table-striped table-hover">
+                  <thead>
+                  <th>Team Name</th>
+                  <th>Grade Submission</th>
+                  </thead>
+                  <tbody>
+                  {this.state.teams &&
+                  this.state.teams.map(teamData => (
+                      <tr>
+                        <td>{teamData.name}</td>
+                        <td>Hackathon open, grading not allowed</td>
+                      </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </If>
+              ))}
+              </If>
+          ))}
+          {this.state.hackathon.judges &&
+          this.state.hackathon.judges.map(judge_hackathon => (
+          <If condition = {getJWTID() === judge_hackathon.id}>
+                {this.state.teams &&
+                this.state.teams.map(teamData => (
+                    <If condition = {teamData.isFinalized.toString() === "false"}>
+                      <h3> No Team Paid and Registered </h3>
+                    </If>
+              ))}
+          </If>
+          ))}
+          {this.state.hackathon.judges &&
+          this.state.hackathon.judges.map(judge_hackathon => (
+          <If condition = {this.state.hackathon.status === "Closed" && getJWTID() === judge_hackathon.id}>
+                <table className="table table-striped table-hover">
+                  <thead>
+                  <th>Team Name</th>
+                  <th>Grade Obtained</th>
+                  <th>Grade Submission</th>
+                  </thead>
+                  <tbody>
+                  {this.state.teams &&
+                  this.state.teams.map(teamData => (
+                      <If condition = {teamData.isFinalized.toString() === "true"}>
+                      <tr>
+                        <td>{teamData.name}</td>
+                        <td>{teamData.grades}</td>
+                        <td>
+                          {this.state.hackathon.judges &&
+                          this.state.hackathon.judges.map(judge_hackathon => (
+                              <If condition={getJWTID() === judge_hackathon.id}>
+                                <div className="input-group-append">
+                                  <input
+                                      type="text"
+                                      name="grades"
+                                      onChange={this.handleChange}
+                                      className="form-control"
+                                      placeholder="Enter Grade"
+                                      aria-describedby="basic-addon1"
+                                  />
+                                  <button
+                                      className="btn-dark"
+                                      onClick={() => this.submitGrades(teamData.id)}
+                                      type="button"
+                                  >
+                                    Submit Grades
+                                  </button>
+                                </div>
+                              </If>
+                          ))}
+                        </td>
+                      </tr>
+                      </If>
+                  ))}
+                  </tbody>
+                </table>
+            </If>
+              ))}
+
+          {this.state.hackathon.judges &&
+          this.state.hackathon.judges.map(judge_hackathon => (
+              <If condition = {this.state.hackathon.status === "Closed" && getJWTID() !== judge_hackathon.id}>
+                <table className="table table-striped table-hover">
+                  <thead>
+                  <th>Team Name</th>
+                  <th>Grade Obtained</th>
+                  </thead>
+                  <tbody>
+                  {this.state.teams &&
+                  this.state.teams.map(teamData => (
+                      <If condition = {teamData.isFinalized.toString() === "true"}>
+                        <tr>
+                          <td>{teamData.name}</td>
+                          <td>{teamData.grades}</td>
+                        </tr>
+                      </If>
+                  ))}
+                  </tbody>
+                </table>
+              </If>
           ))}
         </div>
         <div className="hackathon-judge">
