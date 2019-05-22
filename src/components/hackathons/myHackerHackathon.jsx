@@ -254,6 +254,21 @@ class MyHackerHackathon extends Component {
               ))}
           </If>
           ))}
+
+          {this.state.hackathon.judges &&
+          this.state.hackathon.judges.map(judge_hackathon => (
+              <If condition = {getJWTID() === judge_hackathon.id && this.state.hackathon.status === "Created"}>
+                <h3> Hackathon has not yet opened  </h3>
+              </If>
+          ))}
+
+          {this.state.hackathon.judges &&
+          this.state.hackathon.judges.map(judge_hackathon => (
+              <If condition = {getJWTID() === judge_hackathon.id && this.state.hackathon.status === "Finalized"}>
+                <h3> Hackathon has been finalized, no more grading allowed  </h3>
+              </If>
+          ))}
+
           {this.state.hackathon.judges &&
           this.state.hackathon.judges.map(judge_hackathon => (
           <If condition = {this.state.hackathon.status === "Closed" && getJWTID() === judge_hackathon.id}>
