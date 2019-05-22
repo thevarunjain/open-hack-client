@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Navbar from "../common/navbar";
 import "../../css/hackathon.css";
+import "../../css/createHackathon.css";
+import Select from 'react-select';
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Redirect } from "react-router";
@@ -26,27 +28,35 @@ class MyAdminHackathon extends Component {
       currentDate: "",
       teams: [],
       teamDetails: [],
-      done : ""
+      expenses : [],
+      x : [],
+      allExpenses :[],
+      getExpenses : [],
+      title :"",
+      description : "",
+      amount : "",
+      date : ""
     };
     this.handleOpenStatus = this.handleOpenStatus.bind(this);
     this.handleClosedStatus = this.handleClosedStatus.bind(this);
     this.handleFinalizedStatus = this.handleFinalizedStatus.bind(this);
     this.changeHandle = this.changeHandle.bind(this);
+    this.postExpense =  this.postExpense.bind(this);
   }
+
+
 
   componentDidMount() {
     const ID = this.props.location.state.id;
-    console.log("id=", ID);
     setHeader();
     axios.get(rootUrl + "/hackathons/" + ID).then(response => {
-      console.log("........",response.data);
       this.setState({
         hackathon: response.data
       });
     });
+
     setHeader();
     axios.get(rootUrl + "/hackathons/" + ID + "/teams").then(response => {
-      console.log(response.data);
       this.setState(
         {
           teams: response.data
@@ -64,7 +74,6 @@ class MyAdminHackathon extends Component {
             await axios
               .get(rootUrl + "/hackathons/" + ID + "/teams/" + ids[i])
               .then(response => {
-                console.log(response.data);
                 this.setState({teamGrades : response.data});
                 var temp = [];
                 if (response.data) {
@@ -81,12 +90,47 @@ class MyAdminHackathon extends Component {
         }
       );
     });
+
+
+    // setHeader();
+    axios.get(rootUrl + "/hackathons/" + ID + "/expenses").then(response => {
+      this.setState(
+        {
+          allExpenses: response.data
+        },
+      )}
+    ).catch(e=>{
+      console.log(e);
+    })
+
+
   }
 
+    postExpense(e){
+      const ID = this.props.location.state.id;
+
+        var data = {
+          title : this.state.title,
+          description : this.state.description,
+          amount : this.state.amount,
+          date : this.state.date 
+        }
+
+        //&& data.description.length>0 && data.date.length>0
+        console.log(data.title.length );
+        if(data.title.length==0 || data.amount.length == 0 || data.date.length==0){
+          window.alert("One or more field is required");
+        }else{
+          setHeader();
+          axios.post(rootUrl + "/hackathons/" + ID + "/expenses", data).then(response => {
+            window.alert("Expense Added");
+          }).catch(err=>{
+            console.log(err);
+          })
+        }
+}
+
   handleOpenStatus = e => {
-    console.log(this.state.hackathon.status);
-    console.log(this.state.hackathon.status==="Finalized");
-    
     e.preventDefault();
     if(this.state.hackathon.status!=="Finalized"){
     const ID = this.props.location.state.id;
@@ -167,6 +211,22 @@ class MyAdminHackathon extends Component {
     }
   };
 
+  addExpense(e) {
+    e.preventDefault();
+    this.setState({
+      expenses: [...this.state.expenses, ""]
+    });
+  }
+
+  handlExpenseSelection = (selectedOption,i) => {
+    var expensesById=this.state.x;
+
+    if(expensesById && !expensesById.includes(selectedOption.id)){    // for unique insertion in x object
+          expensesById[i]=selectedOption.id;
+          this.setState({ selectedOption });
+          this.setState({ x : expensesById });
+    }
+  }
   changeHandle(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -236,17 +296,18 @@ console.log(this.state.hackathon)
   };
 
   render() {
-    let redirectVar = null;
+    console.log(this.state);
+      let redirectVar = null;
     var id = getJWTID();
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
+
+
     var teamTable = this.state.teamDetails.map((teams,i)=>{
-      // console.log(this.state.teamGrades);
-      // console.log(this.state.teamGrades[i]);
       return(
         <div>
-        <div className="col-md-12">
+        <div >
         <div className="hackathon-team-name">{this.state.teams[i].name}  {this.state.teams[i].isFinalized ? "- Finalized" : "- Payment Pending" }</div>
 
         </div>
@@ -388,7 +449,135 @@ console.log(this.state.hackathon)
             className="form-control"
             disabled
           />
+<br/>
+<br/>
+<br/>
+            <h3>Expense Manager</h3>
+                {
+                        <div>
+
+                        <table className="table table-striped table-hover">
+                        <thead>
+                          <th>Title</th>
+                          <th>Description</th>
+                          <th>Amount</th>
+                          <th>Date Created</th>
+                        </thead>
+                        <tbody>
+
+                        {this.state.allExpenses.map((expense,i)=>(
+                
+                              <tr>
+                                <td>{expense.title}</td>
+                                <td>{expense.description ? expense.description : "N/A" }</td>
+                                <td>{expense.amount ? "$"+expense.amount : "-" }</td>
+                                <td>{expense.date}</td>
+                              </tr>
+      
+                      ))
+                      }
+
+                        </tbody>
+                      </table>
+                    </div>
+                      
+                      
+                    })
+                }
+
+
+
+            {/* <table className="table table-striped table-hover">
+        <thead>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Date Created</th>
+          </thead>
+            {expenseTable}
+        </table> */}
+          
+            <br></br>
+            <br></br>
+
+            <h5>Add New Expense</h5>
+                  <div style={{display: "inline-flex", paddingBottom:"5px"}}>
+                  <input
+                    type="text"
+                      required
+                      className="form-control"
+                      name = "title"
+                      placeholder="Title"
+                      style={{
+                        marginLeft: "12px",
+                        borderRadius: "4px",
+                        height: "50px",
+                        marginTop: "0px",
+                        width: "71%"
+                      }}
+                      onChange={(e)=>this.setState({title:e.target.value})}
+                      value={this.state.title}
+                    />
+
+                    <input
+                    type="text"
+                      required
+                      className="form-control"
+                      name = "description"
+                      placeholder="Description (Optional)"
+                      style={{
+                        marginLeft: "12px",
+                        borderRadius: "4px",
+                        height: "50px",
+                        marginTop: "0px",
+                        width: "71%"
+                      }}
+                      onChange={(e)=>this.setState({description:e.target.value})}
+                      value={this.state.description}
+                    />
+
+                    <input
+                    type="number"
+                      min ="0"
+                      required
+                      className="form-control"
+                      name = "amount"
+                      placeholder="Amount Optional"
+                      style={{
+                        marginLeft: "12px",
+                        borderRadius: "4px",
+                        height: "50px",
+                        marginTop: "0px",
+                        width: "32%"
+                      }}
+                      onChange={(e)=>this.setState({amount:e.target.value})}                      
+                      value={this.state.amount}
+                    />
+                    <input
+                    type="date"
+                      required
+                      className="form-control"
+                      name = "date"
+                      placeholder="Date"
+                      style={{
+                        marginLeft: "12px",
+                        borderRadius: "4px",
+                        height: "50px",
+                        marginTop: "0px",
+                        width: "24%"
+                      }}
+                      onChange={(e)=>this.setState({date:e.target.value})}                      
+                    />
+                  
+                  </div>
+            <br></br>
+
+              <button className="btn-add" onClick={e => this.postExpense(e)}>
+                Add Expense{" "}
+              </button>
         </div>
+
+      <div>
         <div className="hackathon-team">
           <h3>Teams</h3>
           {teamTable}
@@ -455,6 +644,10 @@ console.log(this.state.hackathon)
             </tbody>
           </table>
         </div>
+        <br/>
+        <br/>
+        <br/>
+  </div>
       </div>
     );
   }
