@@ -199,34 +199,7 @@ class MyHackerHackathon extends Component {
         {/*------------------------------------JUDGES------------------------------------------*/}
         <div className="hacker-hackathon-team">
           <h3>Teams</h3>
-          {/*{this.state.teams &&*/}
-          {/*this.state.teams.map(teamData => (*/}
-          {/*    <If condition = {(teamData.isFinalized.toString()) === "true"}>*/}
-          {/*{this.state.hackathon.judges &&*/}
-          {/*this.state.hackathon.judges.map(judge_hackathon => (*/}
-          {/*    <If condition = {this.state.hackathon.status === "Open" && getJWTID() !== judge_hackathon.id}>*/}
-          {/*      <table className="table table-striped table-hover">*/}
-          {/*        <thead>*/}
-          {/*        <th>Team Participating</th>*/}
-          {/*        </thead>*/}
-          {/*        <tbody>*/}
-          {/*      {this.state.teams &&*/}
-          {/*      this.state.teams.map(teamData => (*/}
-          {/*          <If condition = {teamData.isFinalized.toString() === "true"}>*/}
-          {/*          <tr>*/}
-          {/*            <td>{teamData.name}</td>*/}
-          {/*          </tr>*/}
-          {/*          </If>*/}
-          {/*      ))}*/}
-          {/*        </tbody>*/}
-          {/*      </table>*/}
-          {/*    </If>*/}
-          {/*))}*/}
-          {/*    </If>*/}
-          {/*))}*/}
-
-
-          {this.state.hackathon.judges &&
+         {this.state.hackathon.judges &&
           this.state.hackathon.judges.map(judge_hackathon => (
               <If condition = {this.state.hackathon.status === "Open" && getJWTID() === judge_hackathon.id}>
                 <table className="table table-striped table-hover">
