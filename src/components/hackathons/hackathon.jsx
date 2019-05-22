@@ -50,14 +50,14 @@ class Hackathon extends Component {
     }
 
     return (
-      <div className="hackathon-home">
+      <div className="hackathon-home" style={{height: "-webkit-fill-available"}}>
         {redirectVar}
         <Navbar />
 
-        <div className="hackathon-details">
+        <div className="hackathon-details" style={{height: "-webkit-fill-available", marginTop : "-1%"}}>
           <If
             condition={
-              !getJWTAdminStatus() && this.state.hackathon.status === "Open"
+              !getJWTAdminStatus() && this.state.hackathon.status === "Created"
             }
           >
             <Link
