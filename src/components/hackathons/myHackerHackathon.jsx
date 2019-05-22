@@ -183,7 +183,7 @@ class MyHackerHackathon extends Component {
 
               <If condition={this.state.role !== "judge" && this.state.hackathon.status === "Open"
               && (data[0] && data[0].isFinalized.toString()) === "false"}>
-                <h4 style = {{color: "red"}}>Please pay the Hackathon Fees and code.</h4>
+                <h4 style = {{color: "red"}}>Please pay the Hackathon Fees and then code.</h4>
               </If>
 
           <br/>
@@ -191,11 +191,17 @@ class MyHackerHackathon extends Component {
           <If condition = {this.state.role !== "judge" && this.state.hackathon.status === "Closed"}>
             <h4 style = {{color: "red"}}>Hackathon Closed, you must have already submitted your code.</h4>
           </If>
+
+          <If condition = {this.state.role !== "judge" && this.state.hackathon.status === "Finalized"}>
+            <h4 style = {{color: "green"}}>Hackathon Finalized, you can check for the winner in Teams.</h4>
+          </If>
         </div>
         {/*------------------------------------JUDGES------------------------------------------*/}
         <div className="hacker-hackathon-team">
           <h3>Teams</h3>
-              <If condition = {(data[0] && data[0].isFinalized.toString()) === "true"}>
+          {this.state.teams &&
+          this.state.teams.map(teamData => (
+              <If condition = {(teamData.isFinalized.toString()) === "true"}>
           {this.state.hackathon.judges &&
           this.state.hackathon.judges.map(judge_hackathon => (
               <If condition = {this.state.hackathon.status === "Open" && getJWTID() !== judge_hackathon.id}>
@@ -217,6 +223,7 @@ class MyHackerHackathon extends Component {
               </If>
           ))}
               </If>
+          ))}
 
           {this.state.teams &&
           this.state.teams.map(teamData => (
@@ -232,10 +239,12 @@ class MyHackerHackathon extends Component {
                   <tbody>
                   {this.state.teams &&
                   this.state.teams.map(teamData => (
+                      <If condition = {teamData.isFinalized.toString() === "true"}>
                       <tr>
                         <td>{teamData.name}</td>
                         <td>Hackathon open, grading not allowed</td>
                       </tr>
+                      </If>
                       ))}
                   </tbody>
                 </table>
@@ -331,6 +340,29 @@ class MyHackerHackathon extends Component {
                       <If condition = {teamData.isFinalized.toString() === "true"}>
                         <tr>
                           <td>{teamData.name}</td>
+                          <td>{teamData.grades !== undefined?teamData.grades:"Not yet Graded"}</td>
+                        </tr>
+                      </If>
+                  ))}
+                  </tbody>
+                </table>
+              </If>
+          ))}
+
+          {this.state.hackathon.judges &&
+          this.state.hackathon.judges.map(judge_hackathon => (
+              <If condition = {this.state.hackathon.status === "Finalized" && getJWTID() !== judge_hackathon.id}>
+                <table className="table table-striped table-hover">
+                  <thead>
+                  <th>Team Name</th>
+                  <th>Grade Obtained</th>
+                  </thead>
+                  <tbody>
+                  {this.state.teams &&
+                  this.state.teams.map(teamData => (
+                      <If condition = {teamData.isFinalized.toString() === "true"}>
+                        <tr>
+                          <td>{teamData.name}</td>
                           <td>{teamData.grades}</td>
                         </tr>
                       </If>
@@ -339,6 +371,7 @@ class MyHackerHackathon extends Component {
                 </table>
               </If>
           ))}
+
         </div>
         <div className="hackathon-judge">
           <h3>Judges</h3>
