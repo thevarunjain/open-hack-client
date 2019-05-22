@@ -190,14 +190,13 @@ class MyAdminHackathon extends Component {
    var canHackathonFinalize = true;
 
     this.state.teams.map(e=>{
-          if(e.grades == null){
+          if(e.isFinalized && e.grades == undefined){
             canHackathonFinalize = false;
             window.alert("Cannot finalize hackathon as one or more teams has not been graded");
           }
       })
 
       if(canHackathonFinalize){
-        console.log("....",this.state.done);
         var data = {
           toState: "Finalized"
         };
