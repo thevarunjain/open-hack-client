@@ -199,35 +199,33 @@ class MyHackerHackathon extends Component {
         {/*------------------------------------JUDGES------------------------------------------*/}
         <div className="hacker-hackathon-team">
           <h3>Teams</h3>
-          {this.state.teams &&
-          this.state.teams.map(teamData => (
-              <If condition = {(teamData.isFinalized.toString()) === "true"}>
-          {this.state.hackathon.judges &&
-          this.state.hackathon.judges.map(judge_hackathon => (
-              <If condition = {this.state.hackathon.status === "Open" && getJWTID() !== judge_hackathon.id}>
-                <table className="table table-striped table-hover">
-                  <thead>
-                  <th>Team Participating</th>
-                  </thead>
-                  <tbody>
-                {this.state.teams &&
-                this.state.teams.map(teamData => (
-                    <If condition = {teamData.isFinalized.toString() === "true"}>
-                    <tr>
-                      <td>{teamData.name}</td>
-                    </tr>
-                    </If>
-                ))}
-                  </tbody>
-                </table>
-              </If>
-          ))}
-              </If>
-          ))}
+          {/*{this.state.teams &&*/}
+          {/*this.state.teams.map(teamData => (*/}
+          {/*    <If condition = {(teamData.isFinalized.toString()) === "true"}>*/}
+          {/*{this.state.hackathon.judges &&*/}
+          {/*this.state.hackathon.judges.map(judge_hackathon => (*/}
+          {/*    <If condition = {this.state.hackathon.status === "Open" && getJWTID() !== judge_hackathon.id}>*/}
+          {/*      <table className="table table-striped table-hover">*/}
+          {/*        <thead>*/}
+          {/*        <th>Team Participating</th>*/}
+          {/*        </thead>*/}
+          {/*        <tbody>*/}
+          {/*      {this.state.teams &&*/}
+          {/*      this.state.teams.map(teamData => (*/}
+          {/*          <If condition = {teamData.isFinalized.toString() === "true"}>*/}
+          {/*          <tr>*/}
+          {/*            <td>{teamData.name}</td>*/}
+          {/*          </tr>*/}
+          {/*          </If>*/}
+          {/*      ))}*/}
+          {/*        </tbody>*/}
+          {/*      </table>*/}
+          {/*    </If>*/}
+          {/*))}*/}
+          {/*    </If>*/}
+          {/*))}*/}
 
-          {this.state.teams &&
-          this.state.teams.map(teamData => (
-              <If condition = {teamData.isFinalized.toString() === "true"}>
+
           {this.state.hackathon.judges &&
           this.state.hackathon.judges.map(judge_hackathon => (
               <If condition = {this.state.hackathon.status === "Open" && getJWTID() === judge_hackathon.id}>
@@ -239,42 +237,60 @@ class MyHackerHackathon extends Component {
                   <tbody>
                   {this.state.teams &&
                   this.state.teams.map(teamData => (
-                      <If condition = {teamData.isFinalized.toString() === "true"}>
                       <tr>
                         <td>{teamData.name}</td>
-                        <td>Hackathon open, grading not allowed</td>
+                        <td>{teamData.isFinalized.toString() === "true"?"Hackathon open, grading not allowed"
+                            :"Hackathon open, team not paid fee"}</td>
                       </tr>
-                      </If>
                       ))}
                   </tbody>
                 </table>
               </If>
               ))}
-              </If>
-          ))}
+
+
           {this.state.hackathon.judges &&
           this.state.hackathon.judges.map(judge_hackathon => (
-          <If condition = {getJWTID() === judge_hackathon.id}>
+          <If condition = {getJWTID() === judge_hackathon.id && this.state.hackathon.status === "Created"}>
+            <table className="table table-striped table-hover">
+              <thead>
+              <th>Team Name</th>
+              <th>Team Status</th>
+              </thead>
                 {this.state.teams &&
                 this.state.teams.map(teamData => (
-                    <If condition = {teamData.isFinalized.toString() === "false"}>
-                      <h3> No Team Paid and Registered </h3>
-                    </If>
-              ))}
+                        <tbody>
+                        <tr>
+                        <td>{teamData.name}</td>
+                        <td>{teamData.isFinalized.toString() === "false"? "Team registered but not paid the fee."
+                        :"Team registered and paid the fee."}</td>
+                        </tr>
+                        </tbody>
+                    ))}
+            </table>
           </If>
           ))}
 
           {this.state.hackathon.judges &&
           this.state.hackathon.judges.map(judge_hackathon => (
-              <If condition = {getJWTID() === judge_hackathon.id && this.state.hackathon.status === "Created"}>
-                <h3> Hackathon has not yet opened  </h3>
-              </If>
-          ))}
-
-          {this.state.hackathon.judges &&
-          this.state.hackathon.judges.map(judge_hackathon => (
-              <If condition = {getJWTID() === judge_hackathon.id && this.state.hackathon.status === "Finalized"}>
-                <h3> Hackathon has been finalized, no more grading allowed  </h3>
+              <If condition = {this.state.hackathon.status === "Finalized" && getJWTID() === judge_hackathon.id}>
+                <table className="table table-striped table-hover">
+                  <thead>
+                  <th>Team Name</th>
+                  <th>Grade Obtained</th>
+                  </thead>
+                  <tbody>
+                  {this.state.teams &&
+                  this.state.teams.map(teamData => (
+                      <If condition = {teamData.isFinalized.toString() === "true"}>
+                        <tr>
+                          <td>{teamData.name}</td>
+                          <td>{teamData.grades}</td>
+                        </tr>
+                      </If>
+                  ))}
+                  </tbody>
+                </table>
               </If>
           ))}
 
