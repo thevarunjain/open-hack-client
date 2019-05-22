@@ -274,8 +274,6 @@ console.log(this.state.hackathon)
             }).catch(e=>{
               console.log(e);
             })
-          
-      
         }else{
            window.alert("End date cannot be less than start date");
         }  
@@ -288,11 +286,6 @@ console.log(this.state.hackathon)
    }else{
       status = "Open" 
    }
-   
-
-
-
-
   };
 
   render() {
@@ -303,13 +296,16 @@ console.log(this.state.hackathon)
       redirectVar = <Redirect to="/home" />;
     }
 
-
     var teamTable = this.state.teamDetails.map((teams,i)=>{
       return(
         <div>
         <div >
         <div className="hackathon-team-name">{this.state.teams[i].name}  {this.state.teams[i].isFinalized ? "- Finalized" : "- Payment Pending" }</div>
-
+          <div className="hackathon-team-name">{this.state.teams[i].name} Grade:
+          {(this.state.hackathon.status === "Closed" || this.state.hackathon.status === "Finalized") ?
+              this.state.teams[i].grades === undefined ?" Not Yet Graded": this.state.teams[i].grades
+              : " Hackathon is still open"}
+          </div>
         </div>
         <table className="table table-striped table-hover">
         <thead>
@@ -331,14 +327,8 @@ console.log(this.state.hackathon)
         </tbody>
       </table>
     </div>
-      
       )
-      
     })
-     
-    
-
-
     return (
       <div className="hackathon-home">
         {redirectVar}
@@ -482,7 +472,7 @@ console.log(this.state.hackathon)
                     </div>
                       
                       
-                    })
+
                 }
 
 
