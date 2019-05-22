@@ -21,7 +21,9 @@ class Hackathon extends Component {
     super();
     this.state = {
       hackathon: [],
-      teams: []
+      teams: [],
+      members: [],
+      nonEligibleTeamMember: []
     };
   }
 
@@ -34,6 +36,21 @@ class Hackathon extends Component {
       });
     });
     setHeader();
+    axios.get(rootUrl + "/hackathons/" + ID + "/members")
+        .then(users=>{
+          console.log(users)
+      if(users.data){
+        if(users.data.judges){
+          users.data.judges.map(e=>{this.state.nonEligibleTeamMember.push(e.id)});
+        }
+        if(users.data.participants){
+          users.data.participants.map(e=>{this.state.nonEligibleTeamMember.push(e.id)});
+        }
+      }
+      console.log(this.state.nonEligibleTeamMember);
+    });
+
+    setHeader();
     axios.get(rootUrl + "/hackathons/" + ID + "/teams").then(response => {
       this.setState({
         teams: response.data
@@ -43,6 +60,7 @@ class Hackathon extends Component {
 
   render() {
     console.log(this.state.hackathon);
+    console.log(this.state.members);
     let redirectVar = null;
     var id = getJWTID();
     if (!id) {
@@ -57,7 +75,8 @@ class Hackathon extends Component {
         <div className="hackathon-details">
           <If
             condition={
-              !getJWTAdminStatus() && this.state.hackathon.status === "Open"
+              !getJWTAdminStatus() && this.state.hackathon.status === "Created"
+                && this.state.nonEligibleTeamMember === getJWTID()
             }
           >
             <Link
