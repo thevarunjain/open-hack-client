@@ -64,7 +64,7 @@ class Main extends Component {
         <Route path="/not-found" exact component={NotFound} />
         <Route path="/" exact component={Home} />
         <Route path="/firebase" exact component={Firebase} />
-        <Route path="/payments/:hid/:tid" exact component={Payment} />
+        <Route path="/payments/:hid/:tid/:mid" exact component={Payment} />
         <Route path="/s3" exact component={awss3}/>
         <Redirect to="/not-found" />
 

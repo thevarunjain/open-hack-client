@@ -153,9 +153,9 @@ class CreateHackathon extends Form {
       .label("Maximum Team Size")
       .required()
       .regex(/^[0-9]*$/),
-    judges: Joi.string()
-      .label("Judges")
-      .required(),
+    // x: Joi.string()
+    //   .label("Judges")
+    //   .required(),
     sponsors: Joi.string().label("Sponsors"),
     discount: Joi.string()
       .label("Discount")
@@ -164,8 +164,16 @@ class CreateHackathon extends Form {
 
   doSubmit = async e => {
     var today = new Date();
-    var start_date = new Date(this.state.data.start_date);
-    var end_date = new Date(this.state.data.end_date);
+    today.setHours(0,0,0,0);
+    // var start_date = new Date(this.state.data.start_date);
+    // var end_date = new Date(this.state.data.end_date);
+    var startDateLocale = this.state.data.start_date;
+    var start_date = moment(startDateLocale, "YYYY-MM-DD").toDate();
+
+    var endDateLocale = this.state.data.end_date;
+    var end_date = moment(endDateLocale, "YYYY-MM-DD").toDate();
+
+    console.log(this.state.judges , this.state.judges.length);
     if (start_date < today)
       window.alert("Start Date cannot be less than today");
     else if (end_date < today)
@@ -178,6 +186,11 @@ class CreateHackathon extends Form {
       window.alert("Minimum team size cannot be less than 1");
     else if (this.state.data.max_size < this.state.data.min_size)
       window.alert("Maximum team size cannot be less than minimum team size");
+    else if (this.state.judges && this.state.judges.length == 0)
+      window.alert("Atleast one judge is required");
+    else if (this.state.sponsors.length != this.state.discounts.length)
+      window.alert("Discount or Sponsor is missing");  
+    
     else {
       var startDateLocale = this.state.data.start_date;
       var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
@@ -278,6 +291,7 @@ class CreateHackathon extends Form {
               <input
                 type="number"
                 name="fee"
+                min = "0"
                 required
                 className="form-control"
                 placeholder="Fee in USD"
@@ -287,11 +301,13 @@ class CreateHackathon extends Form {
               {this.state.errors.fee && (
                 <div className="red">{this.state.errors.fee} </div>
               )}
-              <label>Minimum Team Size</label>
+              <label>Minimum Team Size (Minimum 1)</label>
               <input
-                type="text"
+                type="number"
                 name="min_size"
                 required
+                min = "1"
+                max = "10"
                 className="form-control"
                 placeholder="Minimum Team Size (inclusive)"
                 onChange={this.handleChange}
@@ -300,11 +316,13 @@ class CreateHackathon extends Form {
               {this.state.errors.min_size && (
                 <div className="red">{this.state.errors.min_size} </div>
               )}
-              <label>Maximum Team Size</label>
+              <label>Maximum Team Size (Maximum 10)</label>
               <input
-                type="text"
+                type="number"
                 name="max_size"
                 required
+                min = "1"
+                max = "10"
                 className="form-control"
                 placeholder="Maximum Team Size (inclusive)"
                 onChange={this.handleChange}
@@ -321,9 +339,9 @@ class CreateHackathon extends Form {
               />
               <br />
 
-              {/* {this.state.errors.judges && (
+              {this.state.errors.judges && (
                 <div className="red">{this.state.errors.judges} </div>
-              )} */}
+              )}
               <label>Sponsors (Optional)</label>
 
               {this.state.sponsors.map((sponsor, i) => {
@@ -340,29 +358,34 @@ class CreateHackathon extends Form {
                         this.handleSponsorSelection(e, i);
                       }}
                     />
+                    <div>
                     <input
+                    type="number"
                       required
                       className="form-control"
-                      placeholder="discount"
+                      placeholder="Discount"
                       style={{
                         marginLeft: "12px",
                         borderRadius: "4px",
                         height: "59px",
-                        marginTop: "0px"
+                        marginTop: "0px",
+                        width: "71%"
                       }}
                       onChange={e => this.handleDiscountChange(e, i)}
                       value={this.state.discounts[i]}
                     />
+                    </div>
+                    
                     <div
                       class="input-group-append"
                       style={{ marginTop: "-11px" }}
                     >
-                      <button
+                      {/* <button
                         class="btn btn-primary btn-remove"
                         onClick={e => this.removeSponsor(e, i)}
                       >
                         Remove
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 );

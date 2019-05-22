@@ -16,7 +16,6 @@ import {
 import { rootUrl } from "../common/constant";
 
 var moment = require("moment");
-
 class MyAdminHackathon extends Component {
   constructor() {
     super();
@@ -26,7 +25,8 @@ class MyAdminHackathon extends Component {
       endDate: "",
       currentDate: "",
       teams: [],
-      teamDetails: []
+      teamDetails: [],
+      done : ""
     };
     this.handleOpenStatus = this.handleOpenStatus.bind(this);
     this.handleClosedStatus = this.handleClosedStatus.bind(this);
@@ -36,15 +36,17 @@ class MyAdminHackathon extends Component {
 
   componentDidMount() {
     const ID = this.props.location.state.id;
-    // console.log("id=", ID);
+    console.log("id=", ID);
     setHeader();
     axios.get(rootUrl + "/hackathons/" + ID).then(response => {
+      console.log("........",response.data);
       this.setState({
         hackathon: response.data
       });
     });
     setHeader();
     axios.get(rootUrl + "/hackathons/" + ID + "/teams").then(response => {
+      console.log(response.data);
       this.setState(
         {
           teams: response.data
@@ -62,14 +64,16 @@ class MyAdminHackathon extends Component {
             await axios
               .get(rootUrl + "/hackathons/" + ID + "/teams/" + ids[i])
               .then(response => {
-                // console.log(response.data);
+                console.log(response.data);
+                this.setState({teamGrades : response.data});
                 var temp = [];
                 if (response.data) {
                   for (let j = 0; j < response.data.members.length; j++) {
                     temp.push(response.data.members[j]);
+                    /// add grades 
                   }
                 }
-                member.push(temp);
+                member.push(temp);  
               });
           }
 
@@ -80,39 +84,87 @@ class MyAdminHackathon extends Component {
   }
 
   handleOpenStatus = e => {
+    console.log(this.state.hackathon.status);
+    console.log(this.state.hackathon.status==="Finalized");
+    
     e.preventDefault();
+    if(this.state.hackathon.status!=="Finalized"){
     const ID = this.props.location.state.id;
-    var data = {
-      toState: "Open"
-    };
-    setHeader();
-    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Status updated successfully.");
-    });
+    var currentDate = new Date();
+    // Check if any team is graded if yes then do not re open
+      console.log(this.state.teams);
+       var canHackathonOpen = true;
+      this.state.teams.map(e=>{
+          if(e.grades){
+            canHackathonOpen = false;
+            window.alert("Cannot re open hackathon as one or more teams has been graded");
+          }
+      })
+
+      if(canHackathonOpen){
+        var data = {
+          toState: "Open",
+          startDate: currentDate,
+        };
+        setHeader();
+        axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+          window.alert("Hackathon Status updated successfully.");
+        });
+      }
+    }else{
+      window.alert("Hackathon has been finalized. No more changes allowed");
+    }
+
   };
 
   handleClosedStatus = e => {
+    console.log(this.state.hackathon.status);
+    console.log(this.state.hackathon.status==="Finalized");
+    
     e.preventDefault();
-    const ID = this.props.location.state.id;
-    var data = {
-      toState: "Closed"
-    };
-    setHeader();
-    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Status updated successfully.");
-    });
+    if(this.state.hackathon.status!=="Finalized"){
+      const ID = this.props.location.state.id;
+      var currentDate = new Date();
+      var data = {
+        toState: "Closed",
+        endDate : currentDate
+      };
+      setHeader();
+      axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+        window.alert("Hackathon Status updated successfully.");
+      });
+    }else{
+      window.alert("Hackathon has been finalized. No more changes allowed");
+    }
+
   };
 
   handleFinalizedStatus = e => {
+    if(this.state.hackathon.status!=="Finalized"){
     e.preventDefault();
     const ID = this.props.location.state.id;
-    var data = {
-      toState: "Finalized"
-    };
-    setHeader();
-    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Status updated successfully.");
-    });
+   var canHackathonFinalize = true;
+
+    this.state.teams.map(e=>{
+          if(e.grades == null){
+            canHackathonFinalize = false;
+            window.alert("Cannot finalize hackathon as one or more teams has not been graded");
+          }
+      })
+
+      if(canHackathonFinalize){
+        console.log("....",this.state.done);
+        var data = {
+          toState: "Finalized"
+        };
+        setHeader();
+        axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
+          window.alert("Hackathon Status updated successfully.");
+        });
+      }
+    }else{
+      window.alert("Hackathon is already finalized");
+    }
   };
 
   changeHandle(e) {
@@ -122,23 +174,65 @@ class MyAdminHackathon extends Component {
   submitChanges = e => {
     e.preventDefault();
     const ID = this.props.location.state.id;
-
-    var startDateLocale = this.state.startDate;
+    
+console.log(this.state.hackathon)
+    var startDateLocale = this.state.startDate ? this.state.startDate : this.state.hackathon.startDate ;
     var startDate = moment(startDateLocale, "YYYY-MM-DD").toDate();
 
-    var endDateLocale = this.state.endDate;
+    var endDateLocale = this.state.endDate ? this.state.endDate : this.state.hackathon.endDate ;
     var endDate = moment(endDateLocale, "YYYY-MM-DD").toDate();
 
     var currentDate = new Date();
-    var data = {
-      startDate: startDate,
-      currentDate: currentDate,
-      endDate: endDate
-    };
-    setHeader();
-    axios.patch(rootUrl + "/hackathons/" + ID, data).then(response => {
-      window.alert("Hackathon Date updated successfully.");
-    });
+    currentDate.setHours(0,0,0,0)
+    console.log(startDate, endDate, currentDate);
+    var status = "";
+  
+    if(startDate>=currentDate){         // if new start date is not in past 
+        if(endDate>=startDate){         // if end date is not less than start date
+        
+          if(currentDate<=endDate && currentDate>=startDate){
+            status="Open";
+          }else if(currentDate<startDate){
+            status="Created"
+          }else if(currentDate>endDate){
+            status="Closed"
+          }
+
+            var data = {
+              startDate: startDate,
+              currentDate: currentDate,
+              endDate: endDate,
+              toState : status
+            };
+            console.log("...", data);
+            setHeader();
+            console.log(this.state.hackathon.id);
+            axios.patch("http://localhost:8080" + "/hackathons/" + this.state.hackathon.id, data).then(response => {
+              window.alert("Hackathon Date updated successfully.");
+            }).then(e=>{
+              console.log(e);
+            }).catch(e=>{
+              console.log(e);
+            })
+          
+      
+        }else{
+           window.alert("End date cannot be less than start date");
+        }  
+    }else{
+      window.alert("Could not change open date to past. Must be today or after.");
+    }
+
+    if(endDate == startDate){
+      status = "Closed"
+   }else{
+      status = "Open" 
+   }
+   
+
+
+
+
   };
 
   render() {
@@ -147,7 +241,43 @@ class MyAdminHackathon extends Component {
     if (!id) {
       redirectVar = <Redirect to="/home" />;
     }
-    console.log(this.state.teamDetails[0]);
+    var teamTable = this.state.teamDetails.map((teams,i)=>{
+      // console.log(this.state.teamGrades);
+      // console.log(this.state.teamGrades[i]);
+      return(
+        <div>
+        <div className="col-md-12">
+        <div className="hackathon-team-name">{this.state.teams[i].name}  {this.state.teams[i].isFinalized ? "- Finalized" : "- Payment Pending" }</div>
+
+        </div>
+        <table className="table table-striped table-hover">
+        <thead>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Amount</th>
+          <th>Fee Paid</th>
+        </thead>
+        <tbody>
+          {teams &&
+              teams.map(team_data => (
+              <tr>
+                <td>{team_data.firstName}</td>
+                <td>{team_data.role}</td>
+                <td>{team_data.amount ? "$"+team_data.amount : "-" }</td>
+                <td>{team_data.feePaid === false ? "No" : "Yes"}</td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+    </div>
+      
+      )
+      
+    })
+     
+    
+
+
     return (
       <div className="hackathon-home">
         {redirectVar}
@@ -155,6 +285,48 @@ class MyAdminHackathon extends Component {
 
         <div className="hackathon-details">
           <h2>{this.state.hackathon ? this.state.hackathon.name : ""}</h2>
+          <div div className="button-hacks-admin" style={{display : "contents"}}>
+          <button
+            type="button"
+            onClick={this.handleOpenStatus}
+            style={{ margin: 20 }}
+            className="btn btn-primary btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
+          >
+            Open
+          </button>
+          <button
+            type="button"
+            onClick={this.handleClosedStatus}
+            style={{ margin: 20 }}
+            className="btn btn-warning btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
+          >
+            Closed
+          </button>
+          <button
+            type="button"
+            onClick={this.handleFinalizedStatus}
+            style={{ margin: 20 }}
+            className="btn btn-danger btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+          >
+            Finalized
+          </button>
+          
+          <button
+            type="button"
+            onClick={this.submitChanges}
+            style={{ margin: 20 }}
+            className="btn btn-success btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
+          >
+            Save Changes
+          </button>
+        </div>
           <br />
           {this.state.hackathon ? this.state.hackathon.description : ""}
           <br />
@@ -219,25 +391,7 @@ class MyAdminHackathon extends Component {
         </div>
         <div className="hackathon-team">
           <h3>Teams</h3>
-          <table className="table table-striped table-hover">
-            <thead>
-              <th>Name</th>
-              <th>Role</th>
-              <th>Amount</th>
-              <th>Fee Paid</th>
-            </thead>
-            <tbody>
-              {this.state.teamDetails[0] &&
-                this.state.teamDetails[0].map(team_data => (
-                  <tr>
-                    <td>{team_data.firstName}</td>
-                    <td>{team_data.role}</td>
-                    <td>{team_data.amount ? "$"+team_data.amount : "-" }</td>
-                    <td>{team_data.feePaid === false ? "No" : "Yes"}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+          {teamTable}
         </div>
         <div className="hackathon-judge">
           <h3>Judges</h3>
@@ -300,40 +454,6 @@ class MyAdminHackathon extends Component {
               </tr>
             </tbody>
           </table>
-        </div>
-        <div div className="button-hacks-admin">
-          <button
-            type="button"
-            onClick={this.handleOpenStatus}
-            style={{ margin: 20 }}
-            className="btn btn-primary btn-lg"
-          >
-            Open
-          </button>
-          <button
-            type="button"
-            onClick={this.handleClosedStatus}
-            style={{ margin: 20 }}
-            className="btn btn-warning btn-lg"
-          >
-            Closed
-          </button>
-          <button
-            type="button"
-            onClick={this.handleFinalizedStatus}
-            style={{ margin: 20 }}
-            className="btn btn-danger btn-lg"
-          >
-            Finalized
-          </button>
-          <button
-            type="button"
-            onClick={this.submitChanges}
-            style={{ margin: 20 }}
-            className="btn btn-success btn-lg"
-          >
-            Save Changes
-          </button>
         </div>
       </div>
     );

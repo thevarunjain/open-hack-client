@@ -63,7 +63,7 @@ class CreateTeam extends Component {
     var memberById=this.state.x;
 
     if(memberById && !memberById.includes(selectedOption.id)){    // for unique insertion in x object
-          memberById[i]=selectedOption.id;
+          memberById[i+1]=selectedOption.id;
           this.setState({ selectedOption });
           this.setState({ x : memberById });
     } 
@@ -71,14 +71,23 @@ class CreateTeam extends Component {
 
   handleRoleSelection = (selectedOption,i) => {
     console.log(selectedOption);
-    this.state.role[i]=selectedOption.label;
+    this.state.role[i+1]=selectedOption.label;
     this.setState({role: this.state.role})
   }
 
   componentDidMount(){
     var hackathon_id = this.props.location.state.id;
     setHeader();
-    console.log("Com di dmunt", hackathon_id);
+    var currrenUsertId = getJWTID();
+
+    var teamMembers = this.state.x;
+    var teamMembersRoles = this.state.role;
+    teamMembers.push(currrenUsertId);
+    teamMembersRoles.push("Team Lead");
+      this.setState({
+        x :  teamMembers,
+        role : teamMembersRoles
+      })
 
     axios.get(`${rootUrl}/users`)
     .then(allUsers=>{
@@ -94,15 +103,17 @@ class CreateTeam extends Component {
                       } 
                       if(users.data.participants){
                         users.data.participants.map(e=>{nonEligibleTeamMember.push(e.id)});
+                      }if(currrenUsertId){
+                        nonEligibleTeamMember.push(currrenUsertId)
                       }
                     }  
                     // Removed all Judges and particpants
                     console.log(nonEligibleTeamMember);
                     // Remove Admin users
                     var eligibleTeamMember = allUsers.data.filter(e=> !e.admin);
-                    console.log(eligibleTeamMember);
 
                     eligibleTeamMember = eligibleTeamMember.filter(e => !nonEligibleTeamMember.includes(e.id));
+
                     eligibleTeamMember.map(e=>{
                       e["label"] = e.name.first+ " "+e.name.last;
                       e["value"] = e.id
@@ -186,11 +197,11 @@ class CreateTeam extends Component {
                 this.state.members.map((member,i)=>{
                   return(
                     <div class="input-group mb-3" key={i}>
-                    <Select key={i} className="css-1pcexqc-container-spon" options={this.state.allMembers.filter((e) => !this.state.x.includes(e.id))} onChange={(e)=>{this.handleMemberSelection(e,i)}} /> 
-                      <Select key={i} className="css-1pcexqc-container-spon" options={allRoles} onChange={(e)=>{this.handleRoleSelection(e,i)}} /> 
+                    <Select placeholder="Users" key={i} className="css-1pcexqc-container-spon" options={this.state.allMembers.filter((e) => !this.state.x.includes(e.id))} onChange={(e)=>{this.handleMemberSelection(e,i)}} /> 
+                      <Select placeholder="Roles" key={i} className="css-1pcexqc-container-spon" options={allRoles} onChange={(e)=>{this.handleRoleSelection(e,i)}} /> 
                     
                     <div class="input-group-append" style={{    marginTop: "-11px"}}>  
-                      <button class="btn btn-primary btn-remove" onClick={(e)=>this.removeMember(e,i)}>Remove</button>
+                      {/* <button class="btn btn-primary btn-remove" onClick={(e)=>this.removeMember(e,i)}>Remove</button> */}
                     </div>
                     </div>
                   )

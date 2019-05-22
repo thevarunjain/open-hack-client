@@ -91,3 +91,11 @@ input[type="date"] {
   margin-left: 60%;
   margin-top: 3%;
 }
+
+.hackathon-team-name{
+  width: max-content;
+  PADDING: 10px;
+  background-color: white;
+  color: black;
+  margin-bottom: 7px;
+}
