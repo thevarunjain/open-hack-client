@@ -267,7 +267,7 @@ console.log(this.state.hackathon)
             console.log("...", data);
             setHeader();
             console.log(this.state.hackathon.id);
-            axios.patch("http://localhost:8080" + "/hackathons/" + this.state.hackathon.id, data).then(response => {
+            axios.patch(rootUrl + "/hackathons/" + this.state.hackathon.id, data).then(response => {
               window.alert("Hackathon Date updated successfully.");
             }).then(e=>{
               console.log(e);
