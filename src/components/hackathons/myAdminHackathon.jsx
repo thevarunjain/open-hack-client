@@ -340,7 +340,7 @@ console.log(this.state.hackathon)
 
 
     return (
-      <div className="hackathon-home">
+      <div className="hackathon-home" style={{height: "100vx !important"}}> 
         {redirectVar}
         <Navbar />
 
@@ -377,7 +377,7 @@ console.log(this.state.hackathon)
             Finalized
           </button>
           
-          <button
+          {/* <button
             type="button"
             onClick={this.submitChanges}
             style={{ margin: 20 }}
@@ -385,8 +385,8 @@ console.log(this.state.hackathon)
             disabled={this.state.hackathon.status==="Finalized"}
 
           >
-            Save Changes
-          </button>
+            Change Dates
+          </button> */}
         </div>
           <br />
           {this.state.hackathon ? this.state.hackathon.description : ""}
@@ -414,6 +414,17 @@ console.log(this.state.hackathon)
             className="form-control"
             onChange={this.changeHandle}
           />
+                 <button
+            type="button"
+            onClick={this.submitChanges}
+            style={{ margin: 20 }}
+            className="btn btn-success btn-lg"
+            disabled={this.state.hackathon.status==="Finalized"}
+
+          >
+            Change Dates
+          </button>
+          <br></br>
           <label>Fee:</label>
           <input
             type="text"
