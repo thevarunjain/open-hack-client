@@ -515,6 +515,7 @@ console.log(this.state.hackathon)
                   <input
                     type="text"
                       required
+                      disabled={this.state.hackathon.status==="Finalized"}
                       className="form-control"
                       name = "title"
                       placeholder="Title"
@@ -532,6 +533,7 @@ console.log(this.state.hackathon)
                     <input
                     type="text"
                       required
+                      disabled={this.state.hackathon.status==="Finalized"}
                       className="form-control"
                       name = "description"
                       placeholder="Description (Optional)"
@@ -550,6 +552,7 @@ console.log(this.state.hackathon)
                     type="number"
                       min ="0"
                       required
+                      disabled={this.state.hackathon.status==="Finalized"}
                       className="form-control"
                       name = "amount"
                       placeholder="Amount Optional"
@@ -566,6 +569,7 @@ console.log(this.state.hackathon)
                     <input
                     type="date"
                       required
+                      disabled={this.state.hackathon.status==="Finalized"}
                       className="form-control"
                       name = "date"
                       placeholder="Date"
