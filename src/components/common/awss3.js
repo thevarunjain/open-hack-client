@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ReactS3 from 'react-s3';
-const BUCKET_NAME = 'cmpe-275-open-hack-s3';
-const IAM_USER_KEY = 'AKIAIMU3DWJLVBY2VQNA';
-const IAM_USER_SECRET = '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';
+const BUCKET_NAME = "";
+const IAM_USER_KEY = '';
+const IAM_USER_SECRET = "";
 const S3_BUCKET = BUCKET_NAME;
 
 

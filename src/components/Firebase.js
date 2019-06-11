@@ -3,12 +3,12 @@ var firebase = require("firebase/app");
 require("firebase/auth");
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBIcLV4QyRSQk04eabdySZGt-SdEdTEvIw",
-  authDomain: "cmpe-275-open-hack.firebaseapp.com",
-  databaseURL: "https://cmpe-275-open-hack.firebaseio.com",
-  projectId: "cmpe-275-open-hack",
-  storageBucket: "cmpe-275-open-hack.appspot.com",
-  messagingSenderId: "722197382416"
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: ""
 };
 
 firebase.initializeApp(firebaseConfig);
